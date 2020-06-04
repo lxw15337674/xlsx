@@ -1,0 +1,27 @@
+{
+  "presets": [
+    [
+      "@vue/app",
+      {
+        "useBuiltIns": "entry"
+      }
+    ],
+    [
+      "@babel/preset-env",
+      {
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-transform-runtime",
+    "@babel/syntax-dynamic-import"
+  ],
+  "comments": false,
+  "env": {
+    "test": {
+      "presets": ["env", { "modules": false }],
+      "plugins": ["istanbul"]
+    }
+  }
+}
