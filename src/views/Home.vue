@@ -1,27 +1,28 @@
 <template>
   <div>
-    <div class="operationBox">
-      <el-input></el-input>
-
-      <el-button type="file" @click="onPickFile">导入数据</el-button>
-      <input
-        ref="fileInput"
-        type="file"
-        style="display: none"
-        @change="uploadFiles"
-      />
-      <el-button type="success">导出数据</el-button>
-      <!--      <router-link to="/upload">-->
-      <!--        <el-button>上传页</el-button>-->
-      <!--      </router-link>-->
-    </div>
-    <el-table></el-table>
+    <el-header class="header">
+      <div class="tool-container">
+        <el-button type="primary" @click="onPickFile" size="mini" >导入数据</el-button>
+        <input
+          ref="fileInput"
+          type="file"
+          style="display: none"
+          @change="uploadFiles"
+        />
+        <div class="right-tools">
+          <el-button type="success" size="mini">导出数据</el-button>
+        </div>
+      </div>
+    </el-header>
+    <board></board>
   </div>
 </template>
 
 <script>
+  import board from './componets/board.vue'
 import xlsx from 'xlsx';
 export default {
+  components:{board},
   data: function() {
     return {};
   },
@@ -30,32 +31,36 @@ export default {
       this.$refs.fileInput.click();
     },
     uploadFiles() {
-      debugger;
-      let files = this.$refs.fileInput.files;
-      let fileReader = new FileReader();
-      fileReader.onload = function(evt) {
+      let files = this.$refs.fileInput.files,file=files[0],fileReader = new FileReader();
+      fileReader.onload = function(e) {
         try {
-          let data = evt.target.result,
-            workbook = xlsx.read(data, { type: 'array' });
-          debugger;
+          let data =e.target.result;
+          let workbook = xlsx.read( data , { type: 'binary'});
+          console.log(workbook)
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
       };
       // 以二进制方式打开文件
-      fileReader.readAsBinaryString(files[0]);
+      fileReader.readAsBinaryString(file);
     },
   },
 };
 </script>
 
 <style lang="stylus" scoped>
-.operationBox{
-  div{
-    margin 20px
+.header{
+  padding: 10px  20px
+  background-color: #f8f8f8;
+  position: relative;
+  border-bottom 1px solid  rgba(0,0,0,.04)
+  button{
+    margin-right: 10px;
   }
-  .el-input{
-    width 200px
+  .right-tools{
+    display inline-block
+    position absolute
+    right:20px
   }
 }
 </style>
