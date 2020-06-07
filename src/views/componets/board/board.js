@@ -23,6 +23,18 @@ export default {
             vertAxis: {
                 display: 'none',
                 top: 0,
+            },
+            cellInput: {
+                rowIndex: 0,
+                colIndex: 0,
+                value: '',
+                style: {
+                    left: '',
+                    top: '',
+                    width: '',
+                    height: '',
+                    display: 'none',
+                }
             }
         }
     },
@@ -34,7 +46,8 @@ export default {
                     array[row] = [];
                     for (let col = 0; col < 10; col++) {
                         array[row].push({
-                            value: ''
+                            value: '123',
+                            class: [],
                         })
                     }
                 }
@@ -51,10 +64,44 @@ export default {
         }
     },
     mounted() {
-        // this.initReziable()
         this.tableInit()
     },
+    computed: {
+        // 输入框宽度,高度自适应
+        cellInputRect() {
+            if (this.cellInput.value) {
+                let strList = this.cellInput.value.split('\n').map(item => item.length)
+                let width = Math.max(Math.max(...strList,) * 8 + 20, this.cellInput.style.width.slice(0, -2))
+                let height = Math.max(this.cellInput.style.height.slice(0, -2), strList.length * 17 + 10)
+                return {
+                    width: `${width}px`,
+                    height: `${height}px`
+                }
+            }
+            return {
+
+            }
+        }
+    },
     methods: {
+        handleCellClick(evt, rowIndex, colIndex, cell) {
+            let cellRect = evt.currentTarget.getBoundingClientRect()
+            this.cellInput.style.left = `${cellRect.left}px`
+            this.cellInput.style.top = `${cellRect.top}px`
+            this.cellInput.style.width = `${cellRect.width}px`
+            this.cellInput.style.height = `${cellRect.height}px`
+            this.cellInput.style.display = ''
+            this.cellInput.value = cell.value
+            this.cellInput.rowIndex = rowIndex
+            this.cellInput.colIndex = colIndex
+            this.$nextTick(() => {
+                this.$refs.cellInput.focus()
+            })
+        },
+        handleCellInputBlur() {
+            this.data[this.cellInput.rowIndex][this.cellInput.colIndex].value = this.cellInput.value
+            this.cellInput = this.$options.data.call(this).cellInput
+        },
         currentPosition(rowIndex, colIndex) {
             return `${String.fromCharCode(65 + colIndex)}${rowIndex}`
         },

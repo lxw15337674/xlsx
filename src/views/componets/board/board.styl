@@ -3,9 +3,19 @@
     .resizable-table 
         position: relative
         table-layout:fixed;
- 
+        .cell-input
+            position fixed
+            flex:1
+            border: 1px solid activeColor;
+            z-index:10
+            font-size: 15px
+            resize: none;
+            overflow: hidden
+            &:focus
+                outline-color activeColor
+
         .row-header, .col-header
-            background: $bgColor
+            background: bgColor
         th, td 
             border: 1px solid rgba(0, 0, 0, 0.1);
             height: 40px;
@@ -13,6 +23,7 @@
             text-align: center;
             position relative
             word-break: break-all;
+            
         resizable-content(cursor)
             position: absolute;
             display: inline-block;
@@ -44,8 +55,17 @@
 
         .horiAxis
             axis()
-            border-left: 2px dashed #4FA0F1;
+            border-left: 2px dashed activeColor;
         .vertAxis
             width:100%
-            border-top:2px dashed #4FA0F1;
+            border-top:2px dashed activeColor;
             axis()
+        .cell
+            height 100%
+            box-sizing: border-box
+            position relative
+            border: 1px solid transparentColor;
+            word-break: break-all;
+            &:hover
+                border-color: activeColor;
+         

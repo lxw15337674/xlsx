@@ -3,6 +3,15 @@
     <table ref="table" class="resizable-table">
       <div class="horiAxis" id="horiAxis" :style="horiAxis"></div>
       <div class="vertAxis" id="vertAxis" :style="vertAxis"></div>
+      <div style="display:flex">
+        <textarea
+          @blur="handleCellInputBlur()"
+          ref="cellInput"
+          class="cell-input"
+          v-model="cellInput.value"
+          :style="[cellInput.style,cellInputRect]"
+        />
+      </div>
       <colgroup>
         <col v-for="col in colsHeader" :width="col.width" />
       </colgroup>
@@ -19,8 +28,12 @@
           {{rowIndex}}
           <div class="vert-resizable-content" @mousedown="(evt)=>VertResizeStart(evt,rowIndex)"></div>
         </td>
-        <td v-for="(cell,colIndex) in row" v-tip="currentPosition(rowIndex,colIndex)">
-          <div class="cell">123</div>
+        <td v-for="(cell,colIndex) in row">
+          <div
+            class="cell"
+            v-tip="currentPosition(rowIndex,colIndex)"
+            @click.capture="(evt)=>handleCellClick(evt,rowIndex,colIndex,cell)"
+          >{{cell.value}}</div>
         </td>
         <!--        <th >-->
         <!--        </th>-->
