@@ -1,8 +1,8 @@
 <template>
   <div class="board">
     <table ref="table" class="resizable-table">
-      <div ref="horiAxis" class="horiAxis" id="horiAxis" style="display: none"></div>
-      <div ref="vertAxis" class="vertAxis" id="vertAxis" style="display: none"></div>
+      <div ref="horiAxis" class="horiAxis" id="horiAxis"></div>
+      <div ref="vertAxis" class="vertAxis" id="vertAxis"></div>
       <div style="display:flex">
         <textarea
           @blur="handleCellInputBlur()"
