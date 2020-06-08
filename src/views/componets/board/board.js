@@ -116,6 +116,8 @@ export default {
         this.colsHeader.push({ width: '100' });
       });
     },
+    //TODO
+    // 待调整
     // 列拉伸
     colResizeStart(evt, index) {
       evt.preventDefault();
