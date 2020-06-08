@@ -5,10 +5,17 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    countData: {},
+    workBookList: [],
   },
   mutations: {
-
+    saveWorkBook(state, workBook) {
+      state.workBookList.push(workBook);
+    },
+  },
+  getters: {
+    getWorkBookByIndex(state, index) {
+      return state.workBookList[index];
+    },
   },
   actions: {},
   modules: {},

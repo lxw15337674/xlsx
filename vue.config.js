@@ -13,7 +13,7 @@ module.exports = {
   parallel: require('os').cpus().length > 1,
   productionSourceMap: false,
   chainWebpack: (config) => {
-    config.resolve.alias.set('src', path.join(__dirname, 'src'));
+    config.resolve.alias.set('src', path.join(__dirname, 'src'))
   },
   configureWebpack: (config) => {
     //生产and测试环境

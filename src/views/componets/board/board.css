@@ -1,0 +1,88 @@
+.board .resizable-table {
+  position: relative;
+  table-layout: fixed;
+}
+.board .resizable-table .cell-input {
+  position: fixed;
+  flex: 1;
+  border: 1px solid activeColor;
+  z-index: 10;
+  font-size: 15px;
+  resize: none;
+  overflow: hidden;
+}
+.board .resizable-table .cell-input:focus {
+  outline-color: activeColor;
+}
+.board .resizable-table .row-header,
+.board .resizable-table .col-header {
+  background: bgColor;
+}
+.board .resizable-table tr th {
+  border-bottom: 0;
+}
+.board .resizable-table th,
+.board .resizable-table td {
+  border: 1px solid rgba(0,0,0,0.1);
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+  word-break: break-all;
+}
+.board .resizable-table .hori-resizable-content {
+  right: -6px;
+  top: 0;
+  width: 12px;
+  height: 100%;
+  position: absolute;
+  display: inline-block;
+  z-index: 10;
+}
+.board .resizable-table .hori-resizable-content:hover {
+  background: #409eff;
+  opacity: 0.6;
+  cursor: col-resize;
+}
+.board .resizable-table .vert-resizable-content {
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  position: absolute;
+  display: inline-block;
+  z-index: 10;
+}
+.board .resizable-table .vert-resizable-content:hover {
+  background: #409eff;
+  opacity: 0.6;
+  cursor: ns-resize;
+}
+.board .resizable-table .horiAxis {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 10;
+  border-left: 2px dashed activeColor;
+}
+.board .resizable-table .vertAxis {
+  width: 100%;
+  border-top: 2px dashed activeColor;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 10;
+}
+.board .resizable-table .cell {
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  border: 1px solid transparentColor;
+  word-break: break-all;
+}
+.board .resizable-table .cell:hover {
+  border-color: activeColor;
+}

@@ -3,37 +3,63 @@
     <el-header class="header">
       <div class="tool-container">
         <el-button type="primary" @click="onPickFile" size="mini">导入数据</el-button>
+        <history @switch="switchWorkBook"></history>
         <input ref="fileInput" type="file" style="display: none" @change="uploadFiles" />
         <div class="right-tools">
           <el-button type="success" size="mini">导出数据</el-button>
         </div>
       </div>
     </el-header>
-    <board></board>
+    <board ></board>
+    <menu-bar class="sheet-bar">
+      <sheet v-for="(sheet,index) in workBook.SheetNames"
+             :activeSheet="activeSheet"
+             @select="sheetSelect" :key="sheet"
+             :index="index" >
+        {{sheet}}
+      </sheet>
+    </menu-bar>
   </div>
 </template>
 
 <script>
 import board from './componets/board/board.vue';
+import sheet from './componets/sheet/sheet';
 import xlsx from 'xlsx';
+import menuBar from './componets/menuBar/menuBar';
+import History from './componets/history/history';
 export default {
-  components: { board },
+  name:'home',
+  components: { History, board,sheet,menuBar },
   data: function() {
-    return {};
+    return {
+      workBook:{},
+      activeSheet:0,
+    };
   },
   methods: {
+    switchWorkBook(workBook){
+
+    },
+    sheetSelect(index){
+      this.activeSheet=index
+    },
     onPickFile() {
       this.$refs.fileInput.click();
     },
     uploadFiles() {
       let files = this.$refs.fileInput.files,
         file = files[0],
-        fileReader = new FileReader();
+        fileReader = new FileReader(),
+        vue = this
       fileReader.onload = function(e) {
         try {
           let data = e.target.result;
-          let workbook = xlsx.read(data, { type: 'binary' });
-          console.log(workbook);
+          let workBook = xlsx.read(data, { type: 'binary' })
+          for(let [key,value] of Object.entries(workBook)) {
+            vue.$set(vue.workBook, key,value)
+          }
+          vue.$store.commit('saveWorkBook',{...workBook,name:file.name,lastModifiedDate:file.lastModifiedDate})
         } catch (e) {
           console.error(e);
         }
