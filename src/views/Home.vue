@@ -10,6 +10,7 @@
           ref="fileInput"
           type="file"
           style="display: none"
+          accept=".xlsx,.csv,.xls"
           @change="uploadFiles"
         />
         <div class="right-tools">
@@ -17,40 +18,40 @@
         </div>
       </div>
     </el-header>
-    <board></board>
-    <menu-bar>
-      <sheet
-        v-for="(sheet, index) in workBook.SheetNames"
-        :activeSheet="activeSheet"
-        @select="sheetSelect"
-        :key="sheet"
-        :index="index"
-      >
-        {{ sheet }}
-      </sheet>
-    </menu-bar>
+    <board :data="activeSheet"></board>
+    <sheetBar
+      :activeSheetName="activeSheetName"
+      @select="sheetSelect"
+      :sheets="workBook.SheetNames"
+    >
+    </sheetBar>
   </div>
 </template>
 
 <script>
 import board from './componets/board/board.vue';
-import sheet from './componets/sheet/sheet';
+import sheetBar from './componets/sheetBar/sheetBar';
 import xlsx from 'xlsx';
 import menuBar from './componets/menuBar/menuBar';
 import History from './componets/history/history';
 export default {
   name: 'home',
-  components: { History, board, sheet, menuBar },
+  components: { History, board, sheetBar, menuBar },
   data: function() {
     return {
       workBook: {},
-      activeSheet: 0,
+      activeSheetName: '',
     };
+  },
+  computed:{
+    activeSheet(){
+      return this.workBook.Sheets?.[this.activeSheetName] ?? {}
+    }
   },
   methods: {
     switchWorkBook(workBook) {},
-    sheetSelect(index) {
-      this.activeSheet = index;
+    sheetSelect(sheet) {
+      this.activeSheetName = sheet;
     },
     onPickFile() {
       this.$refs.fileInput.click();
@@ -67,6 +68,7 @@ export default {
           for (let [key, value] of Object.entries(workBook)) {
             vue.$set(vue.workBook, key, value);
           }
+          vue.activeSheetName = workBook.SheetNames[0];
           vue.$store.commit('saveWorkBook', {
             ...workBook,
             name: file.name,

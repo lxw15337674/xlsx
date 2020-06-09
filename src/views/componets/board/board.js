@@ -30,27 +30,19 @@ export default {
           display: 'none',
         },
       },
+      table: [],
     };
   },
-
   props: {
     data: {
-      default: function() {
-        let array = [];
-        for (let row = 0; row < 100; row++) {
-          array[row] = [];
-          for (let col = 0; col < 30; col++) {
-            array[row].push({
-              value: '',
-              class: [],
-            });
-          }
-        }
-        return array;
-      },
+      require: true,
+      type: Object,
     },
   },
   filters: {
+
+
+// transfrom(100)
     charCode: function(index) {
       if (!index) {
         return ' ';
@@ -58,11 +50,41 @@ export default {
       return String.fromCharCode(65 + index - 1);
     },
   },
+  watch: {
+    data: {
+      deep: true,
+      handler(val) {
+        //
+        // for (let [key, value] of Object.entries(val)) {
+        //   //处理元数据
+        //   if (/^[A-Z]+[0-9]+$/.test(key)) {
+        //     //区分行与列 即 AA123，切分为AA，123
+        //     let index= key.split(key.search(/\d/) );
+        //     console.log(key.slice(0,index),key.slice(index+1));
+        //   }
+        // }
+
+
+      },
+    },
+  },
   mounted() {
     this.tableInit();
   },
   computed: {
+    tableData:{
+      get(){
+        let obj ={}
+        for(let rowIndex in this.table){
+          for(let colIndex in this.table[rowIndex]){
+            let key = rowIndex+colIndex
+          }
+        }
+      },
+      set(){
 
+      }
+    },
     tableWidth() {
       return this.colsHeader.reduce((total, item) => {
         return total + item.width;
@@ -115,10 +137,14 @@ export default {
       return `${String.fromCharCode(65 + colIndex)}${rowIndex}`;
     },
     tableInit() {
-      this.data.forEach((element) => {
+      for (let row = 0; row < 100; row++) {
+        this.table.splice(row, 0, []);
         this.rowsHeader.push({ height: null });
-      });
-      this.data[0].forEach((element) => {
+        for (let col = 0; col < 30; col++) {
+          this.table[row].push({ value: '' });
+        }
+      }
+      this.table[0].forEach((element) => {
         this.colsHeader.push({ width: 100 });
       });
     },

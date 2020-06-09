@@ -47,7 +47,7 @@
           <col v-for="col in colsHeader" :width="col.width" />
         </colgroup>
         <tbody>
-          <tr v-for="(row, rowIndex) in data">
+          <tr v-for="(row, rowIndex) in table">
             <td class="row-header" ref="rows" :style="rowsHeader[rowIndex]">
               {{ rowIndex }}
               <div
