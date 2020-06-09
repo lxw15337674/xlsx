@@ -1,36 +1,29 @@
-.board .resizable-table {
+.board {
   position: relative;
-  table-layout: fixed;
-}
-.board .resizable-table .cell-input {
-  position: fixed;
   flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+.board .cell-input {
+  position: fixed;
   border: 1px solid activeColor;
   z-index: 10;
   font-size: 15px;
   resize: none;
   overflow: hidden;
 }
-.board .resizable-table .cell-input:focus {
+.board .cell-input:focus {
   outline-color: activeColor;
 }
-.board .resizable-table .row-header,
-.board .resizable-table .col-header {
+.board .row-header,
+.board .col-header {
   background: bgColor;
 }
-.board .resizable-table tr th {
-  border-bottom: 0;
+.board .row-header {
+  position: sticky;
+  left: 0;
 }
-.board .resizable-table th,
-.board .resizable-table td {
-  border: 1px solid rgba(0,0,0,0.1);
-  height: 30px;
-  vertical-align: middle;
-  text-align: center;
-  position: relative;
-  word-break: break-all;
-}
-.board .resizable-table .hori-resizable-content {
+.board .hori-resizable-content {
   right: -6px;
   top: 0;
   width: 12px;
@@ -39,12 +32,12 @@
   display: inline-block;
   z-index: 10;
 }
-.board .resizable-table .hori-resizable-content:hover {
+.board .hori-resizable-content:hover {
   background: #409eff;
   opacity: 0.6;
   cursor: col-resize;
 }
-.board .resizable-table .vert-resizable-content {
+.board .vert-resizable-content {
   position: absolute;
   bottom: -6px;
   left: 0;
@@ -54,35 +47,61 @@
   display: inline-block;
   z-index: 10;
 }
-.board .resizable-table .vert-resizable-content:hover {
+.board .vert-resizable-content:hover {
   background: #409eff;
   opacity: 0.6;
   cursor: ns-resize;
 }
-.board .resizable-table .horiAxis {
+.board .horiAxis {
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 0;
   z-index: 10;
-  border-left: 2px dashed activeColor;
-}
-.board .resizable-table .vertAxis {
   width: 100%;
   border-top: 2px dashed activeColor;
+}
+.board .vertAxis {
+  height: 100%;
+  border-left: 2px dashed activeColor;
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 0;
   z-index: 10;
 }
-.board .resizable-table .cell {
+.board .cell {
   height: 100%;
   box-sizing: border-box;
   position: relative;
   border: 1px solid transparentColor;
   word-break: break-all;
 }
-.board .resizable-table .cell:hover {
+.board .cell:hover {
   border-color: activeColor;
+}
+.board .table-body td {
+  border: 1px solid borderColor;
+  height: 40px;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+.board .table-body tr:first-child td {
+  border-top: 0;
+}
+.board .table-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.board .table-header th {
+  border: 1px solid borderColor;
+  border-top: 0;
+  height: 40px;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+  word-break: break-all;
+  box-sizing: border-box;
 }
