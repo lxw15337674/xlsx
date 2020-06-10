@@ -2,10 +2,11 @@
   <div class="home">
     <el-header class="header">
       <div class="tool-container">
+        <input class="filename-input" v-model="workbookName"></input>
         <el-button type="primary" @click="onPickFile" size="mini"
           >导入数据</el-button
         >
-        <history @switch="switchWorkBook"></history>
+        <history @switch="switchWorkbook"></history>
         <input
           ref="fileInput"
           type="file"
@@ -14,15 +15,15 @@
           @change="uploadFiles"
         />
         <div class="right-tools">
-          <el-button type="success" size="mini">导出数据</el-button>
+          <el-button type="success" size="mini" @click="exportFile">导出数据</el-button>
         </div>
       </div>
     </el-header>
-    <board :data="activeSheet"></board>
+    <board v-model="activeSheet"></board>
     <sheetBar
       :activeSheetName="activeSheetName"
       @select="sheetSelect"
-      :sheets="workBook.SheetNames"
+      :sheets="workbook.SheetNames"
     >
     </sheetBar>
   </div>
@@ -31,7 +32,7 @@
 <script>
 import board from './componets/board/board.vue';
 import sheetBar from './componets/sheetBar/sheetBar';
-import xlsx from 'xlsx';
+import XLSX from 'xlsx';
 import menuBar from './componets/menuBar/menuBar';
 import History from './componets/history/history';
 export default {
@@ -39,38 +40,57 @@ export default {
   components: { History, board, sheetBar, menuBar },
   data: function() {
     return {
-      workBook: {},
-      activeSheetName: '',
+      workbook:{
+        Sheets:{},
+        SheetsNames:['sheet1']
+      },
+      activeSheetName: 'sheet1',
+      workbookName :'新建表格',
     };
   },
   computed:{
     activeSheet(){
-      return this.workBook.Sheets?.[this.activeSheetName] ?? {}
+        let obj = {}
+        for (let [key, value] of Object.entries(this.workbook.Sheets[this.activeSheetName])) {
+          //处理元数据
+          if (/^[A-Z]+[0-9]+$/.test(key)) {
+            obj[key] = value.w
+          }
+        }
+        return obj
     }
   },
   methods: {
-    switchWorkBook(workBook) {},
+    switchWorkbook(workbook) {},
     sheetSelect(sheet) {
       this.activeSheetName = sheet;
     },
     onPickFile() {
       this.$refs.fileInput.click();
     },
+    exportFile(){
+      //TODO 判断是导入的还是自己编辑的
+      if(this.workbook) {
+        XLSX.writeFile(this.workbook, `${this.workbookName}.xlsx`)
+      }
+    },
     uploadFiles() {
-      let files = this.$refs.fileInput.files,
-        file = files[0],
+      if(!this.$refs.fileInput.files.length) return
+      let file = this.$refs.fileInput.files[0],
         fileReader = new FileReader(),
         vue = this;
+
       fileReader.onload = function(e) {
         try {
           let data = e.target.result;
-          let workBook = xlsx.read(data, { type: 'binary' });
-          for (let [key, value] of Object.entries(workBook)) {
-            vue.$set(vue.workBook, key, value);
+          let workbook = XLSX.read(data, { type: 'binary' });
+          for (let [key, value] of Object.entries(workbook)) {
+            vue.$set(vue.workbook, key, value);
           }
-          vue.activeSheetName = workBook.SheetNames[0];
-          vue.$store.commit('saveWorkBook', {
-            ...workBook,
+          vue.activeSheetName = workbook.SheetNames[0];
+          vue.workbookName = file.name.split('.')[0]
+          vue.$store.commit('saveworkbook', {
+            ...workbook,
             name: file.name,
             lastModifiedDate: file.lastModifiedDate,
           });
@@ -95,15 +115,31 @@ export default {
     background-color: #f8f8f8;
     position: relative;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    .tool-container {
+      display flex
+      button {
+        margin-right: 10px;
+      }
 
-    button {
-      margin-right: 10px;
-    }
+      .filename-input {
+        margin-right 10px
+        visibility: visible;
+        color: rgb(51, 51, 51);
+        box-sizing border-box
+        max-width: 400px;
+        border: 1px solid transparent;
+        &:focus {
+          border: 1px solid #4d90fe;
+          -webkit-appearance: none;
+          color: #333333 !important;
+        }
+      }
 
-    .right-tools {
-      display: inline-block;
-      position: absolute;
-      right: 20px;
+      .right-tools {
+        display: inline-block;
+        position: absolute;
+        right: 20px;
+      }
     }
   }
 </style>

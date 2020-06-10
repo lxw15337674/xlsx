@@ -1,3 +1,7 @@
+import { indexToChar, symbolToIndex } from 'src/utils/transform';
+import XLSX from 'xlsx';
+
+//统一单元格位置：第几行第几列，现有row，再有col
 export default {
   data() {
     return {
@@ -33,6 +37,10 @@ export default {
       table: [],
     };
   },
+  model:{
+    prop:'data',
+    event:'sheetChange',
+  },
   props: {
     data: {
       require: true,
@@ -40,31 +48,23 @@ export default {
     },
   },
   filters: {
-
-
-// transfrom(100)
-    charCode: function(index) {
-      if (!index) {
+    indexToChar(index) {
+      if (index) {
+        return indexToChar(index - 1);
+      } else {
         return ' ';
       }
-      return String.fromCharCode(65 + index - 1);
     },
   },
   watch: {
     data: {
       deep: true,
       handler(val) {
-        //
-        // for (let [key, value] of Object.entries(val)) {
-        //   //处理元数据
-        //   if (/^[A-Z]+[0-9]+$/.test(key)) {
-        //     //区分行与列 即 AA123，切分为AA，123
-        //     let index= key.split(key.search(/\d/) );
-        //     console.log(key.slice(0,index),key.slice(index+1));
-        //   }
-        // }
-
-
+        this.clearTable()
+        for (let [key, value] of Object.entries(val)) {
+          let [col, row] = symbolToIndex(key);
+          this.table[row].splice(col, 1, value);
+        }
       },
     },
   },
@@ -72,18 +72,21 @@ export default {
     this.tableInit();
   },
   computed: {
-    tableData:{
-      get(){
-        let obj ={}
-        for(let rowIndex in this.table){
-          for(let colIndex in this.table[rowIndex]){
-            let key = rowIndex+colIndex
+    tableRect() {
+      return this.$refs.table.getBoundingClientRect();
+    },
+    tableData: {
+      get() {
+        let obj = {};
+        for (let colIndex in this.table) {
+          for (let rowIndex in this.table[colIndex]) {
+            let key = indexToChar(colIndex) + (1 + parseInt(rowIndex));
+            obj[key] = this.table[colIndex][rowIndex];
           }
         }
+        return obj;
       },
-      set(){
 
-      }
     },
     tableWidth() {
       return this.colsHeader.reduce((total, item) => {
@@ -113,53 +116,76 @@ export default {
     },
   },
   methods: {
-    handleCellClick(evt, rowIndex, colIndex, cell) {
+    clearTable: function() {
+      for (let item in this.table) {
+        this.clearCol(item);
+      }
+    },
+    clearRow(rowIndex) {
+      for (let index in this.table[rowIndex]) {
+        this.table[rowIndex].splice(index, 1, '');
+      }
+    },
+    clearCol(colIndex) {
+      for (let item of this.table) {
+        item.splice(colIndex - 1, 1, '');
+      }
+    },
+    exportFile() {
+      let sheet = XLSX.utils.aoa_to_sheet(this.table);
+      let workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, sheet, 'test');
+      XLSX.writeFile(workbook, 'test.xlsx');
+    },
+    tableInit() {
+      for (let row = 0; row < 30; row++) {
+        this.table.splice(row, 0, []);
+        this.rowsHeader.splice(row, 1, { height: null });
+        for (let col = 0; col < 30; col++) {
+          this.table[row].splice(col, 0, '');
+          if (row === 0) {
+            this.colsHeader.splice(col + 1, 1, { width: 100 });
+          }
+        }
+      }
+    },
+    handleCellClick(evt, rowIndex, colIndex) {
+      let cell = this.table[colIndex][rowIndex];
       let cellRect = evt.currentTarget.getBoundingClientRect();
-      this.cellInput.style.left = `${cellRect.left}px`;
-      this.cellInput.style.top = `${cellRect.top}px`;
-      this.cellInput.style.width = `${cellRect.width}px`;
-      this.cellInput.style.height = `${cellRect.height}px`;
-      this.cellInput.style.display = '';
-      this.cellInput.value = cell.value;
-      this.cellInput.rowIndex = rowIndex;
-      this.cellInput.colIndex = colIndex;
+      this.cellInput = {
+        rowIndex: rowIndex,
+        colIndex: colIndex,
+        value: cell,
+        style: {
+          left: `${evt.currentTarget.offsetLeft}px`,
+          top: `${evt.currentTarget.offsetTop}px`,
+          width: `${cellRect.width}px`,
+          height: `${cellRect.height}px`,
+          display: '',
+        },
+      };
       this.$nextTick(() => {
         this.$refs.cellInput.focus();
       });
     },
     handleCellInputBlur() {
-      this.data[this.cellInput.rowIndex][
-        this.cellInput.colIndex
-      ].value = this.cellInput.value;
+      this.table[this.cellInput.colIndex].splice(this.cellInput.rowIndex,1,this.cellInput.value)
       this.cellInput = this.$options.data.call(this).cellInput;
     },
     currentPosition(rowIndex, colIndex) {
-      return `${String.fromCharCode(65 + colIndex)}${rowIndex}`;
+      return `${String.fromCharCode(65 + colIndex)}${rowIndex + 1}`;
     },
-    tableInit() {
-      for (let row = 0; row < 100; row++) {
-        this.table.splice(row, 0, []);
-        this.rowsHeader.push({ height: null });
-        for (let col = 0; col < 30; col++) {
-          this.table[row].push({ value: '' });
-        }
-      }
-      this.table[0].forEach((element) => {
-        this.colsHeader.push({ width: 100 });
-      });
-    },
+
     // 列拉伸
     colResizeStart(evt, index) {
       evt.preventDefault();
-      let vue = this;
-      const tableLeft = vue.$refs.table.getBoundingClientRect().left;
-      let vertAxis = vue.$refs.vertAxis.style;
+      let vue = this,
+        vertAxis = vue.$refs.vertAxis.style;
       vertAxis.display = '';
-      vertAxis.left = `${evt.pageX -
-        vue.$refs.table.getBoundingClientRect().left}px`;
+      vertAxis.left = `${evt.pageX - this.tableRect.left}px`;
       document.body.style.cursor = 'col-resize';
       let HandleOnMouseMove = function HandleOnMouseMove(evt) {
-        vertAxis.left = `${evt.pageX - tableLeft}px`;
+        vertAxis.left = `${evt.pageX - vue.tableRect.left}px`;
       };
       let HandleOnMouseUp = function(evt) {
         vertAxis.display = 'none';
@@ -177,7 +203,7 @@ export default {
     rowResizeStart(evt, index) {
       evt.preventDefault();
       let vue = this;
-      const tableTop = vue.$refs.table.getBoundingClientRect().top;
+      const tableTop = this.tableRect.top;
       let horiAxis = vue.$refs.horiAxis.style;
       vue.store.startY = evt.pageY;
       horiAxis.display = '';

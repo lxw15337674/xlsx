@@ -1,14 +1,14 @@
-// function saveWorkBook(key, value) {
-//   let workBooks = getWorkBookList() || [];
-//   workBooks.push(key, value);
-//   sessionStorage.setItem('workBooks', JSON.stringify(workBooks));
+// function saveworkbook(key, value) {
+//   let workbooks = getworkbookList() || [];
+//   workbooks.push(key, value);
+//   sessionStorage.setItem('workbooks', JSON.stringify(workbooks));
 // }
 //
-// function getWorkBookList() {
-//   return JSON.parse(sessionStorage.getItem('workBooks'));
+// function getworkbookList() {
+//   return JSON.parse(sessionStorage.getItem('workbooks'));
 // }
-// function getWorkBookByIndex(index) {
-//   return getWorkBookList()[index];
+// function getworkbookByIndex(index) {
+//   return getworkbookList()[index];
 // }
 //
-// export { saveWorkBook, getWorkBookList, getWorkBookByIndex };
+// export { saveworkbook, getworkbookList, getworkbookByIndex };

@@ -5,16 +5,16 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    workBookList: [],
+    workbookList: [],
   },
   mutations: {
-    saveWorkBook(state, workBook) {
-      state.workBookList.push(workBook);
+    saveworkbook(state, workbook) {
+      state.workbookList.push(workbook);
     },
   },
   getters: {
-    getWorkBookByIndex(state, index) {
-      return state.workBookList[index];
+    getworkbookByIndex(state, index) {
+      return state.workbookList[index];
     },
   },
   actions: {},
