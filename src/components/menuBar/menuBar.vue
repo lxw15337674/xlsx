@@ -15,7 +15,7 @@
 
 <style lang="stylus" scoped>
 .sheetsBar
-  height 35px
+  height 50px
   background bgColor
   display flex
   position relative

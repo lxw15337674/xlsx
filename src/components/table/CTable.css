@@ -1,0 +1,87 @@
+.table {
+  overflow: scroll;
+  display: flex;
+  position: relative;
+}
+.table .row-header,
+.table .col-header {
+  background: bgColor;
+}
+.table .hori-resizable-content {
+  right: -6px;
+  top: 0;
+  width: 12px;
+  height: 100%;
+}
+.table .horiAxis {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  border-top: 2px dashed activeColor;
+}
+.table .vertAxis {
+  height: 100%;
+  border-left: 2px dashed activeColor;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+}
+.table .cell {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparentColor;
+  word-break: break-all;
+}
+.table .cell:hover {
+  border-color: activeColor;
+}
+.table .table-body {
+  display: flex;
+}
+.table .table-body .cell-input {
+  position: absolute;
+  border: 1px solid activeColor;
+  font-size: 15px;
+  resize: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.table .table-body .cell-input:focus {
+  outline-color: activeColor;
+}
+.table .table-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.table td {
+  height: 40px;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+  word-break: break-all;
+  box-sizing: border-box;
+  border: 1px solid borderColor;
+}
+.table tr {
+  position: relative;
+}
+.table tr:first-child td {
+  border-top: 0;
+}
+.table th {
+  border: 1px solid borderColor;
+  border-top: 0;
+  height: 40px;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+  word-break: break-all;
+  box-sizing: border-box;
+}

@@ -1,0 +1,77 @@
+.table
+  overflow scroll
+  display flex
+  position relative
+  .row-header, .col-header
+    background: bgColor
+
+  .hori-resizable-content
+    right: -6px;
+    top: 0;
+    width: 12px;
+    height: 100%;
+    resizable-content(col-resize)
+
+  axis()
+    position absolute
+    left: 0;
+    top: 0;
+    z-index: 10;
+  // 水平线
+  .horiAxis
+    axis()
+    width:100%
+    border-top: 2px dashed activeColor;
+  //垂直线
+  .vertAxis
+    height 100%
+    border-left:2px dashed activeColor;
+    axis()
+  .cell
+    height 100%
+    box-sizing: border-box
+    display flex
+    align-items center
+    justify-content  center
+    border: 1px solid transparentColor;
+    word-break: break-all;
+    &:hover
+      border-color: activeColor;
+  .table-body
+    display flex
+    .cell-input
+      position absolute
+      border: 1px solid activeColor;
+      font-size: 15px
+      resize: none;
+      overflow: hidden
+      z-index 1
+      &:focus
+        outline-color activeColor
+  .table-header
+    position: sticky;
+    top:0
+    z-index 2
+  td
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
+    position relative
+    word-break: break-all;
+    box-sizing border-box
+    border  1px solid borderColor;
+  tr
+    position: relative;
+
+  tr:first-child td
+    border-top 0
+  th
+    border  1px solid borderColor;
+    border-top 0
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
+    position relative
+    word-break: break-all;
+    box-sizing border-box
+  //.table-container

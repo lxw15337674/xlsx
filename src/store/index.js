@@ -8,12 +8,12 @@ export default new Vuex.Store({
     workbookList: [],
   },
   mutations: {
-    saveworkbook(state, workbook) {
+    saveWorkbook(state, workbook) {
       state.workbookList.push(workbook);
     },
   },
   getters: {
-    getworkbookByIndex(state, index) {
+    getWorkbookByIndex(state, index) {
       return state.workbookList[index];
     },
   },

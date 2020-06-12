@@ -19,7 +19,7 @@
         </div>
       </div>
     </el-header>
-    <board v-model="activeSheet"></board>
+    <board v-model="activeSheet" ></board>
     <sheetBar
       :activeSheetName="activeSheetName"
       @select="sheetSelect"
@@ -30,37 +30,49 @@
 </template>
 
 <script>
-import board from './componets/board/board.vue';
-import sheetBar from './componets/sheetBar/sheetBar';
+import board from './components/board/board.vue';
+import sheetBar from './components/sheetBar/sheetBar';
 import XLSX from 'xlsx';
-import menuBar from './componets/menuBar/menuBar';
-import History from './componets/history/history';
+import menuBar from 'src/components/menuBar/menuBar';
+import History from './components/history/history';
+import { indexToChar } from 'src/utils/transform';
 export default {
   name: 'home',
   components: { History, board, sheetBar, menuBar },
   data: function() {
+    const DefaultSheetName = 'sheet1'
     return {
-      workbook:{
-        Sheets:{},
-        SheetsNames:['sheet1']
-      },
-      activeSheetName: 'sheet1',
+      workbook: XLSX.utils.book_new(),
+      activeSheetName: DefaultSheetName,
       workbookName :'新建表格',
     };
   },
   computed:{
-    activeSheet(){
-        let obj = {}
-        for (let [key, value] of Object.entries(this.workbook.Sheets[this.activeSheetName])) {
-          //处理元数据
-          if (/^[A-Z]+[0-9]+$/.test(key)) {
-            obj[key] = value.w
-          }
-        }
-        return obj
+    activeSheet:{
+      get(){
+        return this.workbook.Sheets[this.activeSheetName];
+      },
+      set(val){
+        this.workbook.Sheets[this.activeSheetName]= XLSX.utils.aoa_to_sheet(val)
+      }
     }
   },
+  created() {
+    this.workbookInit()
+  },
   methods: {
+    workbookInit(rowsLength=30,colsLength=30){
+      let table = []
+      for(let row = 0; row < rowsLength; row++){
+        table[row]=[]
+        for(let col = 0; col < colsLength; col++){
+          table[row][col]=''
+        }
+      }
+      let sheet = XLSX.utils.aoa_to_sheet(table);
+      XLSX.utils.book_append_sheet(this.workbook,sheet,'sheet1')
+      // this.$set(this.workbook.Sheets,'sheet1',obj)
+    },
     switchWorkbook(workbook) {},
     sheetSelect(sheet) {
       this.activeSheetName = sheet;
@@ -89,7 +101,8 @@ export default {
           }
           vue.activeSheetName = workbook.SheetNames[0];
           vue.workbookName = file.name.split('.')[0]
-          vue.$store.commit('saveworkbook', {
+          //数据处理
+          vue.$store.commit('saveWorkbook', {
             ...workbook,
             name: file.name,
             lastModifiedDate: file.lastModifiedDate,
