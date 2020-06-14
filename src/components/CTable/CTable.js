@@ -2,8 +2,9 @@
 
 import { indexToChar } from '../../utils/transform';
 import leftTable from './left-table';
+import CInput from './CInput.vue'
 export default {
-  components: { leftTable },
+  components: { leftTable, CInput },
   data() {
     return {
       store: {
@@ -23,13 +24,7 @@ export default {
         rowIndex: 0,
         colIndex: 0,
         value: '',
-        style: {
-          left: '',
-          top: '',
-          width: '',
-          height: '',
-          display: 'none',
-        },
+
       },
       data: []
     };
@@ -66,26 +61,18 @@ export default {
     },
   },
   computed: {
-    // 输入框宽度,高度自适应
-    cellInputRect() {
-      if (this.cellInput.value) {
-        let strList = this.cellInput.value
-          .split('\n')
-          .map((item) => item.length);
-        let width = Math.max(
-          Math.max(...strList) * 8 + 20,
-          parseFloat(this.cellInput.style.width),
-        );
-        let height = Math.max(
-          strList.length * 17 + 10,
-          parseFloat(this.cellInput.style.height.slice(0, -2)),
-        );
-        return {
-          width: `${width}px`,
-          height: `${height}px`,
-        };
+    cellInputStyle() {
+      let currentCell = this.cellInput.colIndex + 1 + this.cellInput.rowIndex * this.colsHeader.length
+      if (!this.$refs.cell) {
+        return {}
       }
-      return {};
+      let cell = this.$refs.cell[currentCell]
+      return {
+        left: `${cell.getBoundingClientRect().left}px`,
+        top: `${cell.getBoundingClientRect().top}px`,
+        minWidth: `${cell.getBoundingClientRect().width}px`,
+        minHeight: `${cell.getBoundingClientRect().height}px`,
+      }
     },
     tableRect() {
       if (this.$refs.table) {
@@ -186,22 +173,9 @@ export default {
     },
     handleCellClick(evt, rowIndex, colIndex) {
       let cell = this.data[rowIndex][colIndex];
-      let cellRect = evt.currentTarget.getBoundingClientRect();
-      this.cellInput = {
-        rowIndex: rowIndex,
-        colIndex: colIndex,
-        value: cell,
-        style: {
-          left: `${evt.currentTarget.offsetLeft}px`,
-          top: `${evt.currentTarget.offsetTop}px`,
-          width: `${cellRect.width}px`,
-          height: `${cellRect.height}px`,
-          display: '',
-        },
-      };
-      this.$nextTick(() => {
-        this.$refs.cellInput.focus();
-      });
+      this.cellInput.rowIndex = rowIndex
+      this.cellInput.colIndex = colIndex
+      this.cellInput.value = cell
     },
   },
 };

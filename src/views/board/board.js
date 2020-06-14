@@ -1,4 +1,4 @@
-import CTable from 'src/components/table/CTable.vue';
+import CTable from 'src/components/CTable/CTable.vue';
 import sheetBar from './components/sheetBar/sheetBar.vue';
 import XLSX from 'xlsx';
 import menuBar from './components/menuBar/menuBar.vue';
@@ -16,18 +16,16 @@ export default {
             activeSheet: [[]]
         };
     },
-    // computed: {
-    //     activeSheet: {
-    //         get() {
-    //             return objToArray(this.workbook.Sheets[this.activeSheetName])
-    //         },
-    //         set(val) {
-    //             this.workbook.Sheets[this.activeSheetName] = XLSX.utils.aoa_to_sheet(val)
-    //         }
-    //     }
-    // },
     created() {
         this.workbookInit()
+    },
+    watch: {
+        activeSheet: {
+            deep: true,
+            handler(val) {
+                this.workbook.Sheets[this.activeSheetName] = XLSX.utils.aoa_to_sheet(val)
+            }
+        }
     },
     methods: {
         exportSheet() {
@@ -36,6 +34,7 @@ export default {
             XLSX.utils.book_append_sheet(workbook, sheet, 'test');
             XLSX.writeFile(workbook, 'test.xlsx');
         },
+
         workbookInit(rowsLength = 30, colsLength = 30) {
             let table = []
             for (let row = 0; row < rowsLength; row++) {
@@ -46,7 +45,7 @@ export default {
             }
             let sheet = XLSX.utils.aoa_to_sheet(table);
             XLSX.utils.book_append_sheet(this.workbook, sheet, 'sheet1')
-            // this.activeSheet = objToArray(this.workbook.Sheets[this.activeSheetName])
+            this.activeSheet = objToArray(this.workbook.Sheets[this.activeSheetName])
             // this.$set(this.workbook.Sheets,'sheet1',obj)
         },
         switchWorkbook(workbook) { },
@@ -61,24 +60,23 @@ export default {
                 XLSX.writeFile(this.workbook, `${this.workbookName}.xlsx`)
             }
         },
+
         importFile() {
             if (!this.$refs.fileInput.files.length) return
             let file = this.$refs.fileInput.files[0],
-                fileReader = new FileReader(),
-                vue = this;
-
-            fileReader.onload = function (e) {
+                fileReader = new FileReader()
+            fileReader.onload = e => {
                 try {
                     let data = e.target.result;
                     let workbook = XLSX.read(data, { type: 'binary' });
                     for (let [key, value] of Object.entries(workbook)) {
-                        vue.$set(vue.workbook, key, value);
+                        this.$set(this.workbook, key, value);
                     }
-                    vue.activeSheetName = workbook.SheetNames[0];
-                    vue.workbookName = file.name.split('.')[0]
-                    // this.activeSheet = objToArray(vue.workbook.Sheets[vue.activeSheetName])
+                    this.activeSheetName = workbook.SheetNames[0];
+                    this.workbookName = file.name.split('.')[0]
+                    this.activeSheet = objToArray(this.workbook.Sheets[this.activeSheetName])
                     //数据处理
-                    vue.$store.commit('saveWorkbook', {
+                    this.$store.commit('saveWorkbook', {
                         ...workbook,
                         name: file.name,
                         lastModifiedDate: file.lastModifiedDate,

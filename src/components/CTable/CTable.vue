@@ -27,12 +27,12 @@
             </tr>
           </thead>
         </table>
-        <textarea
+        <c-input class="cell-input" v-model="activeCellInput" :style="cellInputStyle"></c-input>
+        <!-- <textarea
           ref="cellInput"
-          class="cell-input"
           v-model="activeCellInput"
           :style="[cellInput.style, cellInputRect]"
-        />
+        />-->
         <table class="table-main" :style="{ width: `${bodyWidth}px` }">
           <colgroup>
             <col v-for="col in colsHeader" :width="col.width" />
@@ -46,8 +46,8 @@
                   (evt) => handleCellClick(evt, rowIndex, colIndex)
                 "
               >
-                <div class="cell" :style="rowStyle">
-                  <textarea disabled class="cell-content">{{cell}}</textarea>
+                <div ref="cell" class="cell" :style="rowStyle">
+                  <textarea disabled class="cell-content" :data="cell"></textarea>
                 </div>
               </td>
             </tr>
