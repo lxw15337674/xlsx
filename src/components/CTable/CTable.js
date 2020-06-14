@@ -164,7 +164,6 @@ export default {
         window.removeEventListener('mouseup', HandleOnMouseUp);
       };
       window.addEventListener('mouseup', HandleOnMouseUp);
-      // window.addEventListener('mousemove', debounce(HandleOnMouseMove, 1000));
       window.addEventListener('mousemove', HandleOnMouseMove);
     },
 
