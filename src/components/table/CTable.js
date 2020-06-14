@@ -31,6 +31,7 @@ export default {
           display: 'none',
         },
       },
+      data: []
     };
   },
   model: {
@@ -47,10 +48,17 @@ export default {
     table: {
       immediate: true,
       deep: true,
-      handler() {
+      handler(val) {
+        this.data = val
         this.headerInit();
       },
     },
+    data: {
+      deep: true,
+      handler(val) {
+        this.$emit('updateTable', val)
+      }
+    }
   },
   filters: {
     indexToChar(index) {
@@ -83,7 +91,7 @@ export default {
       if (this.$refs.table) {
         return this.$refs.table.getBoundingClientRect();
       } else {
-        return '';
+        return {};
       }
     },
     tableWidth() {
@@ -91,12 +99,15 @@ export default {
         return total + item.width;
       }, 0);
     },
+    bodyWidth() {
+      return this.tableWidth - 100
+    },
     activeCellInput: {
       get() {
-        return this.table[this.cellInput.rowIndex][this.cellInput.colIndex];
+        return this.data[this.cellInput.rowIndex][this.cellInput.colIndex];
       },
       set(val) {
-        this.table[this.cellInput.rowIndex].splice(
+        this.data[this.cellInput.rowIndex].splice(
           [this.cellInput.colIndex],
           1,
           val,
@@ -107,13 +118,13 @@ export default {
   methods: {
     headerInit() {
       //行
-      for (let rowIndex = 0; rowIndex < this.table.length; rowIndex++) {
+      for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
         if (!this.rowsHeader[rowIndex]) {
-          this.rowsHeader.splice(rowIndex, 1, { height: null });
+          this.rowsHeader.splice(rowIndex, 1, { height: `40px` });
         }
       }
       //列
-      for (let colIndex = 0; colIndex < this.table[0].length; colIndex++) {
+      for (let colIndex = 0; colIndex < this.data[0].length; colIndex++) {
         if (!this.colsHeader[colIndex]) {
           this.colsHeader.splice(colIndex, 1, { width: 100 });
         }
@@ -128,16 +139,16 @@ export default {
       vue.store.startY = evt.pageY;
       horiAxis.display = '';
       horiAxis.top = `${evt.pageY - tableTop}px`;
-      let HandleOnMouseMove = function(evt) {
+      let HandleOnMouseMove = function (evt) {
         evt.stopPropagation();
         horiAxis.top = `${evt.pageY - tableTop}px`;
         document.body.style.cursor = 'ns-resize';
       };
-      let HandleOnMouseUp = function(evt) {
+      let HandleOnMouseUp = function (evt) {
         horiAxis.display = 'none';
         document.body.style.cursor = '';
         let height =
-          evt.pageY - vue.store.startY+vue.rowsHeader[index].height;
+          evt.pageY - vue.store.startY + vue.$refs.rows[index].getBoundingClientRect().height;
         vue.rowsHeader[index].height = `${height}px`;
         window.removeEventListener('mousemove', HandleOnMouseMove);
         window.removeEventListener('mouseup', HandleOnMouseUp);
@@ -150,17 +161,18 @@ export default {
       evt.preventDefault();
       let vue = this,
         vertAxis = vue.$refs.vertAxis.style;
+      vue.store.startX = evt.pageX
       vertAxis.display = '';
-      vertAxis.left = `${evt.pageX - this.tableRect.left}px`;
+      vertAxis.left = `${evt.pageX - vue.tableRect.left}px`;
       document.body.style.cursor = 'col-resize';
       let HandleOnMouseMove = function HandleOnMouseMove(evt) {
         vertAxis.left = `${evt.pageX - vue.tableRect.left}px`;
       };
-      let HandleOnMouseUp = function(evt) {
+      let HandleOnMouseUp = function (evt) {
         vertAxis.display = 'none';
         document.body.style.cursor = '';
         vue.colsHeader[index].width =
-          evt.pageX - vue.$refs.cols[index].getBoundingClientRect().left;
+          evt.pageX - vue.store.startX + vue.$refs.cols[index].getBoundingClientRect().width;
         window.removeEventListener('mousemove', HandleOnMouseMove);
         window.removeEventListener('mouseup', HandleOnMouseUp);
       };
@@ -173,7 +185,7 @@ export default {
       return `${String.fromCharCode(65 + colIndex)}${rowIndex + 1}`;
     },
     handleCellClick(evt, rowIndex, colIndex) {
-      let cell = this.table[rowIndex][colIndex];
+      let cell = this.data[rowIndex][colIndex];
       let cellRect = evt.currentTarget.getBoundingClientRect();
       this.cellInput = {
         rowIndex: rowIndex,

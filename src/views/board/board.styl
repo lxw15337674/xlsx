@@ -1,0 +1,39 @@
+.home
+  display flex
+  flex-flow column
+  height: 100vh;
+  .header {
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    .tool-container {
+      display flex
+      button {
+        margin-right: 10px;
+      }
+
+      .filename-input {
+        margin-right 10px
+        visibility: visible;
+        color: rgb(51, 51, 51);
+        box-sizing border-box
+        max-width: 400px;
+        border: 1px solid transparent;
+        &:focus {
+          border: 1px solid #4d90fe;
+          -webkit-appearance: none;
+          color: #333333 !important;
+        }
+      }
+
+      .right-tools {
+        display: inline-block;
+        position: absolute;
+        right: 20px;
+      }
+    }
+  }
+  .c-table
+    flex:1
+    overflow hidden

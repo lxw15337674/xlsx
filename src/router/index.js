@@ -4,7 +4,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    component: () => import('src/views/Home.vue'),
+    component: () => import('src/views/board/board.vue'),
     name: '',
   },
   {

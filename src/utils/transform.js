@@ -22,8 +22,8 @@ export function indexToChar(number) {
 function charToIndex(str) {
   let res = ''
   for (let i = 0; i < str.length; i++) {
-    let char =  str.charCodeAt(i) - 65
-    if(i<str.length-1){
+    let char = str.charCodeAt(i) - 65
+    if (i < str.length - 1) {
       char++
     }
     res += char.toString(26)
@@ -39,7 +39,7 @@ function charToIndex(str) {
 export function symbolToIndex(str) {
   let index = str.search(/\d/)
   let col = charToIndex(str.slice(0, index), 26)
-  let row = parseInt(str.slice(index))-1
+  let row = parseInt(str.slice(index)) - 1
   return [col, row]
 }
 
@@ -52,16 +52,17 @@ export function IndexToSymbol(row, col) {
 }
 
 // 将sheet对象转为Array二维数组
-export function objToArray(obj){
+export function objToArray(obj) {
+  if (!obj['!ref']) return [[]]
   let table = [];
-  let [row, col] = symbolToIndex(obj['!ref'].split(':')[1]);
-  for(let rowIndex=0;rowIndex<=row;rowIndex++){
-    if(!table[rowIndex]){
-      table[rowIndex]=[]
+  let [col, row] = symbolToIndex(obj['!ref'].split(':')[1]);
+  for (let rowIndex = 0; rowIndex <= row; rowIndex++) {
+    if (!table[rowIndex]) {
+      table[rowIndex] = []
     }
-    for(let colIndex=0;colIndex<=col;colIndex++){
-      let key = IndexToSymbol(rowIndex,colIndex)
-      table[rowIndex][colIndex]=obj[key]?obj[key].v:''
+    for (let colIndex = 0; colIndex <= col; colIndex++) {
+      let key = IndexToSymbol(rowIndex, colIndex)
+      table[rowIndex][colIndex] = obj[key] ? obj[key].w : ''
     }
   }
   return table;

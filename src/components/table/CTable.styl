@@ -1,44 +1,64 @@
-.table
-  overflow scroll
-  display flex
-  position relative
-  .row-header, .col-header
-    background: bgColor
-
-  .hori-resizable-content
-    right: -6px;
-    top: 0;
-    width: 12px;
-    height: 100%;
-    resizable-content(col-resize)
-
-  axis()
-    position absolute
-    left: 0;
-    top: 0;
-    z-index: 10;
-  // 水平线
-  .horiAxis
-    axis()
-    width:100%
-    border-top: 2px dashed activeColor;
-  //垂直线
-  .vertAxis
-    height 100%
-    border-left:2px dashed activeColor;
-    axis()
-  .cell
-    height 100%
-    box-sizing: border-box
+.c-table
+  display: flex
+  flex-direction: column 
+ .formula-container
+      display flex
+      align-items center
+      padding 10px 20px
+      height 50px
+      .formula-key
+          margin-right 20px
+      .formula-value
+          width 100%
+  .table
+    position relative
+    overflow hidden
     display flex
-    align-items center
-    justify-content  center
-    border: 1px solid transparentColor;
-    word-break: break-all;
-    &:hover
-      border-color: activeColor;
-  .table-body
-    display flex
+    overflow: scroll
+    flex:1
+  
+
+    .main-table
+    .row-header, .col-header
+      border-top 1px solid borderColor
+      background: bgColor
+    .table-header,.table-main,.table-fixed
+      table-layout: fixed;
+      border-collapse: separate;
+    .table-header
+      position sticky
+      top:0 
+      z-index:2
+    .hori-resizable-content
+      right: -6px;
+      top: 0;
+      width: 12px;
+      height: 100%;
+      resizable-content(col-resize)
+    axis()
+      position absolute
+      left: 0;
+      top: 0;
+      z-index: 10;
+    // 水平线
+    .horiAxis
+      axis()
+      width:100%
+      border-top: 2px dashed activeColor;
+    //垂直线
+    .vertAxis
+      height 100%
+      border-left:2px dashed activeColor;
+      axis()
+    .cell
+      height 100%
+      box-sizing: border-box
+      border-right  1px solid borderColor
+      border-bottom 1px solid borderColor
+      .cell-content
+        border 1px solid transparentColor
+        &:hover
+          border-color:activeColor
     .cell-input
       position absolute
       border: 1px solid activeColor;
@@ -48,30 +68,26 @@
       z-index 1
       &:focus
         outline-color activeColor
-  .table-header
-    position: sticky;
-    top:0
-    z-index 2
-  td
-    height: 40px;
-    vertical-align: middle;
-    text-align: center;
-    position relative
-    word-break: break-all;
-    box-sizing border-box
-    border  1px solid borderColor;
-  tr
-    position: relative;
 
-  tr:first-child td
-    border-top 0
-  th
-    border  1px solid borderColor;
-    border-top 0
-    height: 40px;
-    vertical-align: middle;
-    text-align: center;
-    position relative
-    word-break: break-all;
-    box-sizing border-box
-  //.table-container
+    td
+      vertical-align: middle;
+      text-align: center;
+      position relative
+      word-break: break-all;
+      box-sizing border-box
+    tr
+      position: relative;
+
+    tr:first-child td
+      border-top 0
+    th
+      border-right  1px solid borderColor;
+      border-bottom 1px solid borderColor
+      height: 40px;
+      vertical-align: middle;
+      text-align: center;
+      position relative
+      word-break: break-all;
+      box-sizing border-box
+    .table-container
+      display: flex

@@ -1,17 +1,22 @@
 <template>
   <div class="leftBody">
-    <table :style="{ width: `${width}px` }">
+    <table class="table-fixed" :style="{ width: `${width}px` }">
       <colgroup>
         <col :width="width" />
       </colgroup>
+      <thead>
+        <th class="col-header"></th>
+      </thead>
       <tbody>
         <tr v-for="(rowStyle, rowIndex) in rowsHeader">
-          <td class="row-header"  :style="rowStyle">
-            {{ rowIndex + 1 }}
-            <div
-              class="vert-resizable-content"
-              @mousedown="(evt) => rowResizeStart(evt, rowIndex)"
-            ></div>
+          <td :style="rowStyle">
+            <div class="row-header" :style="rowStyle">
+              {{ rowIndex + 1 }}
+              <div
+                class="vert-resizable-content"
+                @mousedown="(evt) => rowResizeStart(evt, rowIndex)"
+              ></div>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -46,15 +51,32 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.leftBody {
+  position: sticky;
+  left: 0;
+  z-index: 3;
 
-.leftBody
-  .row-header
-    border-right 0
-  .vert-resizable-content
+  .vert-resizable-content {
     position: absolute;
-    bottom:-6px
-    left:0
+    bottom: -6px;
+    left: 0;
     width: 100%;
-    height: 12px
-    resizable-content(ns-resize)
+    height: 12px;
+    resizable-content(ns-resize);
+  }
+
+  th {
+    border-bottom: 0;
+  }
+
+  .row-header {
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid borderColor;
+    word-break: break-all;
+  }
+}
 </style>
