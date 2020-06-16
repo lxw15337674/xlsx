@@ -20,51 +20,49 @@ export function indexToChar(number) {
 //  例如： Z->1 Z->26   AA->27 AB->28
 
 function charToIndex(str) {
-  let res = ''
+  let res = '';
   for (let i = 0; i < str.length; i++) {
-    let char = str.charCodeAt(i) - 65
+    let char = str.charCodeAt(i) - 65;
     if (i < str.length - 1) {
-      char++
+      char++;
     }
-    res += char.toString(26)
+    res += char.toString(26);
   }
   return parseInt(res, 26);
 }
 
-
-
-
 // 通过单位格标识转换为对应的列与行位置,
 // A1=>[0，0],z2=>[26,2]
 export function symbolToIndex(str) {
-  let index = str.search(/\d/)
-  let col = charToIndex(str.slice(0, index), 26)
-  let row = parseInt(str.slice(index)) - 1
-  return [col, row]
+  let index = str.search(/\d/);
+  let col = charToIndex(str.slice(0, index), 26);
+  let row = parseInt(str.slice(index)) - 1;
+  return [col, row];
 }
 
 // 通过对应的列与行位置转换为单元格标识
 // [26,2]=>Z2
 export function IndexToSymbol(row, col) {
-  let colSymbol = indexToChar(col)
-  let rowSymbol = row + 1
-  return `${colSymbol}${rowSymbol}`
+  let colSymbol = indexToChar(col);
+  let rowSymbol = row + 1;
+  return `${colSymbol}${rowSymbol}`;
 }
 
 // 将sheet对象转为Array二维数组
-export function objToArray(obj) {
-  if (!obj['!ref']) return [[]]
+export function objToArray(obj, minRow = 30, minCol = 30) {
+  if (!obj['!ref']) return [[]];
   let table = [];
   let [col, row] = symbolToIndex(obj['!ref'].split(':')[1]);
+  col = Math.max(col, minCol-1);
+  row = Math.max(row, minRow-1);
   for (let rowIndex = 0; rowIndex <= row; rowIndex++) {
     if (!table[rowIndex]) {
-      table[rowIndex] = []
+      table[rowIndex] = [];
     }
     for (let colIndex = 0; colIndex <= col; colIndex++) {
-      let key = IndexToSymbol(rowIndex, colIndex)
-      table[rowIndex][colIndex] = obj[key] ? obj[key].w : ''
+      let key = IndexToSymbol(rowIndex, colIndex);
+      table[rowIndex][colIndex] = obj[key] ? obj[key].w : '';
     }
   }
   return table;
 }
-

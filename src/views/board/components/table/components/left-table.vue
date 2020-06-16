@@ -67,6 +67,7 @@ export default {
 
   th {
     border-bottom: 0;
+    height 39px
   }
 
   .row-header {

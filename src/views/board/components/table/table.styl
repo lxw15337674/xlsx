@@ -1,23 +1,22 @@
 .c-table
   display: flex
-  flex-direction: column 
+  flex-direction: column
+  .canvas
+    position absolute
  .formula-container
-      display flex
-      align-items center
-      padding 10px 20px
-      height 50px
-      .formula-key
-          margin-right 20px
-      .formula-value
-          width 100%
+    display flex
+    align-items center
+    padding 10px 20px
+    height 50px
+    .formula-key
+        margin-right 20px
+    .formula-value
+        width 100%
   .table
     position relative
-    overflow hidden
     display flex
     overflow: scroll
     flex:1
-  
-
     .main-table
     .row-header, .col-header
       border-top 1px solid borderColor
@@ -27,7 +26,7 @@
       border-collapse: separate;
     .table-header
       position sticky
-      top:0 
+      top:0
       z-index:2
     .hori-resizable-content
       right: -6px;
@@ -55,11 +54,6 @@
       box-sizing: border-box
       border-right  1px solid borderColor
       border-bottom 1px solid borderColor
-      .cell-content
-        border 1px solid transparentColor
-        &:hover
-          border-color:activeColor
-
 
     td
       vertical-align: middle;

@@ -21,11 +21,10 @@ export default {
               timer = setTimeout(() => {
                 func(...args);
                 isFocus = true;
-              }, wait);
+              }, 0);
             }
           };
         }
-
         el.addEventListener(
           'mousemove',
           debounce((event) => {

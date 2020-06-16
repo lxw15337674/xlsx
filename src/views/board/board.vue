@@ -20,11 +20,11 @@
         </div>
       </div>
     </el-header>
-      <c-table class="c-table" v-model="activeSheet"></c-table>
+    <c-table class="c-table" v-model="workbook.sheets[activeSheetName]"></c-table>
     <sheetBar
       :activeSheetName="activeSheetName"
       @select="sheetSelect"
-      :sheets="workbook.SheetNames"
+      :sheets="workbook.sheetNames"
     >
     </sheetBar>
   </div>
