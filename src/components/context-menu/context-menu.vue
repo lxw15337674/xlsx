@@ -9,8 +9,8 @@ export default {
   },
   computed: {
     tipStyle() {
-      let x = this.position.left
-      let y = this.position.top
+      let x = this.position.left;
+      let y = this.position.top;
       return { left: `${x}px`, top: `${y}px` };
     },
   },
@@ -38,7 +38,9 @@ export default {
     },
     getFirstElement() {
       const slots = this.$slots.default;
-      if (!Array.isArray(slots)) return null;
+      if (!Array.isArray(slots)) {
+        return null;
+      }
       let element = null;
       for (let index = 0; index < slots.length; index++) {
         if (slots[index] && slots[index].tag) {
@@ -80,7 +82,9 @@ export default {
       </transition>
     );
     const firstElement = this.getFirstElement();
-    if (!firstElement) return null;
+    if (!firstElement) {
+      return null;
+    }
     if (this.popperVM) {
       document.body.appendChild(this.popperVM.$el);
     }
@@ -99,8 +103,8 @@ export default {
 .context-menu {
   box-sizing: border-box;
   position: fixed;
-  left: 0px;
-  top: 0px;
+  left: 0;
+  top: 0;
   z-index: 100;
   border-radius: 4px;
   padding: 10px 0;

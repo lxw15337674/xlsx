@@ -21,20 +21,19 @@ export default {
               timer = setTimeout(() => {
                 func(...args);
                 isFocus = true;
-              }, 0);
+              }, wait);
             }
           };
         }
+
         el.addEventListener(
           'mousemove',
           debounce((event) => {
             let Tip = Vue.prototype.$tip;
             Tip.content = binding.value;
+            let elRect = el.getBoundingClientRect();
+            Tip.position =elRect
             Tip.visible = true;
-            Tip.position = {
-              left: event.pageX,
-              top: event.pageY,
-            };
           }),
         );
         el.addEventListener('mouseleave', () => {

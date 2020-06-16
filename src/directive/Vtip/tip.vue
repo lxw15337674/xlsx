@@ -14,13 +14,14 @@
 
 <script>
 export default {
-  name: "tip",
+  name: 'tip',
   mounted() {},
   computed: {
     tipStyle() {
-      let x = this.position.left + 10;
-      let y = this.position.top + 15;
-      return { left: `${x}px`, top: `${y}px` };
+      return {
+        left: `${this.position.left + this.position.width / 2}px`,
+        top: `${this.position.bottom+10 }px`,
+      };
     },
   },
   data() {
@@ -30,13 +31,13 @@ export default {
   props: {
     theme: {
       type: String,
-      default: "light",
-      validator: function (value) {
-        return ["dark", "light"].indexOf(value) !== -1;
+      default: 'light',
+      validator: function(value) {
+        return ['dark', 'light'].indexOf(value) !== -1;
       },
     },
     content: {
-      default: "",
+      default: '',
     },
     visible: {
       type: Boolean,
@@ -49,6 +50,10 @@ export default {
         return {
           left: 0,
           top: 0,
+          bottom: 0,
+          right: 0,
+          width: 0,
+          height: 0,
         };
       },
     },
@@ -60,16 +65,29 @@ export default {
 .tip {
   box-sizing: border-box;
   position: absolute;
-  left: 0px;
-  top: 0px;
-  z-index: 999;
+  left: 0;
+  top: 0;
+  z-index: 10;
   border-radius: 4px;
-  padding: 7px 10px;
-  font-size: 12px;
+  padding: 5px 15px;
+  font-size: 15px;
   line-height: 1.2;
   min-width: 10px;
+  pointer-events: none;
   word-wrap: break-word;
+  transform: translate(-50%, 0);
 }
+.tip:before {
+  content: ' ';
+  border-width: 2px 8px 6px 8px;
+  border-style: solid;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,0);
+  top: -7px;
+  border-color: transparent transparent #303133 transparent;
+}
+
 .dark {
   background: #303133;
   color: #fff;

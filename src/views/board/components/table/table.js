@@ -8,9 +8,10 @@ import contextItem from 'src/components/context-menu/context-item';
 import contextMenuMixins from './mixins/context-menu.js';
 import resize from './mixins/resize';
 import canvas from './mixins/canvas';
+import select from './mixins/select';
 export default {
   components: { leftTable, CInput, contextMenu, contextItem },
-  mixins: [contextMenuMixins, resize, canvas],
+  mixins: [contextMenuMixins, resize, canvas, select],
   data() {
     return {
       cellInput: {
@@ -67,10 +68,10 @@ export default {
         this.cellInput.rowIndex * this.colsHeader.length;
       if (!this.$refs.cell) {
         return {
-          left: `100px`,
-          top: `40px`,
-          minHeight: `40px`,
-          minWidth: `100px`,
+          left: '100px',
+          top: '40px',
+          minHeight: '40px',
+          minWidth: '100px',
         };
       }
       let cell = this.$refs.cell[currentCell];
@@ -100,7 +101,7 @@ export default {
       //行
       for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
         if (!this.rowsHeader[rowIndex]) {
-          this.rowsHeader.splice(rowIndex, 1, { height: `40px` });
+          this.rowsHeader.splice(rowIndex, 1, { height: '40px' });
         }
       }
       //列

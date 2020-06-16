@@ -1,6 +1,5 @@
 <template>
   <div class="c-table">
-    <!--    <canvas class="canvas" width="1000" height="1000"></canvas>-->
     <div class="formula-container">
       <div class="formula-key">
         {{ currentPosition(cellInput.rowIndex, cellInput.colIndex) }}
@@ -9,6 +8,13 @@
     </div>
     <contextMenu>
       <div class="table" ref="table">
+        <!--        <canvas-->
+        <!--          class="canvas"-->
+        <!--          :width="canvasRect.width"-->
+        <!--          :height="canvasRect.height"-->
+        <!--        ></canvas>-->
+        <div class="select-content" :style="selectStyle">
+        </div>
         <div
           ref="horiAxis"
           class="horiAxis"
@@ -67,7 +73,12 @@
                     (evt) => handleCellClick(evt, rowIndex, colIndex)
                   "
                 >
-                  <div class="cell" :style="rowStyle">
+                  <div
+                    class="cell"
+                    @mousedown="(evt) => startSelect(evt, rowIndex, colIndex)"
+                    @mouseenter="(evt) => isSelect(evt, rowIndex, colIndex)"
+                    :style="rowStyle"
+                  >
                     <textarea
                       disabled
                       class="cell-content"
