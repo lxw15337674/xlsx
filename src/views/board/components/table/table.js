@@ -1,6 +1,6 @@
 //统一单元格位置：第几行第几列，现有row，再有col
 
-import { indexToChar } from 'src/utils/transform';
+import { indexToChar, getCellIndex } from 'src/utils/transform';
 import leftTable from './components/left-table';
 import CInput from 'src/components/input/input.vue';
 import contextMenu from 'src/components/context-menu/context-menu';
@@ -63,9 +63,11 @@ export default {
   },
   computed: {
     cellInputStyle() {
-      let currentCell =
-        this.cellInput.colIndex +
-        this.cellInput.rowIndex * this.colsHeader.length;
+      let currentCell = getCellIndex(
+        this.cellInput.rowIndex,
+        this.cellInput.colIndex,
+        this.colsHeader.length,
+      );
       if (!this.$refs.cell) {
         return {
           left: '100px',

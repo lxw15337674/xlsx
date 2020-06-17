@@ -53,8 +53,8 @@ export function objToArray(obj, minRow = 30, minCol = 30) {
   if (!obj['!ref']) return [[]];
   let table = [];
   let [col, row] = symbolToIndex(obj['!ref'].split(':')[1]);
-  col = Math.max(col, minCol-1);
-  row = Math.max(row, minRow-1);
+  col = Math.max(col, minCol - 1);
+  row = Math.max(row, minRow - 1);
   for (let rowIndex = 0; rowIndex <= row; rowIndex++) {
     if (!table[rowIndex]) {
       table[rowIndex] = [];
@@ -65,4 +65,9 @@ export function objToArray(obj, minRow = 30, minCol = 30) {
     }
   }
   return table;
+}
+
+// 通过行、列位置获取单元格位置
+export function getCellIndex(rowIndex, colIndex, colLength) {
+  return colIndex + rowIndex * colLength;
 }

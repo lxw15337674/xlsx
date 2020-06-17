@@ -1,47 +1,61 @@
 import { once } from 'src/utils/dom';
-import { getOffset, numToPx } from 'src/utils/location';
+import { numToPx, getTwoElementsRect } from 'src/utils/location';
+import { getCellIndex } from 'src/utils/transform';
 
 export default {
   data() {
     return {
       select: {
-        rowStartIndex: 0,
-        colStartIndex: 0,
-        startCell: undefined,
-        rowEndIndex: 0,
-        colEndIndex: 0,
-        endCell: undefined,
+        rowStartIndex: null,
+        colStartIndex: null,
+        rowEndIndex: null,
+        colEndIndex: null,
       },
       selectStart: false,
     };
   },
   computed: {
     selectStyle() {
-      let sCell = this.select.startCell;
-      let eCell = this.select.endCell;
-      if (!sCell) {
-        return;
+      if (this.select.rowStartIndex===null) {
+        return {};
       }
-      if (!eCell) {
-        return {
-          left: numToPx(sCell.offsetLeft),
-          top: numToPx(sCell.offsetTop),
-          width: numToPx(sCell.offsetWidth),
-          height: numToPx(sCell.offsetHeight),
-        };
-      }
+      let sCell = this.$refs.cell[
+        getCellIndex(
+          this.select.rowStartIndex,
+          this.select.colStartIndex,
+          this.colsHeader.length,
+        )
+      ];
+      let eCell = this.$refs.cell[
+        getCellIndex(this.select.rowEndIndex, this.select.colEndIndex, this.colsHeader.length)
+      ];
+      let rect = getTwoElementsRect(sCell, eCell);
+      return {
+        left: numToPx(rect.left),
+        top: numToPx(rect.top),
+        width: numToPx(rect.width),
+        height: numToPx(rect.height),
+      };
     },
   },
   methods: {
     startSelect(evt, rowIndex, colIndex) {
       this.select.rowStartIndex = rowIndex;
+      this.select.rowEndIndex = rowIndex;
       this.select.colStartIndex = colIndex;
-      this.select.startCell = getOffset(evt.currentTarget);
+      this.select.colEndIndex = colIndex;
       this.selectStart = true;
       let HandleOnMouseUp = (evt) => {
         this.selectStart = false;
       };
       once(window, 'mouseup', HandleOnMouseUp);
+    },
+    rowHeaderClick(rowIndex) {
+      this.select.rowStartIndex = rowIndex;
+      this.select.colStartIndex = 0;
+      this.select.rowEndIndex = rowIndex;
+      this.select.colEndIndex = this.colsHeader.length - 1;
+
     },
     isSelect(evt, rowIndex, colIndex) {
       if (!this.selectStart) {
@@ -49,7 +63,6 @@ export default {
       }
       this.select.rowEndIndex = rowIndex;
       this.select.colEndIndex = colIndex;
-      this.select.endCell = getOffset(evt.currentTarget);
     },
   },
 };

@@ -23,6 +23,11 @@
   overflow: scroll;
   flex: 1;
 }
+.table .select-content {
+  border: 1px solid activeColor;
+  position: fixed;
+  pointer-events: none;
+}
 .table .main-table,
 .table .row-header,
 .table .col-header {

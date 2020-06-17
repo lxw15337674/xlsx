@@ -35,7 +35,9 @@
         <!--      左侧固定列头-->
         <left-table
           :rowsHeader="rowsHeader"
+          :select="select"
           @rowResizeStart="rowResizeStart"
+          @rowHeaderClick="rowHeaderClick"
         ></left-table>
         <div>
           <table class="table-header" :style="{ width: `${tableWidth}px` }">
