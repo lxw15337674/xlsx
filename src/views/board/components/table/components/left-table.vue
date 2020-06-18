@@ -21,7 +21,7 @@
               {{ rowIndex + 1 }}
               <div
                 class="vert-resizable-content"
-                @mousedown="(evt) => rowResizeStart(evt, rowIndex)"
+                @mousedown="(evt) => rowResizeStart(evt, rowIndex,rowStyle)"
               ></div>
             </div>
           </td>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { pxToNum } from 'src/utils/transform';
+
 export default {
   props: {
     rowsHeader: {
@@ -53,24 +55,18 @@ export default {
     };
   },
   computed:{
-    startIndex(){
-      return Math.min(this.select.rowStartIndex ,this.select.rowEndIndex)
-    },
-    endIndex(){
-      return Math.max(this.select.rowStartIndex ,this.select.rowEndIndex)
-    }
   },
   methods: {
     // 行拉伸
-    rowResizeStart(evt, index) {
-      this.$emit('rowResizeStart', evt, index);
+    rowResizeStart(evt, index,row) {
+      this.$emit('rowResizeStart', evt, index,pxToNum(row.height));
     },
     //行头点击
     rowHeaderClick(index) {
       this.$emit('rowHeaderClick', index);
     },
     isActive(rowIndex){
-      return this.startIndex <= rowIndex && rowIndex<=this.endIndex
+      return Math.min(this.select.rowStartIndex ,this.select.rowEndIndex) <= rowIndex && rowIndex<=Math.max(this.select.rowStartIndex ,this.select.rowEndIndex)
     }
   },
 };

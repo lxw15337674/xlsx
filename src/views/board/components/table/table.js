@@ -6,11 +6,12 @@ import CInput from 'src/components/input/input.vue';
 import contextMenu from 'src/components/context-menu/context-menu';
 import contextItem from 'src/components/context-menu/context-item';
 import contextMenuMixins from './mixins/context-menu.js';
+import tableHeader from './components/table-header'
 import resize from './mixins/resize';
 import canvas from './mixins/canvas';
 import select from './mixins/select';
 export default {
-  components: { leftTable, CInput, contextMenu, contextItem },
+  components: { leftTable, CInput, contextMenu, contextItem ,tableHeader},
   mixins: [contextMenuMixins, resize, canvas, select],
   data() {
     return {

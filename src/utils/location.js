@@ -32,13 +32,3 @@ export function getRect(el) {
   };
 }
 
-export function numToPx(number) {
-  if (number) {
-    return `${number}px`;
-  }
-}
-export function pxToNum(str) {
-  if (str) {
-    return parseInt(str.slice(0, -2), 10);
-  }
-}

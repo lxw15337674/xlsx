@@ -71,3 +71,16 @@ export function objToArray(obj, minRow = 30, minCol = 30) {
 export function getCellIndex(rowIndex, colIndex, colLength) {
   return colIndex + rowIndex * colLength;
 }
+
+//数字转px
+export function numToPx(number) {
+  if (number) {
+    return `${number}px`;
+  }
+}
+//px转数字
+export function pxToNum(str) {
+  if (str) {
+    return parseInt(str.slice(0, -2), 10);
+  }
+}

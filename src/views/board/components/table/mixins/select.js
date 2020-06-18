@@ -1,6 +1,6 @@
 import { once } from 'src/utils/dom';
-import { numToPx, getTwoElementsRect } from 'src/utils/location';
-import { getCellIndex } from 'src/utils/transform';
+import { getTwoElementsRect } from 'src/utils/location';
+import { numToPx,getCellIndex } from 'src/utils/transform';
 
 export default {
   data() {
@@ -55,7 +55,12 @@ export default {
       this.select.colStartIndex = 0;
       this.select.rowEndIndex = rowIndex;
       this.select.colEndIndex = this.colsHeader.length - 1;
-
+    },
+    colHeaderClick(colIndex){
+      this.select.rowStartIndex = 0;
+      this.select.colStartIndex = colIndex;
+      this.select.rowEndIndex = this.rowsHeader.length - 1;
+      this.select.colEndIndex = colIndex
     },
     isSelect(evt, rowIndex, colIndex) {
       if (!this.selectStart) {
@@ -64,5 +69,8 @@ export default {
       this.select.rowEndIndex = rowIndex;
       this.select.colEndIndex = colIndex;
     },
+    isActive(colIndex){
+      return Math.min(this.select.colStartIndex ,this.select.colEndIndex) <= colIndex && colIndex<=Math.max(this.select.colStartIndex ,this.select.colEndIndex)
+    }
   },
 };

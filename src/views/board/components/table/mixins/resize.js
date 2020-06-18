@@ -1,10 +1,21 @@
+//todo
+// 待利用dom.js 优化代码
 export default {
+  props: {
+    cellMinHeight: {
+      type:Number,
+      default:30
+      },
+    cellMinWidth:{
+      type:Number,
+      default:50
+    },
+  },
   data() {
     return {
       store: {
         startX: undefined,
         startY: undefined,
-        miniWidth: 30,
       },
     };
   },
@@ -20,28 +31,25 @@ export default {
   },
   methods: {
     //行拉伸
-    rowResizeStart(evt, index) {
+    rowResizeStart(evt, index, currentHeight) {
       evt.preventDefault();
       let vue = this,
-        tableRect = this.$refs.table.getBoundingClientRect(),
-        horiAxis = vue.$refs.horiAxis.style,
-        tableTop = tableRect.top;
+        left = this.$refs.table.getBoundingClientRect().left,
+        horiAxis = vue.$refs.horiAxis.style;
       vue.store.startY = evt.pageY;
       horiAxis.display = '';
-      horiAxis.top = `${evt.pageY - tableTop}px`;
+      horiAxis.left = `${left}px`;
+      horiAxis.top = `${evt.pageY}px`;
       let HandleOnMouseMove = function(evt) {
         evt.stopPropagation();
-        horiAxis.top = `${evt.pageY - tableTop}px`;
+        horiAxis.top = `${evt.pageY}px`;
         document.body.style.cursor = 'ns-resize';
       };
       let HandleOnMouseUp = function(evt) {
         horiAxis.display = 'none';
         document.body.style.cursor = '';
-        let height =
-          evt.pageY -
-          vue.store.startY +
-          vue.$refs.rows[index].getBoundingClientRect().height;
-        vue.rowsHeader[index].height = `${height}px`;
+        let height = evt.pageY - vue.store.startY + currentHeight;
+        vue.rowsHeader[index].height = `${height>vue.cellMinHeight?height:vue.cellMinHeight}px`;
         window.removeEventListener('mousemove', HandleOnMouseMove);
         window.removeEventListener('mouseup', HandleOnMouseUp);
       };
@@ -49,25 +57,24 @@ export default {
       window.addEventListener('mousemove', HandleOnMouseMove);
     },
     // 列拉伸
-    colResizeStart(evt, index) {
+    colResizeStart(evt, index, currentWidth) {
       evt.preventDefault();
       let vue = this,
-        tableRect = this.$refs.table.getBoundingClientRect(),
+        top = this.$refs.table.getBoundingClientRect().top,
         vertAxis = vue.$refs.vertAxis.style;
       vue.store.startX = evt.pageX;
       vertAxis.display = '';
-      vertAxis.left = `${evt.pageX - tableRect.left}px`;
+      vertAxis.left = `${evt.pageX}px`;
+      vertAxis.top = `${top}px`;
       document.body.style.cursor = 'col-resize';
       let HandleOnMouseMove = function HandleOnMouseMove(evt) {
-        vertAxis.left = `${evt.pageX - tableRect.left}px`;
+        vertAxis.left = `${evt.pageX}px`;
       };
       let HandleOnMouseUp = function(evt) {
         vertAxis.display = 'none';
         document.body.style.cursor = '';
-        vue.colsHeader[index].width =
-          evt.pageX -
-          vue.store.startX +
-          vue.$refs.cols[index].getBoundingClientRect().width;
+        let width = evt.pageX - vue.store.startX + currentWidth
+        vue.colsHeader[index].width = width>vue.cellMinWidth?width:vue.cellMinWidth;
         window.removeEventListener('mousemove', HandleOnMouseMove);
         window.removeEventListener('mouseup', HandleOnMouseUp);
       };
