@@ -34,15 +34,19 @@
       <left-table
         :rowsHeader="rowsHeader"
         :select="select"
+        @selectStart="rowSelect"
+        @select="rowsSelect"
         @rowResizeStart="rowResizeStart"
-        @rowHeaderClick="rowHeaderClick"
+        @rowHeaderClick="rowSelect"
       ></left-table>
       <div>
         <table-header
           :colsHeader="colsHeader"
           :select="select"
+          @selectStart="colSelect"
+          @select="colsSelect"
           @colResizeStart="colResizeStart"
-          @colHeaderClick="colHeaderClick"
+          @colHeaderClick="colSelect"
         ></table-header>
         <contextMenu>
           <table class="table-main" :style="{ width: `${bodyWidth}px` }">

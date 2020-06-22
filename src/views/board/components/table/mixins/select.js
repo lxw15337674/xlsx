@@ -1,6 +1,6 @@
 import { once } from 'src/utils/dom';
 import { getTwoElementsRect } from 'src/utils/location';
-import { numToPx,getCellIndex } from 'src/utils/transform';
+import { numToPx, getCellIndex } from 'src/utils/transform';
 
 export default {
   data() {
@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     selectStyle() {
-      if (this.select.rowStartIndex===null) {
+      if (this.select.rowStartIndex === null) {
         return {};
       }
       let sCell = this.$refs.cell[
@@ -27,7 +27,11 @@ export default {
         )
       ];
       let eCell = this.$refs.cell[
-        getCellIndex(this.select.rowEndIndex, this.select.colEndIndex, this.colsHeader.length)
+        getCellIndex(
+          this.select.rowEndIndex,
+          this.select.colEndIndex,
+          this.colsHeader.length,
+        )
       ];
       let rect = getTwoElementsRect(sCell, eCell);
       return {
@@ -50,17 +54,20 @@ export default {
       };
       once(window, 'mouseup', HandleOnMouseUp);
     },
-    rowHeaderClick(rowIndex) {
+    rowSelect(rowIndex) {
       this.select.rowStartIndex = rowIndex;
       this.select.colStartIndex = 0;
       this.select.rowEndIndex = rowIndex;
       this.select.colEndIndex = this.colsHeader.length - 1;
     },
-    colHeaderClick(colIndex){
+    colSelect(colIndex) {
       this.select.rowStartIndex = 0;
       this.select.colStartIndex = colIndex;
       this.select.rowEndIndex = this.rowsHeader.length - 1;
-      this.select.colEndIndex = colIndex
+      this.select.colEndIndex = colIndex;
+    },
+    colsSelect(colIndex){
+      this.select.colEndIndex = colIndex;
     },
     isSelect(evt, rowIndex, colIndex) {
       if (!this.selectStart) {
@@ -69,8 +76,15 @@ export default {
       this.select.rowEndIndex = rowIndex;
       this.select.colEndIndex = colIndex;
     },
-    isActive(colIndex){
-      return Math.min(this.select.colStartIndex ,this.select.colEndIndex) <= colIndex && colIndex<=Math.max(this.select.colStartIndex ,this.select.colEndIndex)
-    }
+    rowsSelect(rowIndex) {
+      this.select.rowEndIndex = rowIndex;
+    },
+    isActive(colIndex) {
+      return (
+        Math.min(this.select.colStartIndex, this.select.colEndIndex) <=
+          colIndex &&
+        colIndex <= Math.max(this.select.colStartIndex, this.select.colEndIndex)
+      );
+    },
   },
 };

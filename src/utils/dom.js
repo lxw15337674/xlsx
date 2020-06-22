@@ -6,9 +6,9 @@ const MOZ_HACK_REGEXP = /^moz([A-Z])/;
 /* istanbul ignore next */
 export const on = (function() {
   if (document.addEventListener) {
-    return function(element, event, handler) {
+    return function(element, event, handler,useCapture=false) {
       if (element && event && handler) {
-        element.addEventListener(event, handler, false);
+        element.addEventListener(event, handler, useCapture);
       }
     };
   } else {
@@ -23,9 +23,9 @@ export const on = (function() {
 /* istanbul ignore next */
 export const off = (function() {
   if (document.removeEventListener) {
-    return function(element, event, handler) {
+    return function(element, event, handler,useCapture=false) {
       if (element && event) {
-        element.removeEventListener(event, handler, false);
+        element.removeEventListener(event, handler, useCapture);
       }
     };
   } else {

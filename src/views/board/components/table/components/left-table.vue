@@ -5,7 +5,7 @@
         <col :width="width" />
       </colgroup>
       <thead>
-        <th class="col-header"></th>
+        <th class="col-header" />
       </thead>
       <tbody>
         <tr v-for="(rowStyle, rowIndex) in rowsHeader">
@@ -16,12 +16,15 @@
                 'is-active': isActive(rowIndex),
               }"
               :style="rowStyle"
-              @click="rowHeaderClick(rowIndex)"
+              @click="handleClick(rowIndex)"
+              @mouseenter="(evt) => handleMouseEnter(evt, rowIndex)"
+              @mousedown="(evt) => handleMousedown(evt, rowIndex)"
+              @mouseup="(evt) => handleMouseUp(evt, rowIndex)"
             >
               {{ rowIndex + 1 }}
               <div
                 class="vert-resizable-content"
-                @mousedown="(evt) => rowResizeStart(evt, rowIndex,rowStyle)"
+                @mousedown="(evt) => rowResizeStart(evt, rowIndex, rowStyle)"
               ></div>
             </div>
           </td>
@@ -33,6 +36,7 @@
 
 <script>
 import { pxToNum } from 'src/utils/transform';
+import select from './mixins/select.js';
 
 export default {
   props: {
@@ -49,25 +53,27 @@ export default {
       require: true,
     },
   },
+  mixins: [select],
   data() {
     return {
       width: '100',
+      selectStart: false,
     };
   },
-  computed:{
-  },
+  computed: {},
   methods: {
     // 行拉伸
-    rowResizeStart(evt, index,row) {
-      this.$emit('rowResizeStart', evt, index,pxToNum(row.height));
+    rowResizeStart(evt, index, row) {
+      evt.stopPropagation();
+      this.$emit('rowResizeStart', evt, index, pxToNum(row.height));
     },
-    //行头点击
-    rowHeaderClick(index) {
-      this.$emit('rowHeaderClick', index);
+    isActive(rowIndex) {
+      return (
+        Math.min(this.select.rowStartIndex, this.select.rowEndIndex) <=
+          rowIndex &&
+        rowIndex <= Math.max(this.select.rowStartIndex, this.select.rowEndIndex)
+      );
     },
-    isActive(rowIndex){
-      return Math.min(this.select.rowStartIndex ,this.select.rowEndIndex) <= rowIndex && rowIndex<=Math.max(this.select.rowStartIndex ,this.select.rowEndIndex)
-    }
   },
 };
 </script>
@@ -85,10 +91,8 @@ export default {
     height: 12px;
     resizable-content(ns-resize);
 
-
   th
     border-bottom: 0;
-    height 39px
 
   .is-active
     background-color borderColor
