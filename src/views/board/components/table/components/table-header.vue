@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { indexToChar } from 'src/utils/transform';
+import { indexToChar } from 'src/utils/transform.ts';
 import select from './mixins/select.js';
 export default {
   name: 'table-header',

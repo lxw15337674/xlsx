@@ -1,13 +1,11 @@
 // 位置转换列头符号。
 //  例如： 1->A 26->Z   27->AA 28->AB
-import { sheetFilter } from './sheetFilter';
-
-export function indexToChar(number) {
-  let res = '';
-  number = number.toString(26);
-  for (let i = 0; i < number.length; i++) {
-    let char = number[i];
-    if (i !== number.length - 1) {
+export function indexToChar(number:number):string {
+  let res:string = '',str:string = number.toString(26);
+  for (let i = 0; i < str.length; i++) {
+    debugger
+    let char:string = str[i];
+    if (i !== str.length - 1) {
       char--;
     }
     char = parseInt(char, 26);
@@ -35,7 +33,7 @@ function charToIndex(str) {
 // A1=>[0，0],z2=>[26,2]
 export function symbolToIndex(str) {
   let index = str.search(/\d/);
-  let col = charToIndex(str.slice(0, index), 26);
+  let col = charToIndex(str.slice(0, index));
   let row = parseInt(str.slice(index)) - 1;
   return [col, row];
 }

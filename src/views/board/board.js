@@ -3,7 +3,7 @@ import sheetBar from './components/sheetBar/sheetBar.vue';
 import XLSX from 'xlsx';
 import menuBar from './components/menuBar/menuBar.vue';
 import History from './components/history/history.vue';
-import { objToArray } from 'src/utils/transform';
+import { objToArray } from 'src/utils/transform.ts';
 export default {
   name: 'board',
   components: { History, sheetBar, menuBar, CTable, },

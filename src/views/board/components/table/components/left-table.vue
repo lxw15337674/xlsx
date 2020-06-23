@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { pxToNum } from 'src/utils/transform';
+import { pxToNum } from 'src/utils/transform.ts';
 import select from './mixins/select.js';
 
 export default {

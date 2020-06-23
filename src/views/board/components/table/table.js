@@ -1,6 +1,6 @@
 //统一单元格位置：第几行第几列，现有row，再有col
 
-import { indexToChar, getCellIndex } from 'src/utils/transform';
+import { indexToChar, getCellIndex } from 'src/utils/transform.ts';
 import leftTable from './components/left-table';
 import CInput from 'src/components/input/input.vue';
 import contextMenu from 'src/components/context-menu/context-menu';
