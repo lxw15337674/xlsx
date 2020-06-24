@@ -10,13 +10,15 @@ import tableHeader from './components/table-header';
 import resize from './mixins/resize';
 import canvas from './mixins/canvas';
 import select from './mixins/select';
+import { importFiles } from 'src/utils/import';
+
 export default {
   components: { leftTable, CInput, contextMenu, contextItem, tableHeader },
   mixins: [contextMenuMixins, resize, canvas, select],
   provide() {
-    return{
+    return {
       rootTable: this,
-    }
+    };
   },
   data() {
     return {
