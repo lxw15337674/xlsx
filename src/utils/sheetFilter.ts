@@ -1,4 +1,4 @@
-export  function sheetFilter(sheet) {
+export  function sheetFilter(sheet:object):object {
   let res = {};
   for (let key in sheet) {
     if (/^[A-Z]+[0-9]+$/.test(key)) {
@@ -8,7 +8,7 @@ export  function sheetFilter(sheet) {
   return res;
 }
 
-export  function sheetsFilter(sheets) {
+export  function sheetsFilter(sheets:object):object {
   let res = {}
   for (let sheetName in sheets) {
     res[sheetName] = sheetFilter(sheets[sheetName]);

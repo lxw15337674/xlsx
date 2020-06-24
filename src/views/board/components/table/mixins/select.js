@@ -1,5 +1,5 @@
 import { once } from 'src/utils/dom';
-import { getTwoElementsRect } from 'src/utils/location';
+import { getTwoElementsRect } from '@/utils/location.ts';
 import { numToPx, getCellIndex } from 'src/utils/transform.ts';
 
 export default {

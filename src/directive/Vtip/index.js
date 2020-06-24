@@ -1,5 +1,5 @@
 import tip from './tip.js';
-import { getRect } from '../../utils/location';
+import { getRect } from '../../utils/location.ts';
 export default {
   install(Vue, options = {}) {
     const name = options.directiveName || 'tip';
