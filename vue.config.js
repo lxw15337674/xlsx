@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack')
 const CompressionPlugin = require('compression-webpack-plugin');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
-const smp = new SpeedMeasurePlugin()
 
 module.exports = {
   //基本路径

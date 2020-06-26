@@ -31,7 +31,6 @@ import { indexToChar } from 'src/utils/transform.ts';
 import select from './mixins/select.js';
 export default {
   name: 'table-header',
-  inject: ['rootTable'],
   mixins: [select],
   props: {
     colsHeader: {

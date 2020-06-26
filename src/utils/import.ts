@@ -6,7 +6,9 @@
  * @param { string} environment 编译环境
  * @return {function} 导入函数
  */
-export function _import(environment?: 'development' | 'production'): Function {
+export function _import(
+  environment: 'development' | 'production' = 'development',
+): Function {
   if (environment === 'development') {
     return (file) => require('@/views/' + file + '.vue').default;
   } else {
@@ -14,10 +16,21 @@ export function _import(environment?: 'development' | 'production'): Function {
   }
 }
 
-export function importFiles(directory,useSubdirectories:boolean=false, regExp:RegExp =/\.js$/) :Array<Object>{
-    const context = require.context(`@src/${directory}`, true,regExp);
-    return context.keys().reduce((modules, modulePath) => {
-      debugger
-      // set './app.js' => 'app'
-    },[]);
+export function importMixins(context): Array<Object> {
+  return context.keys().reduce((modules, moduleName) => {
+    modules.push(context(moduleName).default || context(moduleName));
+    return modules;
+  }, []);
+}
+
+export function importComponents(context): Object {
+  const modules = {};
+  context.keys().forEach((fileName) => {
+    const name = fileName
+      .split('/')
+      .pop()
+      .replace(/\.\w+$/, '');
+    modules[name] = context(fileName).default || context(fileName);
+  });
+  return modules;
 }
