@@ -7,119 +7,121 @@ import contextItem from 'src/components/context-menu/context-item';
 import { importMixins, importComponents } from 'src/utils/import.ts';
 const modulesFiles = importMixins(require.context('./mixins', false, /\.js$/));
 const components = importComponents(
-  require.context('./components', false, /\.vue$/),
+    require.context('./components', false, /\.vue$/),
 );
 export default {
-  components: { ...components, CInput, contextMenu, contextItem },
-  mixins: modulesFiles,
-  data() {
-    return {
-      cellInput: {
-        rowIndex: 0,
-        colIndex: 0,
-        value: '',
-      },
-      data: [],
-      // 列头
-      colsHeader: [
-        {
-          width: 100,
-        },
-      ],
-      // 行头
-      rowsHeader: [],
-    };
-  },
-  model: {
-    prop: 'table',
-    event: 'updateTable',
-  },
-  props: {
-    table: {
-      require: true,
-      type: Array,
-    },
-  },
-  watch: {
-    table: {
-      immediate: true,
-      deep: true,
-      handler(val) {
-        this.data = val;
-        this.headerInit();
-      },
-    },
-    data: {
-      deep: true,
-      handler(val) {
-        this.$emit('updateTable', val);
-      },
-    },
-  },
-  filters: {
-    indexToChar(index) {
-      return indexToChar(index);
-    },
-  },
-  computed: {
-    cellInputStyle() {
-      let currentCell = getCellIndex(
-        this.cellInput.rowIndex,
-        this.cellInput.colIndex,
-        this.colsHeader.length,
-      );
-      if (!this.$refs.cell) {
+    components: { ...components, CInput, contextMenu, contextItem },
+    mixins: modulesFiles,
+    data() {
         return {
-          left: '100px',
-          top: '40px',
-          minHeight: '40px',
-          minWidth: '100px',
+            cellInput: {
+                rowIndex: 0,
+                colIndex: 0,
+                value: '',
+            },
+            data: [],
+            // 列头
+            colsHeader: [
+                {
+                    width: 100,
+                },
+            ],
+            // 行头
+            rowsHeader: [],
         };
-      }
-      let cell = this.$refs.cell[currentCell];
-      return {
-        left: `${cell.offsetLeft}px`,
-        top: `${cell.offsetTop}px`,
-        minWidth: `${cell.offsetWidth}px`,
-        minHeight: `${cell.offsetHeight}px`,
-      };
     },
+    model: {
+        prop: 'table',
+        event: 'updateTable',
+    },
+    props: {
+        table: {
+            require: true,
+            type: Array,
+        },
+    },
+    watch: {
+        table: {
+            immediate: true,
+            deep: true,
+            handler(val) {
+                this.data = val;
+                this.headerInit();
+            },
+        },
+        data: {
+            deep: true,
+            handler(val) {
+                this.$emit('updateTable', val);
+            },
+        },
+    },
+    filters: {
+        indexToChar(index) {
+            return indexToChar(index);
+        },
+    },
+    computed: {
+        cellInputStyle() {
+            let currentCell = getCellIndex(
+                this.cellInput.rowIndex,
+                this.cellInput.colIndex,
+                this.colsHeader.length,
+            );
+            if (!this.$refs.cell) {
+                return {
+                    left: '100px',
+                    top: '40px',
+                    minHeight: '40px',
+                    minWidth: '100px',
+                };
+            }
+            let cell = this.$refs.cell[currentCell];
+            return {
+                left: `${cell.offsetLeft}px`,
+                top: `${cell.offsetTop}px`,
+                minWidth: `${cell.offsetWidth}px`,
+                minHeight: `${cell.offsetHeight}px`,
+            };
+        },
 
-    activeCellInput: {
-      get() {
-        return this.data[this.cellInput.rowIndex][this.cellInput.colIndex];
-      },
-      set(val) {
-        this.data[this.cellInput.rowIndex].splice(
-          [this.cellInput.colIndex],
-          1,
-          val,
-        );
-      },
+        activeCellInput: {
+            get() {
+                return this.data[this.cellInput.rowIndex][
+                    this.cellInput.colIndex
+                ];
+            },
+            set(val) {
+                this.data[this.cellInput.rowIndex].splice(
+                    [this.cellInput.colIndex],
+                    1,
+                    val,
+                );
+            },
+        },
     },
-  },
-  methods: {
-    headerInit() {
-      //行
-      for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
-        if (!this.rowsHeader[rowIndex]) {
-          this.rowsHeader.splice(rowIndex, 1, { height: '40px' });
-        }
-      }
-      //列
-      for (let colIndex = 0; colIndex < this.data[0].length; colIndex++) {
-        if (!this.colsHeader[colIndex]) {
-          this.colsHeader.splice(colIndex, 1, { width: 100 });
-        }
-      }
+    methods: {
+        headerInit() {
+            //行
+            for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
+                if (!this.rowsHeader[rowIndex]) {
+                    this.rowsHeader.splice(rowIndex, 1, { height: 40 });
+                }
+            }
+            //列
+            for (let colIndex = 0; colIndex < this.data[0].length; colIndex++) {
+                if (!this.colsHeader[colIndex]) {
+                    this.colsHeader.splice(colIndex, 1, { width: 100 });
+                }
+            }
+        },
+        currentPosition(rowIndex, colIndex) {
+            return `${String.fromCharCode(65 + colIndex)}${rowIndex + 1}`;
+        },
+        handleCellClick(evt, rowIndex, colIndex) {
+            this.cellInput.rowIndex = rowIndex;
+            this.cellInput.colIndex = colIndex;
+            this.cellInput.value = this.data[rowIndex][colIndex];
+        },
     },
-    currentPosition(rowIndex, colIndex) {
-      return `${String.fromCharCode(65 + colIndex)}${rowIndex + 1}`;
-    },
-    handleCellClick(evt, rowIndex, colIndex) {
-      this.cellInput.rowIndex = rowIndex;
-      this.cellInput.colIndex = colIndex;
-      this.cellInput.value = this.data[rowIndex][colIndex];
-    },
-  },
 };

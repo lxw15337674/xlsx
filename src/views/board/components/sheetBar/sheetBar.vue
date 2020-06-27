@@ -1,37 +1,39 @@
 <template>
-  <div class="sheetsBar">
-    <div
-      :class="{ active: activeSheetName === sheet }"
-      class="sheet"
-      v-for="(sheet, index) in sheets"
-      @click="handleClick(sheet, index)"
-      :key="sheet"
-    >{{ sheet }}</div>
-  </div>
+    <div class="sheetsBar">
+        <div
+            :class="{ active: activeSheetName === sheet }"
+            class="sheet"
+            v-for="(sheet, index) in sheets"
+            @click="handleClick(sheet, index)"
+            :key="sheet"
+        >
+            {{ sheet }}
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'sheet',
-  props: {
-    sheets: {
-      require: true,
-      type: Array,
+    name: 'sheet',
+    props: {
+        sheets: {
+            require: true,
+            type: Array,
+        },
+        activeSheetName: {
+            type: String,
+            default: '',
+        },
     },
-    activeSheetName: {
-      type: String,
-      default: '',
+    mounted() {},
+    data() {
+        return {};
     },
-  },
-  mounted() {},
-  data() {
-    return {};
-  },
-  methods: {
-    handleClick(sheet) {
-      this.$emit('select', sheet);
+    methods: {
+        handleClick(sheet) {
+            this.$emit('select', sheet);
+        },
     },
-  },
 };
 </script>
 

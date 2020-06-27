@@ -1,39 +1,39 @@
 .home {
-  display: flex;
-  flex-flow: column;
-  height: 100vh;
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
 }
 .home .header {
-  padding: 10px 20px;
-  background-color: #f8f8f8;
-  position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.04);
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 .home .header .tool-container {
-  display: flex;
+    display: flex;
 }
 .home .header .tool-container button {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 .home .header .tool-container .filename-input {
-  margin-right: 10px;
-  visibility: visible;
-  color: #333;
-  box-sizing: border-box;
-  max-width: 400px;
-  border: 1px solid transparent;
+    margin-right: 10px;
+    visibility: visible;
+    color: #333;
+    box-sizing: border-box;
+    max-width: 400px;
+    border: 1px solid transparent;
 }
 .home .header .tool-container .filename-input:focus {
-  border: 1px solid #4d90fe;
-  -webkit-appearance: none;
-  color: #333 !important;
+    border: 1px solid #4d90fe;
+    -webkit-appearance: none;
+    color: #333 !important;
 }
 .home .header .tool-container .right-tools {
-  display: inline-block;
-  position: absolute;
-  right: 20px;
+    display: inline-block;
+    position: absolute;
+    right: 20px;
 }
 .home .c-table {
-  flex: 1;
-  overflow: hidden;
+    flex: 1;
+    overflow: hidden;
 }

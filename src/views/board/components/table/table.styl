@@ -1,85 +1,81 @@
 .c-table
-  display: flex
-  flex-direction: column
-  .is-active
-    background-color borderColor !important
- .formula-container
-    display flex
-    align-items center
-    padding 10px 20px
-    height 50px
-    .formula-key
-        margin-right 20px
-    .formula-value
-        width 100%
-  .table
-    position relative
-    display flex
-    overflow: scroll
+    display: flex
+    flex-direction: column
     flex:1
+    overflow hidden
+    .formula-container
+        display flex
+        align-items center
+        padding 10px 20px
+        height 50px
+        .formula-key
+            margin-right 20px
+        .formula-value
+            width 100%
+    .table-container
+        position relative
+        overflow hidden
+        max-width 100%
+        flex:1
+        .table-header
+            position sticky
+            top 0
+        .table-main
+            overflow auto
+            height calc(100% - 40px)
+            width calc(100% - 100px)
+            display inline-block
+            margin-left 100px
+        .left-table
+            position absolute
+            background white
+            display inline-block
+            left 0
+            right 0
+            z-index 3
+    table
+        table-layout: fixed;
+        border-collapse: separate;
+    .is-active
+        background-color borderColor !important
+
     .select-content
-      border 1px solid activeColor
-      background #e5f3ff
-      position fixed
-      pointer-events none
-      z-index -1
-    .main-table
-    .row-header, .col-header
-      border-top 1px solid borderColor
-      background: bgColor
-    .table-header,.table-main,.table-fixed
-      table-layout: fixed;
-      border-collapse: separate;
-    .table-header
-      position sticky
-      top:0
-      z-index:2
-    .hori-resizable-content
-      right: -6px;
-      top: 0;
-      width: 12px;
-      height: 100%;
-      resizable-content(col-resize)
+        border 1px solid activeColor
+        background #e5f3ff
+        position fixed
+        pointer-events none
+        z-index -1
+
     axis()
-      position fixed
-      left: 0;
-      top: 0;
-      z-index 10
+        position fixed
+        left 0;
+        top 0;
+        z-index 10
     // 水平线
     .horiAxis
-      axis()
-      width:100%
-      border-top: 2px dashed activeColor;
+        axis()
+        width:100%
+        border-top: 2px dashed activeColor;
     //垂直线
     .vertAxis
-      height 100%
-      border-left:2px dashed activeColor;
-      axis()
+        height 100%
+        border-left:2px dashed activeColor;
+        axis()
     .cell
-      height 100%
-      box-sizing: border-box
-      border-right  1px solid borderColor
-      border-bottom 1px solid borderColor
+        height 100%
+        box-sizing: border-box
+        border-right  1px solid borderColor
+        border-bottom 1px solid borderColor
 
     td
-      vertical-align: middle;
-      text-align: center;
-      position relative
-      word-break: break-all;
-      box-sizing border-box
+        vertical-align: middle;
+        text-align: center;
+        position relative
+        word-break: break-all;
+        box-sizing border-box
     tr
-      position: relative;
+        position: relative;
 
     tr:first-child td
-      border-top 0
-    th
-      border-right  1px solid borderColor;
-      border-bottom 1px solid borderColor
-      height: 40px;
-      vertical-align: middle;
-      text-align: center;
-      position relative
-      word-break: break-all;
-      box-sizing border-box
-    .table-container
-      display: flex
+        border-top 0
+

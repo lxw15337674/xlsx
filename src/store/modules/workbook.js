@@ -1,19 +1,18 @@
-
 export default {
-  namespaced: true,
-  state: {
-    workbookList: [],
-  },
-  mutations: {
-    saveWorkbook(state, workbook) {
-      state.workbookList.push(workbook);
+    namespaced: true,
+    state: {
+        workbookList: [],
     },
-  },
-  getters: {
-    getWorkbookByIndex(state, index) {
-      return state.workbookList[index];
+    mutations: {
+        saveWorkbook(state, workbook) {
+            state.workbookList.push(workbook);
+        },
     },
-  },
-  actions: {},
-  modules: {},
+    getters: {
+        getWorkbookByIndex(state, index) {
+            return state.workbookList[index];
+        },
+    },
+    actions: {},
+    modules: {},
 };

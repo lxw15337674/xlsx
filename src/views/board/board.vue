@@ -22,6 +22,7 @@
     </el-header>
     <c-table class="c-table" v-model="workbook.sheets[activeSheetName]"></c-table>
     <sheetBar
+            class="sheet-bar"
       :activeSheetName="activeSheetName"
       @select="sheetSelect"
       :sheets="workbook.sheetNames"

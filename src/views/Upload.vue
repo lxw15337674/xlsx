@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <div class="operationBox">
-      <el-input></el-input>
-      <el-button type="success">导出数据</el-button>
+    <div>
+        <div class="operationBox">
+            <el-input></el-input>
+            <el-button type="success">导出数据</el-button>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>

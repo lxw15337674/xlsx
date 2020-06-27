@@ -1,13 +1,13 @@
 <template>
-  <div class="menuBar">
-    <slot></slot>
-  </div>
+    <div class="menuBar">
+        <slot></slot>
+    </div>
 </template>
 
 <script>
 export default {
-  mounted() {},
-  methods: {},
+    mounted() {},
+    methods: {},
 };
 </script>
 

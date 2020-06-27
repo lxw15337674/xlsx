@@ -1,21 +1,21 @@
 <template>
-  <div>
-    <div class="divided" v-if="divided"></div>
-    <div class="context-item">
-      <slot></slot>
+    <div>
+        <div class="divided" v-if="divided"></div>
+        <div class="context-item">
+            <slot></slot>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'context-item',
-  props: {
-    divided: {
-      type: Boolean,
-      default: false,
+    name: 'context-item',
+    props: {
+        divided: {
+            type: Boolean,
+            default: false,
+        },
     },
-  },
 };
 </script>
 

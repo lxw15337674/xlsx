@@ -1,84 +1,106 @@
 <template>
-  <table class="table-header">
-    <colgroup>
-      <col v-for="col in colsHeader" :width="col.width" />
-    </colgroup>
-    <thead>
-      <tr>
-        <th ref="cols" v-for="(col, index) in colsHeader">
-          <div
-            :class="[{ 'is-active': isActive(index) }, 'col-header']"
-            @click="handleClick(index)"
-            @mouseenter="(evt) => handleMouseEnter(evt, index)"
-            @mousedown="(evt) => handleMousedown(evt, index)"
-            @mouseup="(evt) => handleMouseUp(evt, index)"
-          >
-            {{ index | indexToChar }}
-            <div
-              class="hori-resizable-content"
-              @mousedown="(evt) => colResizeStart(evt, index, col.width)"
-            ></div>
-          </div>
-          <!--              <el-button @click="clearCol(index)">删除</el-button>-->
-        </th>
-      </tr>
-    </thead>
-  </table>
+    <table class="table-header">
+        <thead>
+            <tr>
+                <th>
+                    <div style="width:100px" class="col-container">全选</div>
+                </th>
+                <th v-for="(col, index) in colsHeader">
+                    <div
+                        :style="{ width: `${col.width}px` }"
+                        class="col-container"
+                        :class="[{ 'is-active': isActive(index) }]"
+                        @click="handleClick(index)"
+                        @mouseenter="(evt) => handleMouseEnter(evt, index)"
+                        @mousedown="(evt) => handleMousedown(evt, index)"
+                        @mouseup="(evt) => handleMouseUp(evt, index)"
+                    >
+                        <div>
+                            {{ index | indexToChar }}
+                        </div>
+                        <div
+                            class="hori-resizable-content"
+                            @mousedown="
+                                (evt) => colResizeStart(evt, index, col.width)
+                            "
+                        ></div>
+                    </div>
+                    <!--              <el-button @click="clearCol(index)">删除</el-button>-->
+                </th>
+            </tr>
+        </thead>
+    </table>
 </template>
 
 <script>
 import { indexToChar } from 'src/utils/transform.ts';
 import select from './mixins/select.js';
 export default {
-  name: 'table-header',
-  mixins: [select],
-  props: {
-    colsHeader: {
-      type: Array,
-      require: true,
+    name: 'table-header',
+    mixins: [select],
+    props: {
+        colsHeader: {
+            type: Array,
+            require: true,
+        },
+        tableRect: {
+            type: Object,
+            require: true,
+        },
+        select: {
+            type: Object,
+            require: true,
+        },
+        tableWidth: {},
     },
-    tableRect: {
-      type: Object,
-      require: true,
+    data() {
+        return {
+            width: '100',
+        };
     },
-    select: {
-      type: Object,
-      require: true,
+    filters: {
+        indexToChar(index) {
+            return indexToChar(index);
+        },
     },
-    tableWidth: {},
-  },
-  data() {
-    return {
-      width: '100',
-    };
-  },
-  filters: {
-    indexToChar(index) {
-      return indexToChar(index);
+    computed: {},
+    methods: {
+        // 行拉伸
+        colResizeStart(evt, index, colWidth) {
+            evt.stopPropagation();
+            this.$emit('colResizeStart', evt, index, colWidth);
+        },
+        isActive(colIndex) {
+            return (
+                Math.min(this.select.colStartIndex, this.select.colEndIndex) <=
+                    colIndex &&
+                colIndex <=
+                    Math.max(this.select.colStartIndex, this.select.colEndIndex)
+            );
+        },
     },
-  },
-  computed: {},
-  methods: {
-    // 行拉伸
-    colResizeStart(evt, index, colWidth) {
-      evt.stopPropagation();
-      this.$emit('colResizeStart', evt, index, colWidth);
-    },
-    isActive(colIndex) {
-      return (
-        Math.min(this.select.colStartIndex, this.select.colEndIndex) <=
-          colIndex &&
-        colIndex <= Math.max(this.select.colStartIndex, this.select.colEndIndex)
-      );
-    },
-  },
 };
 </script>
 
 <style lang="stylus" scoped>
-.col-header
-  height 40px
-  display flex
-  align-items center
-  justify-content center
+.col-container
+    width 100px
+    border-top 1px solid borderColor
+    border-right  1px solid borderColor
+    border-bottom 1px solid borderColor
+    height 40px
+    vertical-align: middle
+    text-align: center
+    word-break: break-all
+    box-sizing border-box
+    display flex
+    justify-content center
+    align-items  center
+    position relative
+    .hori-resizable-content
+        right: -6px;
+        top: 0;
+        width: 12px;
+        height: 100%;
+        resizable-content(col-resize)
 </style>

@@ -7,30 +7,30 @@
  * @return {function} 导入函数
  */
 export function _import(
-  environment: 'development' | 'production' = 'development',
+    environment: 'development' | 'production' = 'development',
 ): Function {
-  if (environment === 'development') {
-    return (file) => require('@/views/' + file + '.vue').default;
-  } else {
-    return (file) => () => import('@/views/' + file + '.vue');
-  }
+    if (environment === 'development') {
+        return (file) => require('@/views/' + file + '.vue').default;
+    } else {
+        return (file) => () => import('@/views/' + file + '.vue');
+    }
 }
 
 export function importMixins(context): Array<Object> {
-  return context.keys().reduce((modules, moduleName) => {
-    modules.push(context(moduleName).default || context(moduleName));
-    return modules;
-  }, []);
+    return context.keys().reduce((modules, moduleName) => {
+        modules.push(context(moduleName).default || context(moduleName));
+        return modules;
+    }, []);
 }
 
 export function importComponents(context): Object {
-  const modules = {};
-  context.keys().forEach((fileName) => {
-    const name = fileName
-      .split('/')
-      .pop()
-      .replace(/\.\w+$/, '');
-    modules[name] = context(fileName).default || context(fileName);
-  });
-  return modules;
+    const modules = {};
+    context.keys().forEach((fileName) => {
+        const name = fileName
+            .split('/')
+            .pop()
+            .replace(/\.\w+$/, '');
+        modules[name] = context(fileName).default || context(fileName);
+    });
+    return modules;
 }
