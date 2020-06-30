@@ -75,8 +75,7 @@ export default {
                     class={[this.theme, 'context-menu']}
                     style={this.tipStyle}
                     v-show={this.position.visible}
-                    onContextMenu='prevent'
-                >
+                    onContextMenu='prevent'>
                     {this.$slots.contentMenu}
                 </div>
             </transition>

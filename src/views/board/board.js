@@ -28,12 +28,12 @@ export default {
             XLSX.writeFile(workbook, 'test.xlsx');
         },
 
-        sheetInit(rowsLength = 50, colsLength = 50) {
+        sheetInit(rowsLength = 200, colsLength = 10) {
             let table = [];
             for (let row = 0; row < rowsLength; row++) {
                 table[row] = [];
                 for (let col = 0; col < colsLength; col++) {
-                    table[row][col] = '';
+                    table[row][col] = `行：${row}，列：${col}`;
                 }
             }
             return table;

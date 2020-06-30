@@ -22,32 +22,33 @@ export function getOffset(el: HTMLElement): object {
         offsetTop: el.offsetTop,
     };
 }
-//获取包含两个元素的矩形
+/**
+ * 获取两个元素之间的距离
+ */
 export function getTwoElementsRect(el1: HTMLElement, el2: HTMLElement): rect {
-    let rect1: node = getRect(el1);
-    let rect2: node = getRect(el2);
+    let rect1: node = el1.getBoundingClientRect();
+    let rect2: node = el2.getBoundingClientRect();
     return {
         left: Math.min(rect1.left, rect2.left),
         top: Math.min(rect1.top, rect2.top),
-        height:
-            Math.max(rect2.bottom, rect1.bottom) -
-            Math.min(rect1.top, rect2.top),
-        width:
-            Math.max(rect2.right, rect1.right) -
-            Math.min(rect1.left, rect2.left),
+        height: Math.max(rect2.bottom, rect1.bottom) - Math.min(rect1.top, rect2.top),
+        width: Math.max(rect2.right, rect1.right) - Math.min(rect1.left, rect2.left),
     };
 }
-
-export function getRect(el: HTMLElement): node {
-    let rect = el.getBoundingClientRect();
-    return {
-        x: rect.x,
-        y: rect.y,
-        width: rect.width,
-        height: rect.height,
-        top: rect.top,
-        bottom: rect.bottom,
-        left: rect.left,
-        right: rect.right,
-    };
-}
+// /**
+//  * 获取元素的矩形边界
+//  * 等同于getBoundingClientRect()
+//  */
+// export function getRect(el: HTMLElement): node {
+//     let rect = el.getBoundingClientRect();
+//     return {
+//         x: rect.x,
+//         y: rect.y,
+//         width: rect.width,
+//         height: rect.height,
+//         top: rect.top,
+//         bottom: rect.bottom,
+//         left: rect.left,
+//         right: rect.right,
+//     };
+// }

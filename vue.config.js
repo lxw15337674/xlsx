@@ -123,7 +123,7 @@ module.exports = {
   devServer: {
     // host: 'localhost',
     // host: "0.0.0.0",
-    port: 8001, // 端口号
+    port: 8888, // 端口号
     open: true,
     hotOnly: true, // 热更新
     compress: true,

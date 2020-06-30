@@ -1,11 +1,14 @@
+import * as scroll from '@/utils/scroll.ts';
+
 export default {
     data() {
         return {
-            visibleData:[]
+            visibleRowsIndex: [0, 0],
+            visibleColsIndex: [0, 0],
         };
     },
     mounted() {
-        updateVisibleData()
+        this.updateVisibleData();
     },
     computed: {
         tableWidth() {
@@ -24,18 +27,28 @@ export default {
                 height: `${this.tableHeight}px`,
             };
         },
+        rowsList() {
+            return this.rowsHeader.reduce((total, item) => {
+                total.push(item.height);
+                return total;
+            }, []);
+        },
+        visibleRows() {
+            return this.rowsList.slice(...this.visibleRowsIndex);
+        },
+        visibleTable() {
+            return this.table.slice().slice(...this.visibleRowsIndex);
+        },
     },
     methods: {
-        handleScroll(evt){
-            this.updateVisibleData( this.$el.scrollTop)
+        handleScroll(evt) {
+            let el = evt.target;
+            let direction = scroll.scrollDirection(el);
+            this.updateVisibleData(el.scrollTop);
         },
-        updateVisibleData(scrollTop){
-            // scrollTop = scrollTop || 0;
-            // const visibleCount = Math.ceil(this.$el.clientHeight / 40);
-            // const start = Math.floor(scrollTop / 40);
-            // const end = start + visibleCount;
-            // this.visibleData = this.table.slice(start, end);
-            // this.$refs.content.style.webkitTransform = `translate3d(0, ${ start * this.itemHeight }px, 0)`;
-        }
+        updateVisibleData(scrollTop = 0) {
+            this.$refs.contentTable.style.transform = `translate(0, ${scrollTop}px)`;
+            this.visibleRowsIndex = scroll.findVisibleIndex(scrollTop, this.$refs.contentTable.offsetHeight, this.rowsList);
+        },
     },
 };

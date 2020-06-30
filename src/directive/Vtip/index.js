@@ -1,5 +1,4 @@
 import tip from './tip.js';
-import { getRect } from '../../utils/location.ts';
 export default {
     install(Vue, options = {}) {
         const name = options.directiveName || 'tip';
@@ -32,7 +31,7 @@ export default {
                     debounce((event) => {
                         let Tip = Vue.prototype.$tip;
                         Tip.content = binding.value;
-                        Tip.position = getRect(el);
+                        Tip.position = el.getBoundingClientRect();
                         Tip.visible = true;
                     }),
                 );

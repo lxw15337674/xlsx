@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-const _import = require('src/utils/import.ts')._import(ENV);
+const _import = require('src/utils/import.ts')._import(process.env.NODE_ENV);
 Vue.use(VueRouter);
 const routes = [
     {

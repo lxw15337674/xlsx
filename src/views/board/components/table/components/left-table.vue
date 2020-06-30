@@ -106,5 +106,4 @@ export default {
             width: 100%;
             height: 12px;
             resizable-content(ns-resize);
-
 </style>

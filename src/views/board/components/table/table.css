@@ -1,103 +1,103 @@
 .c-table {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+.c-table .formula-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  height: 50px;
+}
+.c-table .formula-container .formula-key {
+  margin-right: 20px;
+}
+.c-table .formula-container .formula-value {
+  width: 100%;
+}
+.c-table .table-container {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  flex: 1;
+}
+.c-table .table-container .table-header {
+  position: sticky;
+  top: 0;
+}
+.c-table .table-container .table-main {
+  overflow: auto;
+  height: calc(100% - 40px);
+  width: calc(100% - 100px);
+  display: inline-block;
+  margin-left: 100px;
+  position: relative;
+}
+.c-table .table-container .table-main .phantom {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: -1;
+}
+.c-table .table-container .table-main .visible {
+  min-height: 100%;
+}
+.c-table .table-container .left-table {
+  position: absolute;
+  background: #fff;
+  display: inline-block;
+  left: 0;
+  right: 0;
+  z-index: 3;
+}
+.c-table table {
+  table-layout: fixed;
+  border-collapse: separate;
 }
 .c-table .is-active {
-    background-color: borderColor !important;
+  background-color: borderColor !important;
 }
-.formula-container {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    height: 50px;
+.c-table .select-content {
+  border: 1px solid activeColor;
+  background: #e5f3ff;
+  position: fixed;
+  pointer-events: none;
+  z-index: -1;
 }
-.formula-container .formula-key {
-    margin-right: 20px;
+.c-table .horiAxis {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  border-top: 2px dashed activeColor;
 }
-.formula-container .formula-value {
-    width: 100%;
+.c-table .vertAxis {
+  height: 100%;
+  border-left: 2px dashed activeColor;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
 }
-.table {
-    position: relative;
-    display: flex;
-    overflow: scroll;
-    flex: 1;
+.c-table .cell {
+  height: 100%;
+  box-sizing: border-box;
+  border-right: 1px solid borderColor;
+  border-bottom: 1px solid borderColor;
 }
-.table .select-content {
-    border: 1px solid activeColor;
-    background: #e5f3ff;
-    position: fixed;
-    pointer-events: none;
-    z-index: -1;
+.c-table td {
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+  word-break: break-all;
+  box-sizing: border-box;
 }
-.table .main-table,
-.table .row-header,
-.table .col-header {
-    border-top: 1px solid borderColor;
-    background: bgColor;
+.c-table tr {
+  position: relative;
 }
-.table .table-header,
-.table .table-main,
-.table .table-fixed {
-    table-layout: fixed;
-    border-collapse: separate;
-}
-.table .table-header {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-}
-.table .hori-resizable-content {
-    right: -6px;
-    top: 0;
-    width: 12px;
-    height: 100%;
-}
-.table .horiAxis {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 10;
-    width: 100%;
-    border-top: 2px dashed activeColor;
-}
-.table .vertAxis {
-    height: 100%;
-    border-left: 2px dashed activeColor;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 10;
-}
-.table .cell {
-    height: 100%;
-    box-sizing: border-box;
-    border-right: 1px solid borderColor;
-    border-bottom: 1px solid borderColor;
-}
-.table td {
-    vertical-align: middle;
-    text-align: center;
-    position: relative;
-    word-break: break-all;
-    box-sizing: border-box;
-}
-.table tr {
-    position: relative;
-}
-.table tr:first-child td {
-    border-top: 0;
-}
-.table th {
-    border-right: 1px solid borderColor;
-    border-bottom: 1px solid borderColor;
-    height: 40px;
-    vertical-align: middle;
-    text-align: center;
-    position: relative;
-    word-break: break-all;
-    box-sizing: border-box;
-}
-.table .table-container {
-    display: flex;
+.c-table tr:first-child td {
+  border-top: 0;
 }
