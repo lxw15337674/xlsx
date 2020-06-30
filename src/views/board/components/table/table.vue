@@ -26,51 +26,54 @@
                 @colResizeStart="colResizeStart"
                 @colHeaderClick="colSelect"
             ></table-header>
-            <left-table
-                class="left-table"
-                :rowsHeader="rowsHeader"
-                :select="select"
-                @selectStart="rowSelect"
-                @select="rowsSelect"
-                @rowResizeStart="rowResizeStart"
-                @rowHeaderClick="rowSelect"
-            ></left-table>
-            <contextMenu>
-                <div class="table-main" @scroll="handleScroll">
-                    <div class="phantom" :style="tableStyle"></div>
-                    <div class="visible" ref="contentTable">
-                        <table>
-                            <colgroup>
-                                <col v-for="col in colsHeader" :style="{ width: `${col.width}px` }" />
-                            </colgroup>
-                            <tbody>
-                                <tr ref="rows" v-for="(rowStyle, rowIndex) in visibleTable">
-                                    <td
-                                        ref="cell"
-                                        v-for="(cell, colIndex) in table[rowIndex]"
-                                        v-tip="currentPosition(rowIndex, colIndex)"
-                                        @click.capture="(evt) => handleCellClick(evt, rowIndex, colIndex)"
-                                    >
-                                        <div
-                                            class="cell"
-                                            @mousedown="(evt) => startSelect(evt, rowIndex, colIndex)"
-                                            @mouseenter="(evt) => isSelect(evt, rowIndex, colIndex)"
-                                            :style="{
-                                                height: `${rowStyle.height}px`,
-                                            }"
+            <div class="ovh table-body">
+                <left-table
+                    class="rows-header"
+                    ref="rowsHeader"
+                    :select="select"
+                    :rowsHeader="visibleRows"
+                    @selectStart="rowSelect"
+                    @select="rowsSelect"
+                    @rowResizeStart="rowResizeStart"
+                    @rowHeaderClick="rowSelect"
+                ></left-table>
+                <contextMenu>
+                    <div class="table-context" @scroll="handleScroll" ref="tableContext">
+                        <div class="phantom" :style="tableStyle"></div>
+                        <div class="visible"  ref="visibleContent">
+                            <table class="table-body">
+                                <colgroup>
+                                    <col v-for="col in colsHeader" :style="{ width: `${col.width}px` }" />
+                                </colgroup>
+                                <tbody>
+                                    <tr ref="rows" v-for="row in visibleRows">
+                                        <td
+                                            ref="cell"
+                                            v-for="(cell, colIndex) in table[row.index]"
+                                            v-tip="currentPosition(row.index, colIndex)"
+                                            @click.capture="(evt) => handleCellClick(evt, row.index, colIndex)"
                                         >
-                                            <textarea disabled class="cell-content" v-model="visibleTable[rowIndex][colIndex]"></textarea>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            <div
+                                                class="cell"
+                                                @mousedown="(evt) => startSelect(evt, row.index, colIndex)"
+                                                @mouseenter="(evt) => isSelect(evt, row.index, colIndex)"
+                                                :style="{
+                                                    height: `${row.height}px`,
+                                                }"
+                                            >
+                                                <textarea disabled class="cell-content" v-model="table[row.index][colIndex]"></textarea>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <template slot="contentMenu">
-                    <context-item v-for="menuItem in contextMenu" :key="menuItem.label" @click.native="fnCall(menuItem.def)">{{ menuItem.label }} </context-item>
-                </template>
-            </contextMenu>
+                    <template slot="contentMenu">
+                        <context-item v-for="menuItem in contextMenu" :key="menuItem.label" @click.native="fnCall(menuItem.def)">{{ menuItem.label }} </context-item>
+                    </template>
+                </contextMenu>
+            </div>
         </div>
     </div>
 </template>

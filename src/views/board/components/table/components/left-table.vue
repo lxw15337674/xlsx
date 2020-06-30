@@ -8,28 +8,20 @@
             <!--                <th class="col-header" />-->
             <!--            </thead>-->
             <tbody>
-                <tr v-for="(rowStyle, rowIndex) in rowsHeader">
-                    <td :style="{ height: `${rowStyle.height}px` }">
+                <tr v-for="row in rowsHeader" :key="row.index">
+                    <td :style="{ height: `${row.height}px` }">
                         <div
                             class="row-header"
                             :class="{
-                                'is-active': isActive(rowIndex),
+                                'is-active': isActive(row.index),
                             }"
-                            @click="handleClick(rowIndex)"
-                            @mouseenter="
-                                (evt) => handleMouseEnter(evt, rowIndex)
-                            "
-                            @mousedown="(evt) => handleMousedown(evt, rowIndex)"
-                            @mouseup="(evt) => handleMouseUp(evt, rowIndex)"
+                            @click="handleClick(row.index)"
+                            @mouseenter="(evt) => handleMouseEnter(evt, row.index)"
+                            @mousedown="(evt) => handleMousedown(evt, row.index)"
+                            @mouseup="(evt) => handleMouseUp(evt, row.index)"
                         >
-                            {{ rowIndex + 1 }}
-                            <div
-                                class="vert-resizable-content"
-                                @mousedown="
-                                    (evt) =>
-                                        rowResizeStart(evt, rowIndex, rowStyle)
-                                "
-                            ></div>
+                            {{ row.index + 1 }}
+                            <div class="vert-resizable-content" @mousedown="(evt) => rowResizeStart(evt, row.index, row)"></div>
                         </div>
                     </td>
                 </tr>
@@ -71,12 +63,7 @@ export default {
             this.$emit('rowResizeStart', evt, index, row.height);
         },
         isActive(rowIndex) {
-            return (
-                Math.min(this.select.rowStartIndex, this.select.rowEndIndex) <=
-                    rowIndex &&
-                rowIndex <=
-                    Math.max(this.select.rowStartIndex, this.select.rowEndIndex)
-            );
+            return Math.min(this.select.rowStartIndex, this.select.rowEndIndex) <= rowIndex && rowIndex <= Math.max(this.select.rowStartIndex, this.select.rowEndIndex);
         },
     },
 };
@@ -85,8 +72,6 @@ export default {
 <style lang="stylus" scoped>
 .left-body
     width 100px
-
-
     .is-active
         background-color borderColor
     .row-header

@@ -28,7 +28,7 @@ export default {
             XLSX.writeFile(workbook, 'test.xlsx');
         },
 
-        sheetInit(rowsLength = 200, colsLength = 10) {
+        sheetInit(rowsLength = 100, colsLength = 20) {
             let table = [];
             for (let row = 0; row < rowsLength; row++) {
                 table[row] = [];
@@ -52,7 +52,9 @@ export default {
         },
 
         importFile() {
-            if (!this.$refs.fileInput.files.length) return;
+            if (!this.$refs.fileInput.files.length) {
+                return;
+            }
             let file = this.$refs.fileInput.files[0],
                 fileReader = new FileReader();
             fileReader.onload = (e) => {
