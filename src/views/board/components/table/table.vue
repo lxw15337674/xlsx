@@ -1,4 +1,3 @@
-<!--suppress ALL -->
 <template>
     <div class="c-table">
         <div class="formula-container">
@@ -13,62 +12,83 @@
             <!--          :width="canvasRect.width"-->
             <!--          :height="canvasRect.height"-->
             <!--        ></canvas>-->
-            <div class="select-content" :style="selectStyle"></div>
+            <div class="select-content" ></div>
             <div ref="horiAxis" class="horiAxis" id="horiAxis" style="display: none"></div>
             <div ref="vertAxis" class="vertAxis" id="vertAxis" style="display: none"></div>
-            <c-input class="cell-input" v-model="activeCellInput" :style="cellInputStyle"></c-input>
-            <table-header
+<!--            <c-input class="cell-input" v-model="activeCellInput" :style="cellInputStyle"></c-input>-->
+            <cols-header
                 class="table-header"
-                :colsHeader="colsHeader"
+                :colsHeader="visibleCols"
                 :select="select"
                 @selectStart="colSelect"
                 @select="colsSelect"
                 @colResizeStart="colResizeStart"
                 @colHeaderClick="colSelect"
-            ></table-header>
-            <left-table
+            ></cols-header>
+            <rows-header
                 class="left-table"
-                :rowsHeader="rowsHeader"
+                :rowsHeader="visibleRows"
                 :select="select"
                 @selectStart="rowSelect"
                 @select="rowsSelect"
                 @rowResizeStart="rowResizeStart"
                 @rowHeaderClick="rowSelect"
-            ></left-table>
+            ></rows-header>
             <contextMenu>
-                <div class="table-main" @scroll="handleScroll">
-                    <div class="phantom" :style="tableStyle"></div>
-                    <div class="visible" ref="contentTable">
-                        <table>
+                <div class="table-main">
+                    <dynamic-scroller
+                        :height="tableHeight"
+                        :width="tableWidth"
+                        :rows="rowsList"
+                        :cols="colslist"
+                    >
+                        <table :style="visibleTableStyle">
                             <colgroup>
-                                <col v-for="col in colsHeader" :style="{ width: `${col.width}px` }" />
+                                <col
+                                    v-for="col in colsHeader"
+                                    :style="{ width: `${col.width}px` }"
+                                />
                             </colgroup>
                             <tbody>
-                                <tr ref="rows" v-for="(rowStyle, rowIndex) in visibleTable">
+                                <tr ref="rows" v-for="row in visibleRows">
                                     <td
                                         ref="cell"
-                                        v-for="(cell, colIndex) in table[rowIndex]"
-                                        v-tip="currentPosition(rowIndex, colIndex)"
-                                        @click.capture="(evt) => handleCellClick(evt, rowIndex, colIndex)"
+                                        v-for="col in visibleCols"
+                                        @click.capture="
+                                            (evt) => handleCellClick(evt, row.index, col.index)
+                                        "
                                     >
                                         <div
                                             class="cell"
-                                            @mousedown="(evt) => startSelect(evt, rowIndex, colIndex)"
-                                            @mouseenter="(evt) => isSelect(evt, rowIndex, colIndex)"
+                                            @mousedown="
+                                                (evt) => startSelect(evt, row.index, col.index)
+                                            "
+                                            @mouseenter="
+                                                (evt) => isSelect(evt, row.index, col.index)
+                                            "
                                             :style="{
-                                                height: `${rowStyle.height}px`,
+                                                height: `${row.height}px`,
                                             }"
                                         >
-                                            <textarea disabled class="cell-content" v-model="visibleTable[rowIndex][colIndex]"></textarea>
+                                            <textarea
+                                                disabled
+                                                class="cell-content"
+                                                v-model="table[row.index][col.index]"
+                                            ></textarea>
                                         </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </dynamic-scroller>
                 </div>
                 <template slot="contentMenu">
-                    <context-item v-for="menuItem in contextMenu" :key="menuItem.label" @click.native="fnCall(menuItem.def)">{{ menuItem.label }} </context-item>
+                    <context-item
+                        v-for="menuItem in contextMenu"
+                        :key="menuItem.label"
+                        @click.native="fnCall(menuItem.def)"
+                        >{{ menuItem.label }}
+                    </context-item>
                 </template>
             </contextMenu>
         </div>

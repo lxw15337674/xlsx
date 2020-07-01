@@ -5,25 +5,20 @@
                 <th>
                     <div style="width:100px" class="col-container">全选</div>
                 </th>
-                <th v-for="(col, index) in colsHeader">
+                <th v-for="col in colsHeader">
                     <div
                         :style="{ width: `${col.width}px` }"
                         class="col-container"
-                        :class="[{ 'is-active': isActive(index) }]"
-                        @click="handleClick(index)"
-                        @mouseenter="(evt) => handleMouseEnter(evt, index)"
-                        @mousedown="(evt) => handleMousedown(evt, index)"
-                        @mouseup="(evt) => handleMouseUp(evt, index)"
+                        :class="[{ 'is-active': isActive(col.index) }]"
+                        @click="handleClick(col.index)"
+                        @mouseenter="(evt) => handleMouseEnter(evt, col.index)"
+                        @mousedown="(evt) => handleMousedown(evt, col.index)"
+                        @mouseup="(evt) => handleMouseUp(evt, col.index)"
                     >
                         <div>
-                            {{ index | indexToChar }}
+                            {{ col.index | indexToChar }}
                         </div>
-                        <div
-                            class="hori-resizable-content"
-                            @mousedown="
-                                (evt) => colResizeStart(evt, index, col.width)
-                            "
-                        ></div>
+                        <div class="hori-resizable-content" @mousedown="(evt) => colResizeStart(evt, col.index, col.width)"></div>
                     </div>
                     <!--              <el-button @click="clearCol(index)">删除</el-button>-->
                 </th>
@@ -71,12 +66,7 @@ export default {
             this.$emit('colResizeStart', evt, index, colWidth);
         },
         isActive(colIndex) {
-            return (
-                Math.min(this.select.colStartIndex, this.select.colEndIndex) <=
-                    colIndex &&
-                colIndex <=
-                    Math.max(this.select.colStartIndex, this.select.colEndIndex)
-            );
+            return Math.min(this.select.colStartIndex, this.select.colEndIndex) <= colIndex && colIndex <= Math.max(this.select.colStartIndex, this.select.colEndIndex);
         },
     },
 };

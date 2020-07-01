@@ -1,15 +1,23 @@
-import * as scroll from '@/utils/scroll.ts';
-
 export default {
-    data() {
+    provide() {
         return {
-            visibleRowsIndex: [0, 0],
-            visibleColsIndex: [0, 0],
+            visibleRowsIndex: this.visibleRowsIndex,
+            visibleColsIndex: this.visibleColsIndex,
         };
     },
-    mounted() {
-        this.updateVisibleData();
+    data() {
+        return {
+            visibleRowsIndex: {
+                start: 0,
+                end: 0,
+            },
+            visibleColsIndex: {
+                start: 0,
+                end: 0,
+            },
+        };
     },
+    mounted() {},
     computed: {
         tableWidth() {
             return this.colsHeader.reduce((total, item) => {
@@ -21,34 +29,54 @@ export default {
                 return total + item.height;
             }, 0);
         },
-        tableStyle() {
-            return {
-                width: `${this.tableWidth}px`,
-                height: `${this.tableHeight}px`,
-            };
-        },
         rowsList() {
             return this.rowsHeader.reduce((total, item) => {
                 total.push(item.height);
                 return total;
             }, []);
         },
-        visibleRows() {
-            return this.rowsList.slice(...this.visibleRowsIndex);
+        colslist() {
+            return this.colsHeader.reduce((total, item) => {
+                total.push(item.width);
+                return total;
+            }, []);
         },
-        visibleTable() {
-            return this.table.slice().slice(...this.visibleRowsIndex);
+        visibleRows() {
+            let { start, end } = this.visibleRowsIndex;
+            return this.rowsHeader.slice(start, end).map((item, index) => {
+                return {
+                    height: item.height,
+                    index: index + this.visibleRowsIndex.start,
+                };
+            });
+        },
+        visibleCols() {
+            let { start, end } = this.visibleColsIndex;
+            return this.colsHeader.slice(start, end).map((item, index) => {
+                return {
+                    width: item.width,
+                    index: index + start,
+                };
+            });
+        },
+        visibleTableStyle() {
+            let width = this.visibleCols.reduce((total, item) => {
+                return (total += item.width);
+            }, 0);
+            return {
+                width: `${width}px`,
+            };
         },
     },
     methods: {
-        handleScroll(evt) {
-            let el = evt.target;
-            let direction = scroll.scrollDirection(el);
-            this.updateVisibleData(el.scrollTop);
-        },
-        updateVisibleData(scrollTop = 0) {
-            this.$refs.contentTable.style.transform = `translate(0, ${scrollTop}px)`;
-            this.visibleRowsIndex = scroll.findVisibleIndex(scrollTop, this.$refs.contentTable.offsetHeight, this.rowsList);
-        },
+        // handleScroll(evt) {
+        //     let el = evt.target;
+        //     let direction = scroll.scrollDirection(el);
+        //     this.updateVisibleData(el.scrollTop);
+        // },
+        // updateVisibleData(scrollTop = 0) {
+        //     this.$refs.contentTable.style.transform = `translate(0, ${scrollTop}px)`;
+        //     this.visibleRowsIndex = scroll.findVisibleIndex(scrollTop, this.$refs.contentTable.offsetHeight, this.rowsList);
+        // },
     },
 };

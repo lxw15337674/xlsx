@@ -6,9 +6,7 @@ import contextMenu from 'src/components/context-menu/context-menu';
 import contextItem from 'src/components/context-menu/context-item';
 import { importMixins, importComponents } from 'src/utils/import.ts';
 const modulesFiles = importMixins(require.context('./mixins', false, /\.js$/));
-const components = importComponents(
-    require.context('./components', false, /\.vue$/),
-);
+const components = importComponents(require.context('./components', false, /\.vue$/));
 export default {
     components: { ...components, CInput, contextMenu, contextItem },
     mixins: modulesFiles,
@@ -17,7 +15,6 @@ export default {
             cellInput: {
                 rowIndex: 0,
                 colIndex: 0,
-                value: '',
             },
             data: [],
             // 列头
@@ -62,41 +59,35 @@ export default {
         },
     },
     computed: {
-        cellInputStyle() {
-            let currentCell = getCellIndex(
-                this.cellInput.rowIndex,
-                this.cellInput.colIndex,
-                this.colsHeader.length,
-            );
-            if (!this.$refs.cell) {
-                return {
-                    left: '100px',
-                    top: '40px',
-                    minHeight: '40px',
-                    minWidth: '100px',
-                };
-            }
-            let cell = this.$refs.cell[currentCell];
-            return {
-                left: `${cell.offsetLeft}px`,
-                top: `${cell.offsetTop}px`,
-                minWidth: `${cell.offsetWidth}px`,
-                minHeight: `${cell.offsetHeight}px`,
-            };
-        },
+        // cellInputStyle() {
+        //     let currentCell = getCellIndex(
+        //         this.cellInput.rowIndex,
+        //         this.cellInput.colIndex,
+        //         this.colsHeader.length,
+        //     );
+        //     if (!this.$refs.cell) {
+        //         return {
+        //             left: '100px',
+        //             top: '40px',
+        //             minHeight: '40px',
+        //             minWidth: '100px',
+        //         };
+        //     }
+        //     let cell = this.$refs.cell[currentCell];
+        //     return {
+        //         left: `${cell.offsetLeft}px`,
+        //         top: `${cell.offsetTop}px`,
+        //         minWidth: `${cell.offsetWidth}px`,
+        //         minHeight: `${cell.offsetHeight}px`,
+        //     };
+        // },
 
         activeCellInput: {
             get() {
-                return this.data[this.cellInput.rowIndex][
-                    this.cellInput.colIndex
-                ];
+                return this.data[this.cellInput.rowIndex][this.cellInput.colIndex];
             },
             set(val) {
-                this.data[this.cellInput.rowIndex].splice(
-                    [this.cellInput.colIndex],
-                    1,
-                    val,
-                );
+                this.data[this.cellInput.rowIndex].splice([this.cellInput.colIndex], 1, val);
             },
         },
     },
@@ -121,7 +112,6 @@ export default {
         handleCellClick(evt, rowIndex, colIndex) {
             this.cellInput.rowIndex = rowIndex;
             this.cellInput.colIndex = colIndex;
-            this.cellInput.value = this.data[rowIndex][colIndex];
         },
     },
 };

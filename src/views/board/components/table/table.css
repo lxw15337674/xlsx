@@ -34,16 +34,6 @@
   margin-left: 100px;
   position: relative;
 }
-.c-table .table-container .table-main .phantom {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  z-index: -1;
-}
-.c-table .table-container .table-main .visible {
-  min-height: 100%;
-}
 .c-table .table-container .left-table {
   position: absolute;
   background: #fff;

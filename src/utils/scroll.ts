@@ -27,16 +27,32 @@ function findStartIndex(scrollTop: number, list: number[]): number {
 function findEndIndex(visibleLength: number, startIndex: number, list: number[]): number {
     let size = 0;
     let endIndex = startIndex;
-    debugger;
     while (endIndex <= list.length - 1 && size < visibleLength) {
         size += list[endIndex];
         endIndex++;
     }
     return endIndex;
 }
-// 获取当前表格的索引值，例如[2,10]
-export function findVisibleIndex(scrollTop: number, visibleLength: number, list: number[]): [number, number] {
-    let start = findStartIndex(scrollTop, list);
+//获取元素在表格的位置
+export function getItemPosition(start: number, end: number, list: number[]): number {
+    return list.slice(start, end + 1).reduce((total, item) => {
+        return total + item;
+    }, 0);
+}
+// 获取当前表格的索引值，例如{start:0,end:10}
+interface VisiblePosition {
+    start: number;
+    end: number;
+}
+export function findVisibleIndex(
+    length: number,
+    visibleLength: number,
+    list: number[],
+): VisiblePosition {
+    let start = findStartIndex(length, list);
     let end = findEndIndex(visibleLength, start, list);
-    return [start, end];
+    return {
+        start: start,
+        end: end,
+    };
 }

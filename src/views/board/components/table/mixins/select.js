@@ -11,39 +11,49 @@ export default {
                 rowEndIndex: null,
                 colEndIndex: null,
             },
+            selectContent: {
+                width: 0,
+                height: 0,
+                left: 0,
+                top: 0,
+            },
             selectStart: false,
+            selectedCellList: [],
         };
     },
     computed: {
         selectStyle() {
-            if (this.select.rowStartIndex === null) {
-                return {};
-            }
-            let sCell = this.$refs.cell[
-                getCellIndex(
-                    this.select.rowStartIndex,
-                    this.select.colStartIndex,
-                    this.colsHeader.length,
-                )
-            ];
-            let eCell = this.$refs.cell[
-                getCellIndex(
-                    this.select.rowEndIndex,
-                    this.select.colEndIndex,
-                    this.colsHeader.length,
-                )
-            ];
-            let rect = getTwoElementsRect(sCell, eCell);
-            return {
-                left: numToPx(rect.left),
-                top: numToPx(rect.top),
-                width: numToPx(rect.width),
-                height: numToPx(rect.height),
-            };
+            // if (this.select.rowStartIndex === null) {
+            //     return {};
+            // }
+            // let sCell = this.$refs.cell[
+            //     getCellIndex(
+            //         this.select.rowStartIndex,
+            //         this.select.colStartIndex,
+            //         this.colsHeader.length,
+            //     )
+            // ];
+            // let eCell = this.$refs.cell[
+            //     getCellIndex(
+            //         this.select.rowEndIndex,
+            //         this.select.colEndIndex,
+            //         this.colsHeader.length,
+            //     )
+            // ];
+            // let rect = getTwoElementsRect(sCell, eCell);
+            // return {
+            //     left: numToPx(rect.left),
+            //     top: numToPx(rect.top),
+            //     width: numToPx(rect.width),
+            //     height: numToPx(rect.height),
+            // };
         },
     },
     methods: {
         startSelect(evt, rowIndex, colIndex) {
+            evt.currentTarget;
+            let el = evt.currentTarget.getBoundingClientRect();
+            debugger;
             this.select.rowStartIndex = rowIndex;
             this.select.rowEndIndex = rowIndex;
             this.select.colStartIndex = colIndex;
@@ -81,10 +91,8 @@ export default {
         },
         isActive(colIndex) {
             return (
-                Math.min(this.select.colStartIndex, this.select.colEndIndex) <=
-                    colIndex &&
-                colIndex <=
-                    Math.max(this.select.colStartIndex, this.select.colEndIndex)
+                Math.min(this.select.colStartIndex, this.select.colEndIndex) <= colIndex &&
+                colIndex <= Math.max(this.select.colStartIndex, this.select.colEndIndex)
             );
         },
     },

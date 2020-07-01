@@ -40,8 +40,7 @@ export default {
                 horiAxis.display = 'none';
                 document.body.style.cursor = '';
                 let height = evt.pageY - vue.store.startY + currentHeight;
-                vue.rowsHeader[index].height =
-                    height > vue.cellMinHeight ? height : vue.cellMinHeight;
+                vue.rowsHeader[index].height = height > vue.cellMinHeight ? height : vue.cellMinHeight;
                 window.removeEventListener('mousemove', HandleOnMouseMove);
                 window.removeEventListener('mouseup', HandleOnMouseUp);
             };
@@ -66,8 +65,7 @@ export default {
                 vertAxis.display = 'none';
                 document.body.style.cursor = '';
                 let width = evt.pageX - vue.store.startX + currentWidth;
-                vue.colsHeader[index].width =
-                    width > vue.cellMinWidth ? width : vue.cellMinWidth;
+                vue.colsHeader[index].width = width > vue.cellMinWidth ? width : vue.cellMinWidth;
                 window.removeEventListener('mousemove', HandleOnMouseMove);
                 window.removeEventListener('mouseup', HandleOnMouseUp);
             };
