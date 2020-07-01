@@ -42,6 +42,7 @@ export default {
             }, []);
         },
         visibleRows() {
+<<<<<<< HEAD
             let { start, end } = this.visibleRowsIndex;
             return this.rowsHeader.slice(start, end).map((item, index) => {
                 return {
@@ -78,5 +79,27 @@ export default {
         //     this.$refs.contentTable.style.transform = `translate(0, ${scrollTop}px)`;
         //     this.visibleRowsIndex = scroll.findVisibleIndex(scrollTop, this.$refs.contentTable.offsetHeight, this.rowsList);
         // },
+=======
+            let start = this.visibleRowsIndex[0];
+            return this.rowsHeader.slice(...this.visibleRowsIndex).map((item) => {
+                return { ...item, index: start++ };
+            });
+        },
+        startTop() {
+            return scroll.findItemTop(this.visibleRowsIndex[0], this.rowsHeader);
+        },
+    },
+    methods: {
+        handleScroll(evt) {
+            let el = evt.target;
+            let direction = scroll.scrollDirection(el);
+            this.updateVisibleData(el.scrollTop);
+        },
+        updateVisibleData(scrollTop = 0) {
+            this.$refs.rowsHeader.$el.style.transform = `translate(0, -${scrollTop}px)`;
+            this.$refs.visibleContent.style.transform = `translate(0, ${this.startTop}px)`;
+            this.visibleRowsIndex = scroll.findVisibleIndex(scrollTop, this.$refs.tableContext.offsetHeight, this.rowsList);
+        },
+>>>>>>> c2410f9de1b5c61216d0f54992536ee9fecb2b6f
     },
 };

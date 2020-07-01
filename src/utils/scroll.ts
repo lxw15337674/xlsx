@@ -19,7 +19,8 @@ function findStartIndex(scrollTop: number, list: number[]): number {
     for (let index in list) {
         top += list[index];
         if (top >= scrollTop) {
-            return Number(index);
+            return Number(index) > 0 ? Number(index) - 1 : 0; // -1使得表格高度始终大于显示高度，这样不会拖拽空白的情况。
+            // return Number(index)
         }
     }
 }
@@ -27,11 +28,15 @@ function findStartIndex(scrollTop: number, list: number[]): number {
 function findEndIndex(visibleLength: number, startIndex: number, list: number[]): number {
     let size = 0;
     let endIndex = startIndex;
+<<<<<<< HEAD
+=======
+    debugger
+>>>>>>> c2410f9de1b5c61216d0f54992536ee9fecb2b6f
     while (endIndex <= list.length - 1 && size < visibleLength) {
         size += list[endIndex];
         endIndex++;
     }
-    return endIndex;
+    return endIndex + 1; // +1使得表格高度始终大于显示高度，这样不会拖拽空白的情况。
 }
 //获取元素在表格的位置
 export function getItemPosition(start: number, end: number, list: number[]): number {
@@ -55,4 +60,14 @@ export function findVisibleIndex(
         start: start,
         end: end,
     };
+}
+
+//查找指定元素的位置
+interface row {
+    height: number;
+}
+export function findItemTop(index: number, list: row[]): number {
+    return list.slice(0, index).reduce((total, item) => {
+        return total + item.height;
+    }, 0);
 }

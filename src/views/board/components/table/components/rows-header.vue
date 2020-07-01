@@ -8,7 +8,11 @@
             <!--                <th class="col-header" />-->
             <!--            </thead>-->
             <tbody>
+<<<<<<< HEAD:src/views/board/components/table/components/rows-header.vue
                 <tr v-for="row in rowsHeader">
+=======
+                <tr v-for="row in rowsHeader" :key="row.index">
+>>>>>>> c2410f9de1b5c61216d0f54992536ee9fecb2b6f:src/views/board/components/table/components/left-table.vue
                     <td :style="{ height: `${row.height}px` }">
                         <div
                             class="row-header"
@@ -21,7 +25,11 @@
                             @mouseup="(evt) => handleMouseUp(evt, row.index)"
                         >
                             {{ row.index + 1 }}
+<<<<<<< HEAD:src/views/board/components/table/components/rows-header.vue
                             <div class="vert-resizable-content" @mousedown="(evt) => rowResizeStart(evt, row.index, row.height)"></div>
+=======
+                            <div class="vert-resizable-content" @mousedown="(evt) => rowResizeStart(evt, row.index, row)"></div>
+>>>>>>> c2410f9de1b5c61216d0f54992536ee9fecb2b6f:src/views/board/components/table/components/left-table.vue
                         </div>
                     </td>
                 </tr>
@@ -72,8 +80,6 @@ export default {
 <style lang="stylus" scoped>
 .left-body
     width 100px
-
-
     .is-active
         background-color borderColor
     .row-header
