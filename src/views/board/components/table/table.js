@@ -92,11 +92,12 @@ export default {
         },
     },
     methods: {
+        updateCellInput() {},
         headerInit() {
             //行
             for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
-                    this.rowsHeader.splice(rowIndex, 1, { height: 40 });
+                    this.rowsHeader.splice(rowIndex, 1, { height: 50 });
                 }
             }
             //列

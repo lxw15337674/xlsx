@@ -1,5 +1,5 @@
-//todo
-// 待利用dom.js 优化代码
+import { once } from 'src/utils/dom';
+
 export default {
     props: {
         cellMinHeight: {
@@ -40,12 +40,12 @@ export default {
                 horiAxis.display = 'none';
                 document.body.style.cursor = '';
                 let height = evt.pageY - vue.store.startY + currentHeight;
-                vue.rowsHeader[index].height = height > vue.cellMinHeight ? height : vue.cellMinHeight;
+                vue.rowsHeader[index].height =
+                    height > vue.cellMinHeight ? height : vue.cellMinHeight;
                 window.removeEventListener('mousemove', HandleOnMouseMove);
-                window.removeEventListener('mouseup', HandleOnMouseUp);
             };
-            window.addEventListener('mouseup', HandleOnMouseUp);
             window.addEventListener('mousemove', HandleOnMouseMove);
+            once(window, 'mouseup', HandleOnMouseUp);
         },
         // 列拉伸
         colResizeStart(evt, index, currentWidth) {
@@ -59,6 +59,7 @@ export default {
             vertAxis.top = `${top}px`;
             document.body.style.cursor = 'col-resize';
             let HandleOnMouseMove = function HandleOnMouseMove(evt) {
+                evt.stopPropagation();
                 vertAxis.left = `${evt.pageX}px`;
             };
             let HandleOnMouseUp = function(evt) {
@@ -67,9 +68,8 @@ export default {
                 let width = evt.pageX - vue.store.startX + currentWidth;
                 vue.colsHeader[index].width = width > vue.cellMinWidth ? width : vue.cellMinWidth;
                 window.removeEventListener('mousemove', HandleOnMouseMove);
-                window.removeEventListener('mouseup', HandleOnMouseUp);
             };
-            window.addEventListener('mouseup', HandleOnMouseUp);
+            once(window, 'mouseup', HandleOnMouseUp);
             window.addEventListener('mousemove', HandleOnMouseMove);
         },
     },

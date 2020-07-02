@@ -5,8 +5,6 @@ interface rect {
     width: number;
 }
 interface node {
-    x: number;
-    y: number;
     width: number;
     height: number;
     top: number;
@@ -14,12 +12,14 @@ interface node {
     left: number;
     right: number;
 }
-export function getOffset(el: HTMLElement): object {
+function getOffset(el: HTMLElement): node {
     return {
-        offsetWidth: el.offsetWidth,
-        offsetHeight: el.offsetHeight,
-        offsetLeft: el.offsetLeft,
-        offsetTop: el.offsetTop,
+        width: el.offsetWidth,
+        height: el.offsetHeight,
+        left: el.offsetLeft,
+        top: el.offsetTop,
+        bottom: el.offsetTop + el.offsetHeight,
+        right: el.offsetLeft + el.offsetWidth,
     };
 }
 /**

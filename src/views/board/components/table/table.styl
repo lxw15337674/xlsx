@@ -17,7 +17,6 @@
         overflow hidden
         max-width 100%
         flex:1
-<<<<<<< HEAD
         .table-header
             position sticky
             top 0
@@ -39,41 +38,21 @@
         .left-table
             position absolute
             background white
-=======
-        .rows-header
->>>>>>> c2410f9de1b5c61216d0f54992536ee9fecb2b6f
             display inline-block
-        .table-body
-            height calc(100% - 40px)
-            .table-context
-                overflow auto
-                height 100%
-                width calc(100% - 100px)
-                display inline-block
-                vertical-align top
-                position relative
-                .phantom
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    right: 0;
-                    z-index -1
-                .visible
-                    min-height 100%
-
-
+            left 0
+            right 0
+            z-index 3
     table
         table-layout: fixed;
         border-collapse: separate;
     .is-active
         background-color borderColor !important
 
-    .select-content
+    >>>.select-content
         border 1px solid activeColor
         background #e5f3ff
-        position fixed
+        position :absolute
         pointer-events none
-        z-index -1
 
     axis()
         position fixed

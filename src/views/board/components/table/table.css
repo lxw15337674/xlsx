@@ -52,9 +52,8 @@
 .c-table .select-content {
   border: 1px solid activeColor;
   background: #e5f3ff;
-  position: fixed;
+  position: absolute;
   pointer-events: none;
-  z-index: -1;
 }
 .c-table .horiAxis {
   position: fixed;

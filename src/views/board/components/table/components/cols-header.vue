@@ -18,7 +18,10 @@
                         <div>
                             {{ col.index | indexToChar }}
                         </div>
-                        <div class="hori-resizable-content" @mousedown="(evt) => colResizeStart(evt, col.index, col.width)"></div>
+                        <div
+                            class="hori-resizable-content"
+                            @mousedown="(evt) => colResizeStart(evt, col.index, col.width)"
+                        ></div>
                     </div>
                     <!--              <el-button @click="clearCol(index)">删除</el-button>-->
                 </th>
@@ -31,7 +34,7 @@
 import { indexToChar } from 'src/utils/transform.ts';
 import select from './mixins/select.js';
 export default {
-    name: 'table-header',
+    name: 'cols-header',
     mixins: [select],
     props: {
         colsHeader: {
@@ -66,13 +69,18 @@ export default {
             this.$emit('colResizeStart', evt, index, colWidth);
         },
         isActive(colIndex) {
-            return Math.min(this.select.colStartIndex, this.select.colEndIndex) <= colIndex && colIndex <= Math.max(this.select.colStartIndex, this.select.colEndIndex);
+            return (
+                Math.min(this.select.colStartIndex, this.select.colEndIndex) <= colIndex &&
+                colIndex <= Math.max(this.select.colStartIndex, this.select.colEndIndex)
+            );
         },
     },
 };
 </script>
 
 <style lang="stylus" scoped>
+.is-active
+    background-color borderColor
 .col-container
     width 100px
     border-top 1px solid borderColor
