@@ -10,6 +10,8 @@ export default {
                 colStartIndex: null,
                 rowEndIndex: null,
                 colEndIndex: null,
+                startCell: {},
+                endCell: {},
             },
             selectContent: {
                 width: 0,
@@ -21,39 +23,29 @@ export default {
             selectedCellList: [],
         };
     },
-    computed: {
-        selectStyle() {
-            // if (this.select.rowStartIndex === null) {
-            //     return {};
-            // }
-            // let sCell = this.$refs.cell[
-            //     getCellIndex(
-            //         this.select.rowStartIndex,
-            //         this.select.colStartIndex,
-            //         this.colsHeader.length,
-            //     )
-            // ];
-            // let eCell = this.$refs.cell[
-            //     getCellIndex(
-            //         this.select.rowEndIndex,
-            //         this.select.colEndIndex,
-            //         this.colsHeader.length,
-            //     )
-            // ];
-            // let rect = getTwoElementsRect(sCell, eCell);
-            // return {
-            //     left: numToPx(rect.left),
-            //     top: numToPx(rect.top),
-            //     width: numToPx(rect.width),
-            //     height: numToPx(rect.height),
-            // };
+    watch: {
+        select: {
+            deep: true,
+            handler() {
+                this.getSelectContent();
+            },
         },
     },
     methods: {
+        getSelectContent() {
+            let rect = getTwoElementsRect(this.select.startCell, this.select.endCell);
+            let scroller = this.$refs.scroller.$el.getBoundingClientRect();
+            this.selectContent = {
+                left: numToPx(rect.left - scroller.left),
+                top: numToPx(rect.top - scroller.top),
+                width: numToPx(rect.width),
+                height: numToPx(rect.height),
+            };
+        },
         startSelect(evt, rowIndex, colIndex) {
-            evt.currentTarget;
-            let el = evt.currentTarget.getBoundingClientRect();
-            debugger;
+            evt.preventDefault();
+            this.select.startCell = evt.currentTarget;
+            this.select.endCell = evt.currentTarget;
             this.select.rowStartIndex = rowIndex;
             this.select.rowEndIndex = rowIndex;
             this.select.colStartIndex = colIndex;
@@ -83,6 +75,7 @@ export default {
             if (!this.selectStart) {
                 return;
             }
+            this.select.endCell = evt.currentTarget;
             this.select.rowEndIndex = rowIndex;
             this.select.colEndIndex = colIndex;
         },

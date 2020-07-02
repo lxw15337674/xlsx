@@ -92,17 +92,18 @@ export default {
         },
     },
     methods: {
+        updateCellInput() {},
         headerInit() {
             //行
             for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
-                    this.rowsHeader.splice(rowIndex, 1, { height: 40 });
+                    this.rowsHeader.splice(rowIndex, 1, { height: 200 });
                 }
             }
             //列
             for (let colIndex = 0; colIndex < this.data[0].length; colIndex++) {
                 if (!this.colsHeader[colIndex]) {
-                    this.colsHeader.splice(colIndex, 1, { width: 100 });
+                    this.colsHeader.splice(colIndex, 1, { width: 200 });
                 }
             }
         },

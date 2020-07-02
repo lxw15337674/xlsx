@@ -28,7 +28,7 @@ export default {
             XLSX.writeFile(workbook, 'test.xlsx');
         },
 
-        sheetInit(rowsLength = 50, colsLength = 50) {
+        sheetInit(rowsLength = 500, colsLength = 100) {
             let table = [];
             for (let row = 0; row < rowsLength; row++) {
                 table[row] = [];

@@ -14,28 +14,29 @@ export function scrollDirection(el: HTMLElement): string {
 //todo 二分查找法优化
 function binarySearch() {}
 //查找开始位置
-function findStartIndex(scrollTop: number, list: number[]): number {
+export function findStartIndex(scrollTop: number, list: number[]): number {
     let top = 0;
     for (let index in list) {
         top += list[index];
-        if (top >= scrollTop) {
+        if (top > scrollTop) {
             return Number(index);
         }
     }
 }
 //查找结束位置
-function findEndIndex(visibleLength: number, startIndex: number, list: number[]): number {
+export function findEndIndex(visibleLength: number, startIndex: number, list: number[]): number {
     let size = 0;
     let endIndex = startIndex;
-    while (endIndex <= list.length - 1 && size < visibleLength) {
+    let maxVisibleLength = visibleLength + list[startIndex];
+    while (endIndex <= list.length - 1 && size <= maxVisibleLength) {
         size += list[endIndex];
         endIndex++;
     }
     return endIndex;
 }
-//获取元素在表格的位置
-export function getItemPosition(start: number, end: number, list: number[]): number {
-    return list.slice(start, end + 1).reduce((total, item) => {
+//获取元素在表格的起始位置
+export function getItemStartPosition(start: number, end: number, list: number[]): number {
+    return list.slice(start, end).reduce((total, item) => {
         return total + item;
     }, 0);
 }

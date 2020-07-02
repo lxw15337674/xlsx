@@ -49,12 +49,10 @@
 .c-table .is-active {
   background-color: borderColor !important;
 }
-.c-table .select-content {
+.c-table >>>.select-content {
   border: 1px solid activeColor;
   background: #e5f3ff;
-  position: fixed;
-  pointer-events: none;
-  z-index: -1;
+  position: absolute;
 }
 .c-table .horiAxis {
   position: fixed;
