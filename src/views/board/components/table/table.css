@@ -49,7 +49,7 @@
 .c-table .is-active {
   background-color: borderColor !important;
 }
-.c-table .select-content {
+.c-table >>>.select-content {
   border: 1px solid activeColor;
   background: #e5f3ff;
   position: absolute;

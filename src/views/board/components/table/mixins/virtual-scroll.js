@@ -47,6 +47,7 @@ export default {
                 return {
                     height: item.height,
                     index: index + this.visibleRowsIndex.start,
+                    id: item.id,
                 };
             });
         },
@@ -56,6 +57,7 @@ export default {
                 return {
                     width: item.width,
                     index: index + start,
+                    id: item.id,
                 };
             });
         },

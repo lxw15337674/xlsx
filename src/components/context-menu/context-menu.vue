@@ -4,7 +4,7 @@ import Vue from 'vue';
 export default {
     name: 'context-menu',
     mounted() {
-        this.$el.addEventListener('contextmenu', this.handleOnContextMenu);
+        this.$el.addEventListener('contextmenu', this.handleOnContextMenu,true);
         this.$el.addEventListener('click', this.handleClick);
     },
     computed: {
@@ -32,9 +32,6 @@ export default {
         },
         handleClick() {
             this.position.visible = false;
-        },
-        prevent(evt) {
-            evt.preventDefault();
         },
         getFirstElement() {
             const slots = this.$slots.default;
@@ -75,7 +72,7 @@ export default {
                     class={[this.theme, 'context-menu']}
                     style={this.tipStyle}
                     v-show={this.position.visible}
-                    onContextMenu='prevent'>
+                   >
                     {this.$slots.contentMenu}
                 </div>
             </transition>

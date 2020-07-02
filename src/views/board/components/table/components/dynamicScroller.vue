@@ -48,7 +48,6 @@ export default {
             if (!this.$_scrollDirty) {
                 this.$_scrollDirty = true;
                  requestAnimationFrame(() => {
-                    console.log('test')
                     this.$_scrollDirty = false;
                     let el = evt.target;
                     let continuous = this.updateVisibleData(el.scrollTop, el.scrollLeft);

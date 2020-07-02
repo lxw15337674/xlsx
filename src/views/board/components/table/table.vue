@@ -50,14 +50,16 @@
                                 <colgroup>
                                     <col
                                         v-for="col in visibleCols"
+                                        :key="col.id"
                                         :style="{ width: `${col.width}px` }"
                                     />
                                 </colgroup>
                                 <tbody>
-                                    <tr ref="rows" v-for="row in visibleRows">
+                                    <tr ref="rows" v-for="row in visibleRows" :key="row.id">
                                         <td
                                             ref="cell"
                                             v-for="col in visibleCols"
+                                            :key="col.id"
                                             @click.capture="
                                                 (evt) => handleCellClick(evt, row.index, col.index)
                                             "

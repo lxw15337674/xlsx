@@ -7,6 +7,7 @@ import contextItem from 'src/components/context-menu/context-item';
 import { importMixins, importComponents } from 'src/utils/import.ts';
 const modulesFiles = importMixins(require.context('./mixins', false, /\.js$/));
 const components = importComponents(require.context('./components', false, /\.vue$/));
+let id = 1;
 export default {
     components: { ...components, CInput, contextMenu, contextItem },
     mixins: modulesFiles,
@@ -21,6 +22,7 @@ export default {
             colsHeader: [
                 {
                     width: 100,
+                    id: 0,
                 },
             ],
             // 行头
@@ -97,13 +99,13 @@ export default {
             //行
             for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
-                    this.rowsHeader.splice(rowIndex, 1, { height: 50 });
+                    this.rowsHeader.splice(rowIndex, 1, { height: 50, id: id++ });
                 }
             }
             //列
             for (let colIndex = 0; colIndex < this.data[0].length; colIndex++) {
                 if (!this.colsHeader[colIndex]) {
-                    this.colsHeader.splice(colIndex, 1, { width: 100 });
+                    this.colsHeader.splice(colIndex, 1, { width: 100, id: id++ });
                 }
             }
         },
