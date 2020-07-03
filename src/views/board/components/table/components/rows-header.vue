@@ -43,7 +43,7 @@ export default {
             type: Object,
             require: true,
         },
-        select: {
+        selectedIndex: {
             type: Object,
             require: true,
         },
@@ -63,7 +63,7 @@ export default {
             this.$emit('rowResizeStart', evt, index, height);
         },
         isActive(rowIndex) {
-            return Math.min(this.select.rowStartIndex, this.select.rowEndIndex) <= rowIndex && rowIndex <= Math.max(this.select.rowStartIndex, this.select.rowEndIndex);
+            return Math.min(this.selectedIndex.rowStartIndex, this.selectedIndex.rowEndIndex) <= rowIndex && rowIndex <= Math.max(this.selectedIndex.rowStartIndex, this.selectedIndex.rowEndIndex);
         },
     },
 };

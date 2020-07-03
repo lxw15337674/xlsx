@@ -18,7 +18,7 @@
             <cols-header
                 class="table-header"
                 :colsHeader="visibleCols"
-                :select="select"
+                :selectedIndex="selectedIndex"
                 @selectStart="colSelect"
                 @select="colsSelect"
                 @colResizeStart="colResizeStart"
@@ -27,7 +27,7 @@
             <rows-header
                 class="left-table"
                 :rowsHeader="visibleRows"
-                :select="select"
+                :selectedIndex="selectedIndex"
                 @selectStart="rowSelect"
                 @select="rowsSelect"
                 @rowResizeStart="rowResizeStart"
@@ -43,7 +43,7 @@
                         :cols="colslist"
                     >
                         <template slot="before">
-                            <div class="select-content" :style="selectContent"></div>
+                            <div class="select-content" :style="selectedContent"></div>
                         </template>
                         <slot>
                             <table :style="visibleTableStyle">

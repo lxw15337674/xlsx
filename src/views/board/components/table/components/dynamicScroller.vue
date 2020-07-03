@@ -51,9 +51,7 @@ export default {
                     this.$_scrollDirty = false;
                     let el = evt.target;
                     let continuous = this.updateVisibleData(el.scrollTop, el.scrollLeft);
-                    // const { continuous } = this.updateVisibleItems(false, true)
-                    // It seems sometimes chrome doesn't fire scroll event :/
-                    // When non continous scrolling is ending, we force a refresh
+                     //todo 滚动性能待优化
                     if (!continuous) {
                         clearTimeout(this.$_refreshTimout);
                         this.$_refreshTimout = setTimeout(this.handleScroll, 100);
@@ -87,7 +85,7 @@ export default {
                 this.tableScrollLeft = scroll.getItemStartPosition(0, start, this.cols);
                 this.scrollMaxWidth = this.tableScrollLeft + this.cols[start];
             }
-            return true;
+            return true
         },
     },
     computed: {

@@ -15,6 +15,7 @@
                     @change="importFile"
                 />
                 <div class="right-tools">
+                    <img src="~src/assets/images/hi.png" width="50" height="50" class="mr30">
                     <el-button type="success" size="mini" @click="exportFile"
                         >导出数据</el-button
                     >

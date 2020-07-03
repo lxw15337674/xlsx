@@ -45,7 +45,7 @@ export default {
             type: Object,
             require: true,
         },
-        select: {
+        selectedIndex: {
             type: Object,
             require: true,
         },
@@ -70,8 +70,8 @@ export default {
         },
         isActive(colIndex) {
             return (
-                Math.min(this.select.colStartIndex, this.select.colEndIndex) <= colIndex &&
-                colIndex <= Math.max(this.select.colStartIndex, this.select.colEndIndex)
+                Math.min(this.selectedIndex.colStartIndex, this.selectedIndex.colEndIndex) <= colIndex &&
+                colIndex <= Math.max(this.selectedIndex.colStartIndex, this.selectedIndex.colEndIndex)
             );
         },
     },

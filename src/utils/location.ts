@@ -1,8 +1,10 @@
+//TODO 引用问题
+import * as math from './math.ts';
 interface rect {
-    left: number;
-    top: number;
-    height: number;
-    width: number;
+    left: string;
+    top: string;
+    height: string;
+    width: string;
 }
 interface node {
     width: number;
@@ -25,16 +27,44 @@ function getOffset(el: HTMLElement): node {
 /**
  * 获取两个元素之间的距离
  */
-export function getTwoElementsRect(el1: HTMLElement, el2: HTMLElement): rect {
-    let rect1: node = el1.getBoundingClientRect();
-    let rect2: node = el2.getBoundingClientRect();
+// export function getTwoElementsRect(el1: HTMLElement, el2: HTMLElement): rect {
+//     let rect1: node = el1.getBoundingClientRect();
+//     let rect2: node = el2.getBoundingClientRect();
+//     return {
+//         left: Math.min(rect1.left, rect2.left),
+//         top: Math.min(rect1.top, rect2.top),
+//         height: Math.max(rect2.bottom, rect1.bottom) - Math.min(rect1.top, rect2.top),
+//         width: Math.max(rect2.right, rect1.right) - Math.min(rect1.left, rect2.left),
+//     };
+// }
+
+/**
+ * 获取两个单元格之间的矩形边界
+ */
+interface selectedIndex {
+    rowStartIndex: number;
+    colStartIndex: number;
+    rowEndIndex: number;
+    colEndIndex: number;
+}
+
+export function getRectBetweenTwoCells(
+    selected: selectedIndex,
+    rows: number[],
+    cols: number[],
+): rect {
+    let [rowStartIndex, rowEndIndex] = math.sort([selected.rowStartIndex, selected.rowEndIndex]);
+    let [colStartIndex, colEndIndex] = math.sort([selected.colStartIndex, selected.colEndIndex]);
+    // 数组取和
+    function total(start: number, end: number) {}
     return {
-        left: Math.min(rect1.left, rect2.left),
-        top: Math.min(rect1.top, rect2.top),
-        height: Math.max(rect2.bottom, rect1.bottom) - Math.min(rect1.top, rect2.top),
-        width: Math.max(rect2.right, rect1.right) - Math.min(rect1.left, rect2.left),
+        left: `${math.total(cols, 0, colStartIndex)}px`,
+        width: `${math.total(cols, colStartIndex, colEndIndex + 1)}px`,
+        top: `${math.total(rows, 0, rowStartIndex)}px`,
+        height: `${math.total(rows, rowStartIndex, rowEndIndex + 1)}px`,
     };
 }
+
 // /**
 //  * 获取元素的矩形边界
 //  * 等同于getBoundingClientRect()
