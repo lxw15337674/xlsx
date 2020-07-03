@@ -56,22 +56,20 @@
                                 </colgroup>
                                 <tbody>
                                     <tr ref="rows" v-for="row in visibleRows" :key="row.id">
-                                        <td
-                                            ref="cell"
-                                            v-for="col in visibleCols"
-                                            :key="col.id"
-                                            @click.capture="
-                                                (evt) => handleCellClick(evt, row.index, col.index)
-                                            "
-                                        >
+                                        <td ref="cell" v-for="col in visibleCols" :key="col.id">
                                             <div
                                                 class="cell"
+                                                @click="
+                                                    (evt) =>
+                                                        handleCellClick(evt, row.index, col.index)
+                                                "
                                                 @mousedown="
                                                     (evt) => startSelect(evt, row.index, col.index)
                                                 "
                                                 @mouseenter="
-                                                    (evt) => isSelect(evt, row.index, col.index)
+                                                    (evt) => handleMouseEnter(evt, row.index, col.index)
                                                 "
+                                                @contextmenu=" (evt) => handleContextMenu(evt, row.index, col.index)"
                                                 :style="{
                                                     height: `${row.height}px`,
                                                 }"

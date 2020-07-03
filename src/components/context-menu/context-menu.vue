@@ -29,6 +29,7 @@ export default {
             this.position.left = evt.pageX;
             this.position.top = evt.pageY;
             this.position.visible = true;
+            this.$emit('contextmenu')
         },
         handleClick() {
             this.position.visible = false;
