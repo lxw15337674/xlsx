@@ -1,15 +1,28 @@
+@keyframes hi {
+  0% {
+    left: -60px;
+    filter: hue-rotate(0)  ;
+
+  }
+  100% {
+    left:100%;
+    filter  hue-rotate(360deg)
+  }
+}
+
 .home
   height: 100vh
   overflow hidden
   display flex
   flex-direction column
   .header {
-    padding: 10px 20px;
+    padding:0 20px;
+    line-height 60px
     background-color: #f8f8f8;
     position: relative;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    .tool-container {
-      display flex
+
+    .left-tools {
       button {
         margin-right: 10px;
       }
@@ -21,20 +34,31 @@
         box-sizing border-box
         max-width: 400px;
         border: 1px solid transparent;
+
         &:focus {
           border: 1px solid #4d90fe;
           -webkit-appearance: none;
           color: #333333 !important;
         }
       }
-
-      .right-tools {
-        display: inline-block;
-        position: absolute;
-        right: 20px;
-        * {
-          vertical-align: middle
-        }
+    }
+    .hi{
+      position:absolute;
+      animation: hi 50s linear infinite;
+      transition all 1s
+      z-index 0
+      &:hover{
+        opacity:0.2;
+        filter: grayscale(50%)
       }
+    }
+    .right-tools {
+      position: absolute;
+      right: 20px;
+
+      * {
+        vertical-align: middle
+      }
+
     }
   }
