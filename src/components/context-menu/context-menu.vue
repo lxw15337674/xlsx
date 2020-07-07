@@ -4,8 +4,8 @@ import Vue from 'vue';
 export default {
     name: 'context-menu',
     mounted() {
-        this.$el.addEventListener('contextmenu', this.handleOnContextMenu,true);
-        this.$el.addEventListener('click', this.handleClick);
+        this.$el.addEventListener('contextmenu', this.OpenContextMenu, true);
+        this.$el.addEventListener('click', this.closeContextMenu);
     },
     computed: {
         tipStyle() {
@@ -19,20 +19,20 @@ export default {
             position: {
                 left: 0,
                 top: 0,
-                visible: false,
             },
+            visible: false,
         };
     },
     methods: {
-        handleOnContextMenu(evt) {
+        OpenContextMenu(evt) {
             evt.preventDefault();
             this.position.left = evt.pageX;
             this.position.top = evt.pageY;
-            this.position.visible = true;
-            this.$emit('contextmenu')
+            this.visible = true;
+            this.$emit('contextmenu');
         },
-        handleClick() {
-            this.position.visible = false;
+        closeContextMenu() {
+            this.visible = false;
         },
         getFirstElement() {
             const slots = this.$slots.default;
@@ -72,8 +72,9 @@ export default {
                     id='context-menu'
                     class={[this.theme, 'context-menu']}
                     style={this.tipStyle}
-                    v-show={this.position.visible}
-                   >
+                    v-show={this.visible}
+                    onClick={this.closeContextMenu}
+                >
                     {this.$slots.contentMenu}
                 </div>
             </transition>

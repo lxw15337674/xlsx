@@ -11,9 +11,8 @@ export default {
                 rowEndIndex: null,
                 colEndIndex: null,
             },
-
             selectStart: false,
-            // selectedCellList: [], //TODO 多选情况
+            multipleList: [], //TODO 多选情况
         };
     },
     watch: {},
@@ -24,6 +23,9 @@ export default {
                 this.rowsList,
                 this.colslist,
             );
+        },
+        selectedList() {
+            return select.getSelectedList(this.data, this.selectedIndex);
         },
     },
     methods: {

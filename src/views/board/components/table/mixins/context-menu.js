@@ -41,6 +41,7 @@ export default {
             ],
         };
     },
+    computed: {},
     methods: {
         fnCall(method) {
             this[method]();
@@ -48,18 +49,29 @@ export default {
         copy() {
             //https://github.com/justjavac/the-front-end-knowledge-you-may-not-know/blob/master/archives/023-clipboardapi.md
             //https://juejin.im/entry/5ad0684cf265da237b227fc0
-            navigator.clipboard
-                .writeText('要复制的文本')
-                .then(() => {
-                    console.log('文本已经成功复制到剪切板');
-                })
-                .catch((err) => {
-                    // This can happen if the user denies clipboard permissions:
-                    // 如果用户没有授权，则抛出异常
-                    console.error('无法复制此文本：', err);
-                });
+            navigator.clipboard.writeText(this.selectedList.join(' ')).catch((err) => {
+                // 如果用户没有授权，则抛出异常
+                console.error('无法复制此文本：', err);
+            });
         },
-        paste() {},
+        paste() {
+            let vue = this;
+            navigator.clipboard.readText().then((text) => {
+                for (
+                    let row = this.selectedIndex.rowStartIndex;
+                    row <= this.selectedIndex.rowEndIndex;
+                    row++
+                ) {
+                    for (
+                        let col = this.selectedIndex.colStartIndex;
+                        col <= this.selectedIndex.colEndIndex;
+                        col++
+                    ) {
+                        this.table[row].splice([col], 1, text);
+                    }
+                }
+            });
+        },
         cut() {},
         clear() {},
         insertRowUp() {},
