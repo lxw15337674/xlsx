@@ -1,6 +1,5 @@
 import { once } from 'src/utils/dom';
 import * as location from '@/utils/location.ts';
-import { numToPx, getCellIndex } from 'src/utils/transform.ts';
 import * as select from 'src/utils/select.ts';
 
 export default {

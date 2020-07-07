@@ -1,5 +1,4 @@
-//TODO 引用问题
-import * as math from './math.ts';
+import * as math from './math';
 interface rect {
     left: string;
     top: string;
@@ -55,8 +54,6 @@ export function getRectBetweenTwoCells(
 ): rect {
     let [rowStartIndex, rowEndIndex] = math.sort([selected.rowStartIndex, selected.rowEndIndex]);
     let [colStartIndex, colEndIndex] = math.sort([selected.colStartIndex, selected.colEndIndex]);
-    // 数组取和
-    function total(start: number, end: number) {}
     return {
         left: `${math.total(cols, 0, colStartIndex)}px`,
         width: `${math.total(cols, colStartIndex, colEndIndex + 1)}px`,

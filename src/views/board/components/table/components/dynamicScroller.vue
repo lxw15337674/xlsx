@@ -38,7 +38,6 @@ export default {
         return {
             tableScrollTop: 0,
             tableScrollLeft: 0,
-
             scrollMaxHeight: 0, //增加滚动缓存，减少计算
             scrollMaxWidth: 0,
         };
@@ -100,6 +99,7 @@ export default {
                 height: `${this.height}px`,
             };
         },
+
         bottomItem() {
             return scroll.getItemPosition(0, this.visibleRowsIndex.end, this.rows);
         },
