@@ -46,18 +46,17 @@ export default {
         handleScroll(evt) {
             if (!this.$_scrollDirty) {
                 this.$_scrollDirty = true;
-                 requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
                     this.$_scrollDirty = false;
                     let el = evt.target;
                     let continuous = this.updateVisibleData(el.scrollTop, el.scrollLeft);
-                     //todo 滚动性能待优化
+                    //todo 滚动性能待优化
                     if (!continuous) {
                         clearTimeout(this.$_refreshTimout);
                         this.$_refreshTimout = setTimeout(this.handleScroll, 100);
                     }
                 });
             }
-
             this.$emit('scroll');
         },
         updateVisibleData(scrollTop = 0, scrollLeft = 0) {
@@ -65,7 +64,7 @@ export default {
                 let { start, end } = scroll.findVisibleIndex(
                     scrollTop,
                     this.$refs.scroller.clientHeight,
-                    this.rows,
+                    this.contentHeight,
                 );
                 this.visibleRowsIndex.start = start;
                 this.visibleRowsIndex.end = end;
@@ -77,14 +76,14 @@ export default {
                 let { start, end } = scroll.findVisibleIndex(
                     scrollLeft,
                     this.$refs.scroller.clientWidth,
-                    this.cols,
+                    this.contentWidth,
                 );
                 this.visibleColsIndex.start = start;
                 this.visibleColsIndex.end = end;
                 this.tableScrollLeft = scroll.getItemStartPosition(0, start, this.cols);
                 this.scrollMaxWidth = this.tableScrollLeft + this.cols[start];
             }
-            return true
+            return true;
         },
     },
     computed: {
@@ -99,7 +98,22 @@ export default {
                 height: `${this.height}px`,
             };
         },
-
+        //高度缓存
+        contentHeight() {
+            let total = 0;
+            return this.rows.map((item) => {
+                total += item;
+                return total;
+            });
+        },
+        //长度缓存
+        contentWidth() {
+            let total = 0;
+            return this.cols.map((item) => {
+                total += item;
+                return total;
+            });
+        },
         bottomItem() {
             return scroll.getItemPosition(0, this.visibleRowsIndex.end, this.rows);
         },
