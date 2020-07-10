@@ -7,7 +7,9 @@
     "module": "commonjs", // 指定生成哪个模块系统代码
     "noImplicitAny": false, // 是否默认禁用 any
     "removeComments": true, // 是否移除注释
-    "target": "ESNext",
+    "target": "es5",
+    "declaration": true,
+    "declarationDir": "types",
     "strict": false,
     "importHelpers": true,
     "moduleResolution": "node",
@@ -19,7 +21,14 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "lib": [
+      "dom",
+      "es5",
+      "es6",
+      "es7",
+      "es2015.promise"
+    ],
+    "pretty": true
   },
   "exclude": ["node_modules"]
 }
