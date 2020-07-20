@@ -39,7 +39,7 @@ function binarySearch(offset: number, list: number[]): number {
             startIndex = midIndex + 1;
         }
     }
-    return -1;
+    return list.length;
 }
 
 // //查找开始位置

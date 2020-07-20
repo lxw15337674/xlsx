@@ -1,14 +1,16 @@
 <template>
-    <!--      v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
+<!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
+    <!--        @scroll.passive="handleScroll"-->
+
     <div
         class="dynamicScroller"
         ref="scroller"
-        @scroll.passive="handleScroll"
+        v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"
         v-on="$listeners"
         v-bind="$attrs"
     >
         <slot name="before"></slot>
-        <div class="phantom" :style="tableSize"></div>
+        <div @resize="handleScroll" ref="phantom" class="phantom" :style="tableSize"></div>
         <div class="wrapper" ref="wrapper" :style="wrapperStyle">
             <slot></slot>
         </div>
@@ -44,19 +46,8 @@ export default {
     },
     methods: {
         handleScroll(evt) {
-            if (!this.$_scrollDirty) {
-                this.$_scrollDirty = true;
-                requestAnimationFrame(() => {
-                    this.$_scrollDirty = false;
-                    let el = evt.target;
-                    let continuous = this.updateVisibleData(el.scrollTop, el.scrollLeft);
-                    //todo 滚动性能待优化
-                    if (!continuous) {
-                        clearTimeout(this.$_refreshTimout);
-                        this.$_refreshTimout = setTimeout(this.handleScroll, 100);
-                    }
-                });
-            }
+            let el = evt.target;
+            this.updateVisibleData(el.scrollTop, el.scrollLeft);
             this.$emit('scroll');
         },
         updateVisibleData(scrollTop = 0, scrollLeft = 0) {
@@ -83,7 +74,12 @@ export default {
                 this.tableScrollLeft = scroll.getItemStartPosition(0, start, this.cols);
                 this.scrollMaxWidth = this.tableScrollLeft + this.cols[start];
             }
-            return true;
+        },
+    },
+    watch: {
+        tableSize: {
+            deep: true,
+            handler() {},
         },
     },
     computed: {

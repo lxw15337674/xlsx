@@ -5,13 +5,13 @@ export default {
         Vue.directive(name, {
             inserted(el, binding, vnode, oldVnode) {
                 let params = binding.value;
-                function debounce(func, wait = params.wait || 500) {
+                function debounce(func) {
                     let timer;
                     return function(...args) {
                         clearTimeout(timer);
                         timer = setTimeout(() => {
                             func(...args);
-                        }, wait);
+                        }, params.wait || 500);
                     };
                 }
                 callback = debounce(params.handler);

@@ -55,8 +55,12 @@
                                     />
                                 </colgroup>
                                 <tbody>
-                                    <tr ref="rows" v-for="row in visibleRows" :key="row.id">
-                                        <td ref="cell" v-for="col in visibleCols" :key="col.id">
+                                    <tr ref="rows" v-for="(row, index) in visibleRows" :key="index">
+                                        <td
+                                            ref="cell"
+                                            v-for="(col, index) in visibleCols"
+                                            :key="index"
+                                        >
                                             <div
                                                 class="cell"
                                                 @click="
@@ -67,9 +71,13 @@
                                                     (evt) => startSelect(evt, row.index, col.index)
                                                 "
                                                 @mouseenter="
-                                                    (evt) => handleMouseEnter(evt, row.index, col.index)
+                                                    (evt) =>
+                                                        handleMouseEnter(evt, row.index, col.index)
                                                 "
-                                                @contextmenu=" (evt) => handleContextMenu(evt, row.index, col.index)"
+                                                @contextmenu="
+                                                    (evt) =>
+                                                        handleContextMenu(evt, row.index, col.index)
+                                                "
                                                 :style="{
                                                     height: `${row.height}px`,
                                                 }"
