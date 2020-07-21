@@ -1,11 +1,11 @@
 <template>
-<!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
+    <!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
     <!--        @scroll.passive="handleScroll"-->
 
     <div
         class="dynamicScroller"
         ref="scroller"
-        v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"
+        @scroll.passive="handleScroll"
         v-on="$listeners"
         v-bind="$attrs"
     >
@@ -18,6 +18,8 @@
 </template>
 <script>
 import * as scroll from 'src/utils/scroll.ts';
+let worker= new scroll.Worker()
+
 export default {
     name: 'dynamicScroller',
     inject: ['visibleRowsIndex', 'visibleColsIndex'],
@@ -42,44 +44,80 @@ export default {
             tableScrollLeft: 0,
             scrollMaxHeight: 0, //增加滚动缓存，减少计算
             scrollMaxWidth: 0,
+            cacheCols: [],
+            cacheRows: [],
         };
     },
     methods: {
-        handleScroll(evt) {
-            let el = evt.target;
-            this.updateVisibleData(el.scrollTop, el.scrollLeft);
+        handleScroll() {
+            switch (scroll.scrollToPosition(this.$refs.scroller)) {
+                case 'horizontal':
+                    this.updateHorizontal();
+                    break;
+                case 'vertical':
+                    this.updateVertical();
+            }
             this.$emit('scroll');
         },
-        updateVisibleData(scrollTop = 0, scrollLeft = 0) {
+        async updateHorizontal() {
+            let scrollLeft = this.$refs.scroller.scrollLeft;
+            if (this.tableScrollLeft >= scrollLeft || this.scrollMaxWidth <= scrollLeft) {
+                let start = await worker.postMessage('findStartIndex', [
+                    scrollLeft,
+                    this.cols,
+                ]);
+                this.visibleColsIndex.start = start;
+                this.visibleColsIndex.end = this.cacheCols[start];
+                this.tableScrollLeft = await worker.postMessage('getItemStartPosition', [
+                    0,
+                    start,
+                    this.cols,
+                ]);
+                this.scrollMaxWidth = this.tableScrollLeft + this.cols[start];
+            }
+        },
+        async updateVertical() {
+            let scrollTop = this.$refs.scroller.scrollTop;
             if (this.tableScrollTop >= scrollTop || this.scrollMaxHeight <= scrollTop) {
-                let { start, end } = scroll.findVisibleIndex(
-                    scrollTop,
-                    this.$refs.scroller.clientHeight,
-                    this.contentHeight,
-                );
+                let start = scroll.findStartIndex(scrollTop, this.rows);
                 this.visibleRowsIndex.start = start;
-                this.visibleRowsIndex.end = end;
+                this.visibleRowsIndex.end = this.cacheRows[start];
                 this.tableScrollTop = scroll.getItemStartPosition(0, start, this.rows);
                 this.scrollMaxHeight = this.tableScrollTop + this.rows[start];
             }
-
-            if (this.tableScrollLeft >= scrollLeft || this.scrollMaxWidth <= scrollLeft) {
-                let { start, end } = scroll.findVisibleIndex(
-                    scrollLeft,
-                    this.$refs.scroller.clientWidth,
-                    this.contentWidth,
-                );
-                this.visibleColsIndex.start = start;
-                this.visibleColsIndex.end = end;
-                this.tableScrollLeft = scroll.getItemStartPosition(0, start, this.cols);
-                this.scrollMaxWidth = this.tableScrollLeft + this.cols[start];
-            }
+        },
+        initTableData() {
+            this.updateHorizontal(0);
+            this.updateVertical(0);
+            this.cache();
+        },
+        async cache() {
+            this.cacheCols = await worker.postMessage('visibleCache', [
+                this.$refs.scroller.clientWidth,
+                this.cols,
+            ]);
+            this.cacheRows = await worker.postMessage('visibleCache', [
+                this.$refs.scroller.clientHeight,
+                this.rows,
+            ]);
         },
     },
     watch: {
         tableSize: {
             deep: true,
             handler() {},
+        },
+        cols: {
+            deep: true,
+            handler() {
+                this.cache();
+            },
+        },
+        rows: {
+            deep: true,
+            handler() {
+                this.cache();
+            },
         },
     },
     computed: {
@@ -94,28 +132,9 @@ export default {
                 height: `${this.height}px`,
             };
         },
-        //高度缓存
-        contentHeight() {
-            let total = 0;
-            return this.rows.map((item) => {
-                total += item;
-                return total;
-            });
-        },
-        //长度缓存
-        contentWidth() {
-            let total = 0;
-            return this.cols.map((item) => {
-                total += item;
-                return total;
-            });
-        },
-        bottomItem() {
-            return scroll.getItemPosition(0, this.visibleRowsIndex.end, this.rows);
-        },
     },
     mounted() {
-        this.updateVisibleData();
+        this.initTableData();
     },
 };
 </script>

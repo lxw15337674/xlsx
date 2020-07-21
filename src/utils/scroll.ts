@@ -1,7 +1,8 @@
+import SWorker from 'simple-web-worker';
 //判断滚动方向
 let sLeft = 0,
     sTop = 0;
-export function scrollDirection(el: HTMLElement): string {
+export function scrollToPosition(el): string {
     if (sLeft != el.scrollLeft) {
         sLeft = el.scrollLeft;
         return 'horizontal';
@@ -42,27 +43,17 @@ function binarySearch(offset: number, list: number[]): number {
     return list.length;
 }
 
-// //查找开始位置
-// export function findStartIndex(scrollTop: number, list: number[]): number {
-//     let top = 0;
-//     for (let index in list) {
-//         top += list[index];
-//         if (top > scrollTop) {
-//             return Number(index);
-//         }
-//     }
-// }
-//查找结束位置
-// export function findEndIndex(visibleOffset: number, startIndex: number, list: number[]): number {
-//     let size = 0;
-//     let endIndex = startIndex;
-//     let maxVisibleLength = visibleOffset + list[startIndex];
-//     while (endIndex <= list.length - 1 && size <= maxVisibleLength) {
-//         size =list[endIndex];
-//         endIndex++;
-//     }
-//     return endIndex;
-// }
+//查找开始位置
+export function findStartIndex(offset: number, list: number[]): number {
+    let top = 0;
+    for (let index in list) {
+        top += list[index];
+        if (top > offset) {
+            return Number(index);
+        }
+    }
+}
+
 //获取元素在表格的起始位置
 export function getItemStartPosition(start: number, end: number, list: number[]): number {
     return list.slice(start, end).reduce((total, item) => {
@@ -85,4 +76,49 @@ export function findVisibleIndex(
         start: start,
         end: end,
     };
+}
+
+//webWorker
+let sWorker;
+export class Worker {
+    private cacheCols = [];
+    private cacheRows = [];
+    public actions = [
+        { message: 'getItemStartPosition', func: getItemStartPosition },
+        { message: 'findStartIndex', func: findStartIndex },
+        //将所有显示内容进行缓存。
+        {
+            message: 'visibleCache',
+            func: (visibleOffset: number, list: number[]) => {
+                // 查找结束位置
+                function findEndIndex(
+                    visibleOffset: number,
+                    startIndex: number,
+                    list: number[],
+                ): number {
+                    let size = 0;
+                    let endIndex = startIndex;
+                    let maxVisibleLength = visibleOffset + list[startIndex];
+                    while (endIndex <= list.length - 1 && size <= maxVisibleLength) {
+                        size += list[endIndex];
+                        endIndex++;
+                    }
+                    return endIndex;
+                }
+
+                let visibleList = [];
+                for (let index in list) {
+                    visibleList.push(findEndIndex(visibleOffset, Number(index), list));
+                }
+                return visibleList;
+            },
+        },
+    ];
+
+    constructor() {
+        if (!sWorker) {
+            return SWorker.create(this.actions);
+        }
+        return sWorker;
+    }
 }
