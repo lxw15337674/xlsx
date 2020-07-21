@@ -8,7 +8,7 @@
             <!--                <th class="col-header" />-->
             <!--            </thead>-->
             <tbody>
-                <tr v-for="row in rowsHeader" :key="row.id">
+                <tr v-for="(row,index) in rowsHeader" :key="index">
                     <td :style="{ height: `${row.height}px` }">
                         <div
                             class="row-header"

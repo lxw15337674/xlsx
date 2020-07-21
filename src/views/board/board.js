@@ -29,7 +29,6 @@ export default {
         },
 
         sheetInit(rowsLength = 100, colsLength = 100) {
-            this.loading = true;
             let table = [];
             for (let row = 0; row < rowsLength; row++) {
                 table[row] = [];
@@ -37,7 +36,6 @@ export default {
                     table[row][col] = `行：${row}，列：${col}`;
                 }
             }
-            this.loading = false;
             return table;
         },
         switchWorkbook(workbook) {},

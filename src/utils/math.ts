@@ -12,3 +12,7 @@ export function total(array: number[], start: number = 0, end: number = -1): num
     }
     return array.slice(start, end).reduce((total, item) => total + item, 0);
 }
+//生成随机数
+export function random(m, n) {
+    return Math.floor(Math.random() * (m - n) + n);
+}

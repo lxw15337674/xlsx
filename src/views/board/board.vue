@@ -1,5 +1,5 @@
 <template>
-    <div class="home" v-loading="loading">
+    <div class="home" >
         <header class="header">
             <img class="mr30 hi "
                  src="~src/assets/images/hi.png"

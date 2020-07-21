@@ -5,6 +5,7 @@ import CInput from 'src/components/input/input.vue';
 import contextMenu from 'src/components/context-menu/context-menu';
 import contextItem from 'src/components/context-menu/context-item';
 import { importMixins, importComponents } from 'src/utils/import.ts';
+import * as math from '@/utils/math';
 const modulesFiles = importMixins(require.context('./mixins', false, /\.js$/));
 const components = importComponents(require.context('./components', false, /\.vue$/));
 let id = 1;
@@ -99,13 +100,13 @@ export default {
             //行
             for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
-                    this.rowsHeader.splice(rowIndex, 1, { height: 50, id: id++ });
+                    this.rowsHeader.splice(rowIndex, 1, { height: math.random(50, 100), id: id++ });
                 }
             }
             //列
             for (let colIndex = 0; colIndex < this.data[0].length; colIndex++) {
                 if (!this.colsHeader[colIndex]) {
-                    this.colsHeader.splice(colIndex, 1, { width: 100, id: id++ });
+                    this.colsHeader.splice(colIndex, 1, { width: math.random(100, 200), id: id++ });
                 }
             }
         },

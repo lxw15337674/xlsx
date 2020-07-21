@@ -5,7 +5,7 @@
                 <th>
                     <div style="width:100px" class="col-container">全选</div>
                 </th>
-                <th v-for="col in colsHeader" :key="col.id">
+                <th v-for="(col,index) in colsHeader" :key="index">
                     <div
                         :style="{ width: `${col.width}px` }"
                         class="col-container"
