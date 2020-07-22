@@ -37,7 +37,7 @@
                 <div class="table-main">
                     <virtual-scroller-table :rows="rowsList" :cols="colsList">
                         <template slot="before">
-                            <div class="select-content" :style="selectedContent"></div>
+                            <div class="select-content" ref="selectedRect" ></div>
                         </template>
                         <template v-slot="{ rowIndex, colIndex, height, width }">
                             <div

@@ -1,3 +1,5 @@
+import * as select from '@/utils/select';
+
 export default {
     data() {
         return {
@@ -41,15 +43,19 @@ export default {
             ],
         };
     },
-    computed: {},
+    // computed: {
+    //     selectedList() {
+    //         return select.getSelectedList(this.data, this.selectedIndex);
+    //     },
+    // },
     methods: {
         fnCall(method) {
             this[method]();
         },
-        copy() {
+        copy(dataList) {
             //https://github.com/justjavac/the-front-end-knowledge-you-may-not-know/blob/master/archives/023-clipboardapi.md
             //https://juejin.im/entry/5ad0684cf265da237b227fc0
-            navigator.clipboard.writeText(this.selectedList.join(' ')).catch((err) => {
+            navigator.clipboard.writeText(dataList.join(' ')).catch((err) => {
                 // 如果用户没有授权，则抛出异常
                 console.error('无法复制此文本：', err);
             });

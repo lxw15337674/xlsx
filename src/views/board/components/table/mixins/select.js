@@ -15,17 +15,19 @@ export default {
             multipleList: [], //TODO 多选情况
         };
     },
-    watch: {},
-    computed: {
-        selectedContent() {
-            return location.getRectBetweenTwoCells(
-                this.selectedIndex,
-                this.rowsList,
-                this.colsList,
-            );
-        },
-        selectedList() {
-            return select.getSelectedList(this.data, this.selectedIndex);
+    watch: {
+        selectedIndex: {
+            deep: true,
+            handler() {
+                Object.assign(
+                    this.$refs.selectedRect.style,
+                    location.getRectBetweenTwoCells(
+                        this.selectedIndex,
+                        this.rowsList,
+                        this.colsList,
+                    ),
+                );
+            },
         },
     },
     methods: {
@@ -64,7 +66,6 @@ export default {
             if (!this.selectedStart) {
                 return;
             }
-            // this.selectedIndex.endCell = evt.currentTarget;
             this.selectedIndex.rowEndIndex = rowIndex;
             this.selectedIndex.colEndIndex = colIndex;
         },

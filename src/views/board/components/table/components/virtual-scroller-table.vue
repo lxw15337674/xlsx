@@ -128,6 +128,9 @@ export default {
             // }
         },
     },
+    mounted(){
+        this.handleScroll()
+    },
     watch: {
         visibleRowsIndex: {
             deep: true,
