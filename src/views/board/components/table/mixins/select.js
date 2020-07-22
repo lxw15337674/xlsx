@@ -21,7 +21,7 @@ export default {
             return location.getRectBetweenTwoCells(
                 this.selectedIndex,
                 this.rowsList,
-                this.colslist,
+                this.colsList,
             );
         },
         selectedList() {
@@ -32,12 +32,12 @@ export default {
         startSelect(evt, rowIndex, colIndex) {
             if (evt.button === 0) {
                 evt.preventDefault();
-                //  this.selectedIndex.startCell = evt.currentTarget;
-                //  this.selectedIndex.endCell = evt.currentTarget;
-                this.selectedIndex.rowStartIndex = rowIndex;
-                this.selectedIndex.rowEndIndex = rowIndex;
-                this.selectedIndex.colStartIndex = colIndex;
-                this.selectedIndex.colEndIndex = colIndex;
+                this.selectedIndex = {
+                    rowStartIndex: rowIndex,
+                    rowEndIndex: rowIndex,
+                    colStartIndex: colIndex,
+                    colEndIndex: colIndex,
+                };
                 this.selectedStart = true;
                 let HandleOnMouseUp = (evt) => {
                     this.selectedStart = false;
@@ -64,7 +64,7 @@ export default {
             if (!this.selectedStart) {
                 return;
             }
-            this.selectedIndex.endCell = evt.currentTarget;
+            // this.selectedIndex.endCell = evt.currentTarget;
             this.selectedIndex.rowEndIndex = rowIndex;
             this.selectedIndex.colEndIndex = colIndex;
         },
@@ -72,10 +72,12 @@ export default {
          */
         handleContextMenu(evt, rowIndex, colIndex) {
             if (!select.isSelected(rowIndex, colIndex, this.selectedIndex)) {
-                this.selectedIndex.rowStartIndex = rowIndex;
-                this.selectedIndex.rowEndIndex = rowIndex;
-                this.selectedIndex.colStartIndex = colIndex;
-                this.selectedIndex.colEndIndex = colIndex;
+                this.selectedIndex = {
+                    rowStartIndex: rowIndex,
+                    rowEndIndex: rowIndex,
+                    colStartIndex: colIndex,
+                    colEndIndex: colIndex,
+                };
             }
         },
         rowsSelect(rowIndex) {

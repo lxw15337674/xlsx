@@ -1,152 +1,172 @@
 <template>
     <!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
     <!--        @scroll.passive="handleScroll"-->
-
-    <div
-        class="dynamicScroller"
-        ref="scroller"
-        @scroll.passive="handleScroll"
-        v-on="$listeners"
-        v-bind="$attrs"
-    >
+    <div class="dynamicScroller" ref="scroller" @scroll.passive="handleScroll">
         <slot name="before"></slot>
-        <div @resize="handleScroll" ref="phantom" class="phantom" :style="tableSize"></div>
-        <div class="wrapper" ref="wrapper" :style="wrapperStyle">
-            <slot></slot>
+        <div  ref="phantom" class="phantom" :style="tableSize"></div>
+        <div class="wrapper" ref="wrapper">
+            <div
+                class="item-view"
+                :class="direction"
+                v-for="view of pool"
+                :key="view.id"
+                v-show="view.used"
+                :style="{
+                    transform: `translate${direction === 'vertical' ? 'Y' : 'X'}(${
+                        view.position
+                    }px)`,
+                }"
+            >
+                <slot :size="view.item" :index="view.index"></slot>
+            </div>
         </div>
+        <slot name="before"></slot>
     </div>
 </template>
 <script>
-    import * as scroll from 'src/utils/scroll.ts';
-
-
-    export default {
-        name: 'dynamicScroller',
-        inject: ['visibleRowsIndex', 'visibleColsIndex'],
-        props: {
-            height: {
-                type: Number,
-            },
-            width: {
-                type: Number,
-            },
-            rows: {
-                type: Array,
-            },
-            cols: {
-                type: Array,
-            },
+import * as scroll from 'src/utils/scroll.ts';
+import * as math from 'src/utils/math.ts';
+let uid = 0;
+export default {
+    name: 'dynamicScroller',
+    props: {
+        items: {
+            type: Array,
+            require:true
         },
-        components: {},
-        data() {
-            return {
-                tableScrollTop: 0,
-                tableScrollLeft: 0,
-                scrollMaxHeight: 0, //增加滚动缓存，减少计算
-                scrollMaxWidth: 0,
-            };
+        direction: {
+            type: String,
+            default: 'vertical',
+            validator: (value) => ['vertical', 'horizontal'].includes(value),
         },
-        methods: {
-            handleScroll() {
-                switch (scroll.scrollToPosition(this.$refs.scroller)) {
-                    case 'horizontal':
-                        this.updateHorizontal();
-                        break;
-                    case 'vertical':
-                        this.updateVertical();
-                }
-                this.$emit('scroll');
+    },
+    components: {},
+    data() {
+        return {
+            pool: [],
+            visibleIndex: {
+                start: -1,
+                end: -1,
             },
-            async updateHorizontal() {
-                let scrollLeft = this.$refs.scroller.scrollLeft;
-                if (this.tableScrollLeft >= scrollLeft || this.scrollMaxWidth <= scrollLeft) {
-                    let { start, end } = await this.worker.postMessage('findVisibleIndex', [
-                        scrollLeft,
-                        this.$refs.scroller.clientWidth,
-                        this.contentWidth,
-                    ]);
-                    // let { start, end } = scroll.findVisibleIndex(
-                    //     scrollLeft,
-                    //     this.$refs.scroller.clientWidth,
-                    //     this.contentWidth,
-                    // );
-                    this.visibleColsIndex.start = start;
-                    this.visibleColsIndex.end = end;
-                    this.tableScrollLeft = this.contentWidth[start - 1] || 0;
-                    this.scrollMaxWidth = this.tableScrollLeft + this.cols[start];
-                }
-            },
-            async updateVertical() {
-                let scrollTop = this.$refs.scroller.scrollTop;
-                if (this.tableScrollTop >= scrollTop || this.scrollMaxHeight <= scrollTop) {
-                    let { start, end } = await this.worker.postMessage('findVisibleIndex', [
-                        scrollTop,
-                        this.$refs.scroller.clientHeight,
-                        this.contentHeight,
-                    ]);
-                    this.visibleRowsIndex.start = start;
-                    this.visibleRowsIndex.end = end;
-                    this.tableScrollTop = this.contentHeight[start - 1] || 0;
-                    this.scrollMaxHeight = this.tableScrollTop + this.rows[start];
-                }
-            },
-            initTableData() {
-                this.updateHorizontal();
-                this.updateVertical();
-            },
-        },
-        watch: {
-            tableSize: {
-                deep: true,
-                handler() {},
-            },
-        },
-        computed: {
-            worker(){
-                return this.$store.state.webWorker.worker
-            },
-            wrapperStyle() {
-                return {
-                    transform: `translate(${this.tableScrollLeft}px,${this.tableScrollTop}px)`,
+        };
+    },
+    methods: {
+        usedView(viewIndex, itemsIndex) {
+            let view = {}, { items, itemsPosition } = this;
+            if(this.pool[viewIndex]){
+                view = this.pool[viewIndex]
+                view.item = items[itemsIndex];
+                view.index = itemsIndex;
+                view.used = true;
+                view.position = itemsPosition[itemsIndex-1]||0;
+            }else{
+                 view = {
+                    item:this.items[itemsIndex],
+                    position:itemsPosition[itemsIndex-1]||0,
+                    index: itemsIndex,
+                    id: uid++,
+                    used: true,
                 };
+                this.pool.push(view);
+            }
+            return view
+        },
+        unusedView(view) {
+            view.item = undefined;
+            view.used = false;
+            view.position = -9999;
+            view.index = -1;
+        },
+        updateVisibleItems() {
+            let { start, end } = this.visibleIndex;
+            let items = this.items;
+            let viewIndex = 0;
+            //更新使用的view
+            for (let i = start; i <= end; i++) {
+                this.usedView(viewIndex,i)
+                viewIndex++
+            }
+            // 处理不使用的view
+            for (let i = viewIndex; i < this.pool.length; i++) {
+                this.unusedView(this.pool[i]);
+            }
+
+        },
+        handleScroll() {
+            if (this.direction === 'vertical') {
+                this.handleVisibilityChange( this.$refs.scroller.scrollTop, this.$refs.scroller.clientHeight);
+            }else{
+                this.handleVisibilityChange( this.$refs.scroller.scrollLeft, this.$refs.scroller.clientWidth);
+            }
+        },
+        handleVisibilityChange(offset,clientSize) {
+            let { start, end } = scroll.findVisibleIndex(
+                offset,
+                clientSize,
+                this.itemsPosition,
+            );
+            this.visibleIndex.start = start;
+            this.visibleIndex.end = end;
+        },
+    },
+    watch: {
+        visibleIndex: {
+            deep: true,
+            handler() {
+                this.updateVisibleItems();
             },
-            tableSize() {
+        },
+        items: {
+            deep: true,
+            handler() {
+                this.handleScroll();
+            },
+        },
+    },
+    computed: {
+        tableSize() {
+            if (this.direction === 'vertical') {
                 return {
-                    width: `${this.width}px`,
-                    height: `${this.height}px`,
+                    height: `${math.total(this.items, 0, -1)}px`,
+                    width: '100%',
                 };
-            },
-            //高度缓存
-            contentHeight() {
-                let total = 0;
-                return this.rows.map((item) => {
-                    total += item;
-                    return total;
-                });
-            },
-            //长度缓存
-            contentWidth() {
-                let total = 0;
-                return this.cols.map((item) => {
-                    total += item;
-                    return total;
-                });
-            },
+            }else{
+                return {
+                    height:'100%',
+                    width:`${math.total(this.items, 0, -1)}px`,
+                };
+            }
+
         },
-        mounted() {
-            this.initTableData();
+        //尺寸缓存
+        itemsPosition() {
+            let total = 0;
+            return this.items.map((item) => {
+                total += item;
+                return total;
+            });
         },
-    };
+    },
+    mounted() {
+        this.handleScroll();
+    },
+};
 </script>
 
 <style lang="stylus" scoped>
-    .dynamicScroller
-        overflow auto
+.dynamicScroller
+    overflow auto
+    position absolute
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    .phantom
         position absolute
+    .item-view
+        will-change: transform;
+        position: absolute;
         top: 0;
-        bottom: 0;
         left: 0;
-        right: 0;
-        .phantom
-            position absolute
+
 </style>

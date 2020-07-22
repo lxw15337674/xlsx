@@ -1,6 +1,6 @@
 <template>
-    <div class="home" >
-        <header class="header">
+    <div class="home" v-loading="loading">
+        <header class="header" >
             <img class="mr30 hi "
                  src="~src/assets/images/hi.png"
                  width="50" height="50" />
@@ -21,7 +21,7 @@
                 <el-button @click="exportFile" size="mini">导出当前sheet</el-button>
             </div>
         </header>
-        <c-table class="c-table" v-model="workbook.sheets[activeSheetName]"></c-table>
+        <c-table  class="c-table" v-model="workbook.sheets[activeSheetName]"></c-table>
         <sheetBar
             class="sheet-bar"
             :activeSheetName="activeSheetName"

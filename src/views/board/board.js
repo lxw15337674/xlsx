@@ -4,15 +4,17 @@ import XLSX from 'xlsx';
 import menuBar from './components/menuBar/menuBar.vue';
 import History from './components/history/history.vue';
 import { objToArray } from 'src/utils/transform.ts';
+const DefaultSheetName = 'sheet1';
+
 export default {
     name: 'board',
     components: { History, sheetBar, menuBar, CTable },
     data: function() {
-        const DefaultSheetName = 'sheet1';
         return {
+            loading: true,
             workbook: {
                 sheets: {
-                    [DefaultSheetName]: this.sheetInit(),
+                    [DefaultSheetName]: [[]],
                 },
                 sheetNames: [DefaultSheetName],
             },
@@ -28,16 +30,16 @@ export default {
             XLSX.writeFile(workbook, 'test.xlsx');
         },
 
-        sheetInit(rowsLength = 100, colsLength = 100) {
-            let table = [];
-            for (let row = 0; row < rowsLength; row++) {
-                table[row] = [];
-                for (let col = 0; col < colsLength; col++) {
-                    table[row][col] = `行：${row}，列：${col}`;
-                }
-            }
-            return table;
-        },
+        // sheetInit(rowsLength = 100, colsLength = 100) {
+        //     let table = [];
+        //     for (let row = 0; row < rowsLength; row++) {
+        //         table[row] = [];
+        //         for (let col = 0; col < colsLength; col++) {
+        //             table[row][col] = `行：${row}，列：${col}`;
+        //         }
+        //     }
+        //     return table;
+        // },
         switchWorkbook(workbook) {},
         sheetSelect(sheet) {
             this.activeSheetName = sheet;
@@ -80,5 +82,13 @@ export default {
             // 以二进制方式打开文件
             fileReader.readAsBinaryString(file);
         },
+    },
+    mounted() {
+        this.loading = true;
+        let that = this;
+        this.$store.state.webWorker.worker.postMessage('sheetInit', [100, 100]).then((res) => {
+            that.workbook.sheets[DefaultSheetName] = res;
+            that.loading = false;
+        });
     },
 };

@@ -100,7 +100,10 @@ export default {
             //行
             for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
-                    this.rowsHeader.splice(rowIndex, 1, { height: math.random(50, 100), id: id++ });
+                    this.rowsHeader.splice(rowIndex, 1, {
+                        height: math.random(50, 100),
+                        id: id++,
+                    });
                 }
             }
             //列
