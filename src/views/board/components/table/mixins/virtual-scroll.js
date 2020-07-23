@@ -3,6 +3,14 @@ export default {
     components: {
         virtualScrollerTable,
     },
+    data() {
+        return {
+            offset: {
+                left: 0,
+                top: 0,
+            },
+        };
+    },
     mounted() {},
     computed: {
         rowsList() {
@@ -22,6 +30,11 @@ export default {
                 total.push(item.width);
                 return total;
             }, []);
+        },
+    },
+    methods: {
+        scrollHandle(offset) {
+            this.offset = offset;
         },
     },
 };

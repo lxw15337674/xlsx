@@ -22,10 +22,6 @@
   max-width: 100%;
   flex: 1;
 }
-.c-table .table-container .table-header {
-  position: sticky;
-  top: 0;
-}
 .c-table .table-container .table-main {
   overflow: auto;
   height: calc(100% - 40px);
@@ -33,14 +29,6 @@
   display: inline-block;
   margin-left: 100px;
   position: relative;
-}
-.c-table .table-container .left-table {
-  position: absolute;
-  background: #fff;
-  display: inline-block;
-  left: 0;
-  right: 0;
-  z-index: 3;
 }
 .c-table table {
   table-layout: fixed;

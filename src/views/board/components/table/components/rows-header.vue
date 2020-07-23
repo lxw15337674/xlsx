@@ -1,59 +1,52 @@
 <template>
-    <div class="left-body">
-        <table :style="{ width: `${width}px` }">
-            <!--      <colgroup>-->
-            <!--        <col :style="{ width: `${width}px` }" />-->
-            <!--      </colgroup>-->
-            <!--            <thead>-->
-            <!--                <th class="col-header" />-->
-            <!--            </thead>-->
-            <tbody>
-                <tr v-for="(row,index) in rowsHeader" :key="index">
-                    <td :style="{ height: `${row.height}px` }">
-                        <div
-                            class="row-header"
-                            :class="{
-                                'is-active': isActive(row.index),
-                            }"
-                            @click="handleClick(row.index)"
-                            @mouseenter="(evt) => handleMouseEnter(evt, row.index)"
-                            @mousedown="(evt) => handleMousedown(evt, row.index)"
-                            @mouseup="(evt) => handleMouseUp(evt, row.index)"
-                        >
-                            {{ row.index + 1 }}
-                            <div class="vert-resizable-content" @mousedown="(evt) => rowResizeStart(evt, row.index, row.height)"></div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div>
+        <dynamic-scroller :items="rowsList" :offset="offset" class="rows-header">
+            <template v-slot="{ index, size }">
+                <div
+                    class="row-header"
+                    :style="{ height: `${size}px`, width: `100px` }"
+                    :class="{
+                        'is-active': isActive(index),
+                    }"
+                    @click="handleClick(index)"
+                    @mouseenter="(evt) => handleMouseEnter(evt, index)"
+                    @mousedown="(evt) => handleMousedown(evt, index)"
+                    @mouseup="(evt) => handleMouseUp(evt, index)"
+                >
+                    {{ index + 1 }}
+                    <div
+                        class="vert-resizable-content"
+                        @mousedown="(evt) => rowResizeStart(evt, index, size)"
+                    ></div>
+                </div>
+            </template>
+        </dynamic-scroller>
     </div>
 </template>
 
 <script>
 import select from './mixins/select.js';
+import dynamicScroller from 'src/components/dynamicScroller';
 
 export default {
     props: {
-        rowsHeader: {
+        rowsList: {
             type: Array,
-            require: true,
-        },
-        tableRect: {
-            type: Object,
             require: true,
         },
         selectedIndex: {
             type: Object,
             require: true,
         },
+        offset: {
+            type: Number,
+            default: 0,
+        },
     },
     mixins: [select],
+    components: { dynamicScroller },
     data() {
-        return {
-            width: '100',
-            selectStart: false,
-        };
+        return {};
     },
     computed: {},
     methods: {
@@ -63,17 +56,20 @@ export default {
             this.$emit('rowResizeStart', evt, index, height);
         },
         isActive(rowIndex) {
-            return Math.min(this.selectedIndex.rowStartIndex, this.selectedIndex.rowEndIndex) <= rowIndex && rowIndex <= Math.max(this.selectedIndex.rowStartIndex, this.selectedIndex.rowEndIndex);
+            return (
+                Math.min(this.selectedIndex.rowStartIndex, this.selectedIndex.rowEndIndex) <=
+                    rowIndex &&
+                rowIndex <=
+                    Math.max(this.selectedIndex.rowStartIndex, this.selectedIndex.rowEndIndex)
+            );
         },
     },
 };
 </script>
 
 <style lang="stylus" scoped>
-.left-body
-    width 100px
-
-
+.rows-header
+    margin-top 40px
     .is-active
         background-color borderColor
     .row-header

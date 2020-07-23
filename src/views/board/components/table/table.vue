@@ -15,17 +15,17 @@
             <div ref="horiAxis" class="horiAxis" id="horiAxis" style="display: none"></div>
             <div ref="vertAxis" class="vertAxis" id="vertAxis" style="display: none"></div>
             <cols-header
-                class="table-header"
                 :colsList="colsList"
                 :selectedIndex="selectedIndex"
+                :offset="offset.left"
                 @selectStart="colSelect"
                 @select="colsSelect"
                 @colResizeStart="colResizeStart"
                 @colHeaderClick="colSelect"
             ></cols-header>
             <rows-header
-                class="left-table"
-                :rowsHeader="rowsHeader"
+                :rowsList="rowsList"
+                :offset="offset.top"
                 :selectedIndex="selectedIndex"
                 @selectStart="rowSelect"
                 @select="rowsSelect"
@@ -34,7 +34,7 @@
             ></rows-header>
             <contextMenu>
                 <div class="table-main">
-                    <virtual-scroller-table :rows="rowsList" :cols="colsList">
+                    <virtual-scroller-table :rows="rowsList" :cols="colsList" @scroll="scrollHandle">
                         <template slot="before">
                             <div class="select-content" ref="selectedRect" ></div>
                             <c-input class="cell-edit-input" ref="editInput" v-show="cellInputShow" v-model="activeCellInput" ></c-input>
@@ -48,12 +48,6 @@
                                 @contextmenu="(evt) => handleContextMenu(evt, rowIndex, colIndex)"
                                 :style="{ height: `${height}px`, width: `${width}px` }"
                             >
-<!--                                <textarea-->
-<!--                                    disabled-->
-<!--                                    class="cell-content"-->
-<!--                                    :value="table[rowIndex]&&table[rowIndex][colIndex]"-->
-<!--                                    @input="e=>updateCell(e.target.value,rowIndex,colIndex)"-->
-<!--                                ></textarea>-->
                                 <textarea
                                     disabled
                                     class="cell-content"

@@ -1,7 +1,7 @@
 <template>
     <!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
     <!--        @scroll.passive="handleScroll"-->
-    <div class="dynamicScroller" ref="scroller" @scroll.passive="handleScroll">
+    <div class="dynamicScroller" ref="scroller" >
         <slot name="before"></slot>
         <div  ref="phantom" class="phantom" :style="tableSize"></div>
         <div class="wrapper" ref="wrapper">
@@ -39,6 +39,10 @@ export default {
             default: 'vertical',
             validator: (value) => ['vertical', 'horizontal'].includes(value),
         },
+        offset:{
+            type:Number,
+            default:0
+        }
     },
     components: {},
     data() {
@@ -94,9 +98,9 @@ export default {
         },
         handleScroll() {
             if (this.direction === 'vertical') {
-                this.handleVisibilityChange( this.$refs.scroller.scrollTop, this.$refs.scroller.clientHeight);
+                this.handleVisibilityChange( this.offset, this.$refs.scroller.clientHeight);
             }else{
-                this.handleVisibilityChange( this.$refs.scroller.scrollLeft, this.$refs.scroller.clientWidth);
+                this.handleVisibilityChange( this.offset, this.$refs.scroller.clientWidth);
             }
         },
         handleVisibilityChange(offset,clientSize) {
@@ -107,21 +111,26 @@ export default {
             );
             this.visibleIndex.start = start;
             this.visibleIndex.end = end;
+            this.updateVisibleItems();
         },
     },
     watch: {
-        visibleIndex: {
-            deep: true,
-            handler() {
-                this.updateVisibleItems();
-            },
-        },
         items: {
             deep: true,
             handler() {
                 this.handleScroll();
             },
         },
+        offset:{
+            handler(){
+                this.handleScroll();
+                if (this.direction === 'vertical') {
+                    this.$refs.scroller.scrollTop=this.offset
+                }else{
+                    this.$refs.scroller.scrollLeft = this.offset
+                }
+            }
+        }
     },
     computed: {
         tableSize() {
@@ -154,13 +163,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 .dynamicScroller
-    overflow auto
     position absolute
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+    overflow hidden
     .phantom
         position absolute
     .item-view

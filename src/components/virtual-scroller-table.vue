@@ -1,7 +1,7 @@
 <template>
     <!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
     <!--        @scroll.passive="handleScroll"-->
-    <div class="dynamicScroller" ref="scroller" @scroll.passive="handleScroll()">
+    <div class="dynamicScroller" ref="scroller" @scroll.passive="handleScroll">
         <slot name="before"></slot>
         <div class="phantom" :style="tableSize"></div>
         <div class="wrapper">
@@ -135,11 +135,10 @@ export default {
                 this.colsPosition,
             );
             // }
+            this.$emit('scroll',{left:this.$refs.scroller.scrollLeft,top:this.$refs.scroller.scrollTop,})
         },
     },
-    mounted() {
-        this.handleScroll();
-    },
+
     watch: {
         visibleRowsIndex: {
             deep: true,

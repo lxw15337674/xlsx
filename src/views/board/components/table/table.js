@@ -24,12 +24,7 @@ export default {
             },
             cellInputShow: false,
             // 列头
-            colsHeader: [
-                {
-                    width: 100,
-                    id: 0,
-                },
-            ],
+            colsHeader: [],
             // 行头
             rowsHeader: [],
         };

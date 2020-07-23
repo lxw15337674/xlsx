@@ -43,19 +43,20 @@ export default {
             ],
         };
     },
-    // computed: {
-    //     selectedList() {
-    //         return select.getSelectedList(this.data, this.selectedIndex);
-    //     },
-    // },
+    computed: {
+        selectedList() {
+            return select.getSelectedList(this.table, this.selectedIndex);
+        },
+    },
     methods: {
         fnCall(method) {
             this[method]();
         },
-        copy(dataList) {
+        copy() {
             //https://github.com/justjavac/the-front-end-knowledge-you-may-not-know/blob/master/archives/023-clipboardapi.md
             //https://juejin.im/entry/5ad0684cf265da237b227fc0
-            navigator.clipboard.writeText(dataList.join(' ')).catch((err) => {
+
+            navigator.clipboard.writeText(this.selectedList.join(' ')).catch((err) => {
                 // 如果用户没有授权，则抛出异常
                 console.error('无法复制此文本：', err);
             });
@@ -73,7 +74,11 @@ export default {
                         col <= this.selectedIndex.colEndIndex;
                         col++
                     ) {
-                        this.table[row].splice([col], 1, text);
+                        this.$store.commit('workbook/updateCell', {
+                            rowIndex: row,
+                            colIndex: col,
+                            value: text,
+                        });
                     }
                 }
             });
