@@ -1,21 +1,7 @@
+import virtualScrollerTable from 'src/components/virtual-scroller-table';
 export default {
-    // provide() {
-    //     return {
-    //         visibleRowsIndex: this.visibleRowsIndex,
-    //         visibleColsIndex: this.visibleColsIndex,
-    //     };
-    // },
-    data() {
-        return {
-            // visibleRowsIndex: {
-            //     start: -1,
-            //     end: -1,
-            // },
-            // visibleColsIndex: {
-            //     start: -1,
-            //     end: -1,
-            // },
-        };
+    components: {
+        virtualScrollerTable,
     },
     mounted() {},
     computed: {
@@ -37,16 +23,5 @@ export default {
                 return total;
             }, []);
         },
-    },
-    methods: {
-        // handleScroll(evt) {
-        //     let el = evt.target;
-        //     let direction = scroll.scrollDirection(el);
-        //     this.updateVisibleData(el.scrollTop);
-        // },
-        // updateVisibleData(scrollTop = 0) {
-        //     this.$refs.contentTable.style.transform = `translate(0, ${scrollTop}px)`;
-        //     this.visibleRowsIndex = scroll.findVisibleIndex(scrollTop, this.$refs.contentTable.offsetHeight, this.rowsList);
-        // },
     },
 };

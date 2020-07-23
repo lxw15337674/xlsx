@@ -7,6 +7,9 @@ export function sort(array: [number, number]): [number, number] {
 
 //数组取和
 export function total(array: number[], start: number = 0, end: number = -1, key?: string): number {
+    if (!array) {
+        return 0;
+    }
     if (end === -1) {
         end = array.length;
     }

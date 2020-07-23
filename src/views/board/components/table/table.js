@@ -6,9 +6,13 @@ import contextMenu from 'src/components/context-menu/context-menu';
 import contextItem from 'src/components/context-menu/context-item';
 import { importMixins, importComponents } from 'src/utils/import.ts';
 import * as math from '@/utils/math';
+import * as location from '@/utils/location';
+import { tsTsxRegex } from 'ts-loader/dist/constants';
 const modulesFiles = importMixins(require.context('./mixins', false, /\.js$/));
 const components = importComponents(require.context('./components', false, /\.vue$/));
 let id = 1;
+const DefaultRowsLength = 100,
+    DefaultColsLength = 100;
 export default {
     components: { ...components, CInput, contextMenu, contextItem },
     mixins: modulesFiles,
@@ -18,7 +22,7 @@ export default {
                 rowIndex: 0,
                 colIndex: 0,
             },
-            data: [],
+            cellInputShow: false,
             // 列头
             colsHeader: [
                 {
@@ -30,86 +34,61 @@ export default {
             rowsHeader: [],
         };
     },
-    model: {
-        prop: 'table',
-        event: 'updateTable',
-    },
-    props: {
-        table: {
-            require: true,
-            type: Array,
-        },
-    },
-    watch: {
-        table: {
-            immediate: true,
-            deep: true,
-            handler(val) {
-                this.data = val;
-                this.headerInit();
-            },
-        },
-        data: {
-            deep: true,
-            handler(val) {
-                this.$emit('updateTable', val);
-            },
-        },
-    },
     filters: {
         indexToChar(index) {
             return indexToChar(index);
         },
     },
     computed: {
-        // cellInputStyle() {
-        //     let currentCell = getCellIndex(
-        //         this.cellInput.rowIndex,
-        //         this.cellInput.colIndex,
-        //         this.colsHeader.length,
-        //     );
-        //     if (!this.$refs.cell) {
-        //         return {
-        //             left: '100px',
-        //             top: '40px',
-        //             minHeight: '40px',
-        //             minWidth: '100px',
-        //         };
-        //     }
-        //     let cell = this.$refs.cell[currentCell];
-        //     return {
-        //         left: `${cell.offsetLeft}px`,
-        //         top: `${cell.offsetTop}px`,
-        //         minWidth: `${cell.offsetWidth}px`,
-        //         minHeight: `${cell.offsetHeight}px`,
-        //     };
-        // },
-
         activeCellInput: {
             get() {
-                return this.data[this.cellInput.rowIndex][this.cellInput.colIndex];
+                return this.table[this.cellInput.rowIndex][this.cellInput.colIndex];
             },
             set(val) {
-                this.data[this.cellInput.rowIndex].splice([this.cellInput.colIndex], 1, val);
+                this.$store.commit('workbook/updateCell', {
+                    rowIndex: this.cellInput.rowIndex,
+                    colIndex: this.cellInput.colIndex,
+                    value: val,
+                });
             },
         },
+        table: {
+            get() {
+                return this.$store.getters['workbook/activeTable'];
+            },
+            // set(value) {
+            //     this.$store.commit('initSheet', { array: value });
+            // },
+        },
     },
+    // watch: {
+    //     table: {
+    //         deep: true,
+    //         immediate: true,
+    //         handler() {
+    //             this.headerInit();
+    //         },
+    //     },
+
     methods: {
+        // updateCell(value, rowIndex, colIndex) {
+        //     this.$store.commit('workbook/updateCell', { value, rowIndex, colIndex });
+        // },
         updateCellInput() {},
         headerInit() {
             //行
-            for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
+            for (let rowIndex = 0; rowIndex < this.table.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
                     this.rowsHeader.splice(rowIndex, 1, {
-                        height: math.random(50, 100),
+                        height: math.random(10, 100),
                         id: id++,
                     });
                 }
             }
             //列
-            for (let colIndex = 0; colIndex < this.data[0].length; colIndex++) {
+            for (let colIndex = 0; colIndex < this.table[0].length; colIndex++) {
                 if (!this.colsHeader[colIndex]) {
-                    this.colsHeader.splice(colIndex, 1, { width: math.random(100, 200), id: id++ });
+                    this.colsHeader.splice(colIndex, 1, { width: math.random(10, 200), id: id++ });
                 }
             }
         },
@@ -119,6 +98,25 @@ export default {
         handleCellClick(evt, rowIndex, colIndex) {
             this.cellInput.rowIndex = rowIndex;
             this.cellInput.colIndex = colIndex;
+            Object.assign(
+                this.$refs.editInput.$el.style,
+                location.getCellPosition(this.cellInput, this.rowsList, this.colsList),
+            );
+            this.cellInputShow = true;
+            // let rect = evt.target.getBoundingClientRect();
+            // this.$refs.editInput.$el.style.left = `${rect.left}px`;
+            // this.$refs.editInput.$el.style.top = `${rect.top}px`;
+            // this.$refs.editInput.$el.style.height = `${rect.height}px`;
+            // this.$refs.editInput.$el.style.width = `${rect.width}px`;
         },
+    },
+    mounted() {
+        this.$store
+            .dispatch('workbook/sheetInit', {
+                rowsLength: DefaultRowsLength,
+                colsLength: DefaultColsLength,
+            })
+            .catch((res) => console.error('表格初始化失败', res));
+        this.headerInit();
     },
 };

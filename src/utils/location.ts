@@ -62,6 +62,18 @@ export function getRectBetweenTwoCells(
     };
 }
 
+interface cellIndex {
+    rowIndex: number;
+    colIndex: number;
+}
+export function getCellPosition(cellIndex: cellIndex, rows: number[], cols: number[]) {
+    return {
+        left: `${math.total(cols, 0, cellIndex.colIndex)}px`,
+        minWidth: `${cols[cellIndex.colIndex]}px`,
+        top: `${math.total(rows, 0, cellIndex.rowIndex)}px`,
+        minHeight: `${rows[cellIndex.rowIndex]}px`,
+    };
+}
 // /**
 //  * 获取元素的矩形边界
 //  * 等同于getBoundingClientRect()

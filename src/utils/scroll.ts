@@ -14,7 +14,8 @@ export function scrollToPosition(el): string {
 // 二分查找法
 function binarySearch(offset: number, list: number[]): number {
     if (list.length === 0) {
-        throw '数组不能为空';
+        // console.error('数组为空');
+        return -1;
     }
     let startIndex = 0,
         endIndex = list.length - 1,

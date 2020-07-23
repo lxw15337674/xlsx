@@ -40,6 +40,7 @@ export default {
                     colStartIndex: colIndex,
                     colEndIndex: colIndex,
                 };
+                this.cellInputShow = false;
                 this.selectedStart = true;
                 let HandleOnMouseUp = (evt) => {
                     this.selectedStart = false;

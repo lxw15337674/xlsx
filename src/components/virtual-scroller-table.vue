@@ -1,14 +1,18 @@
 <template>
     <!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
     <!--        @scroll.passive="handleScroll"-->
-    <div class="dynamicScroller" ref="scroller"  @scroll.passive="handleScroll()">
+    <div class="dynamicScroller" ref="scroller" @scroll.passive="handleScroll()">
         <slot name="before"></slot>
         <div class="phantom" :style="tableSize"></div>
         <div class="wrapper">
-            <div v-for="row of rowsPool" :key="row.id" class="row-view"
-                 :style="{
-                        transform: `  translate(0,${row.position}px)`,
-                    }" >
+            <div
+                v-for="row of rowsPool"
+                :key="row.id"
+                class="row-view"
+                :style="{
+                    transform: `  translate(0,${row.position}px)`,
+                }"
+            >
                 <div
                     v-for="col of colsPool"
                     :key="col.id"
@@ -17,7 +21,12 @@
                     }"
                     class="col-view"
                 >
-                    <slot :rowIndex="row.index" :colIndex="col.index" :height="row.item" :width="col.item"></slot>
+                    <slot
+                        :rowIndex="row.index"
+                        :colIndex="col.index"
+                        :height="row.item"
+                        :width="col.item"
+                    ></slot>
                 </div>
             </div>
         </div>
@@ -113,23 +122,23 @@ export default {
             //     direction = scroll.scrollToPosition(this.$refs.scroller.scrollLeft,this.$refs.scroller.scrollTop);
             // }
             // if (direction === 'vertical') {
-                this.visibleRowsIndex = scroll.findVisibleIndex(
-                    this.$refs.scroller.scrollTop,
-                    this.$refs.scroller.clientHeight,
-                    this.rowsPosition,
-                );
+            this.visibleRowsIndex = scroll.findVisibleIndex(
+                this.$refs.scroller.scrollTop,
+                this.$refs.scroller.clientHeight,
+                this.rowsPosition,
+            );
             // } else {
-                //TODO 结束位置缓存
-                this.visibleColsIndex = scroll.findVisibleIndex(
-                    this.$refs.scroller.scrollLeft,
-                    this.$refs.scroller.clientWidth,
-                    this.colsPosition,
-                );
+            //TODO 结束位置缓存
+            this.visibleColsIndex = scroll.findVisibleIndex(
+                this.$refs.scroller.scrollLeft,
+                this.$refs.scroller.clientWidth,
+                this.colsPosition,
+            );
             // }
         },
     },
-    mounted(){
-        this.handleScroll()
+    mounted() {
+        this.handleScroll();
     },
     watch: {
         visibleRowsIndex: {
@@ -181,7 +190,6 @@ export default {
             });
         },
     },
-
 };
 </script>
 

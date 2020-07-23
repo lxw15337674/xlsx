@@ -14,30 +14,30 @@
             <!--        ></canvas>-->
             <div ref="horiAxis" class="horiAxis" id="horiAxis" style="display: none"></div>
             <div ref="vertAxis" class="vertAxis" id="vertAxis" style="display: none"></div>
-<!--            <c-input class="cell-input" v-model="activeCellInput" :style="cellInputStyle"></c-input>-->
-<!--            <cols-header-->
-<!--                class="table-header"-->
-<!--                :colsHeader="visibleCols"-->
-<!--                :selectedIndex="selectedIndex"-->
-<!--                @selectStart="colSelect"-->
-<!--                @select="colsSelect"-->
-<!--                @colResizeStart="colResizeStart"-->
-<!--                @colHeaderClick="colSelect"-->
-<!--            ></cols-header>-->
-<!--            <rows-header-->
-<!--                class="left-table"-->
-<!--                :rowsHeader="visibleRows"-->
-<!--                :selectedIndex="selectedIndex"-->
-<!--                @selectStart="rowSelect"-->
-<!--                @select="rowsSelect"-->
-<!--                @rowResizeStart="rowResizeStart"-->
-<!--                @rowHeaderClick="rowSelect"-->
-<!--            ></rows-header>-->
+            <cols-header
+                class="table-header"
+                :colsList="colsList"
+                :selectedIndex="selectedIndex"
+                @selectStart="colSelect"
+                @select="colsSelect"
+                @colResizeStart="colResizeStart"
+                @colHeaderClick="colSelect"
+            ></cols-header>
+            <rows-header
+                class="left-table"
+                :rowsHeader="rowsHeader"
+                :selectedIndex="selectedIndex"
+                @selectStart="rowSelect"
+                @select="rowsSelect"
+                @rowResizeStart="rowResizeStart"
+                @rowHeaderClick="rowSelect"
+            ></rows-header>
             <contextMenu>
                 <div class="table-main">
                     <virtual-scroller-table :rows="rowsList" :cols="colsList">
                         <template slot="before">
                             <div class="select-content" ref="selectedRect" ></div>
+                            <c-input class="cell-edit-input" ref="editInput" v-show="cellInputShow" v-model="activeCellInput" ></c-input>
                         </template>
                         <template v-slot="{ rowIndex, colIndex, height, width }">
                             <div
@@ -48,6 +48,12 @@
                                 @contextmenu="(evt) => handleContextMenu(evt, rowIndex, colIndex)"
                                 :style="{ height: `${height}px`, width: `${width}px` }"
                             >
+<!--                                <textarea-->
+<!--                                    disabled-->
+<!--                                    class="cell-content"-->
+<!--                                    :value="table[rowIndex]&&table[rowIndex][colIndex]"-->
+<!--                                    @input="e=>updateCell(e.target.value,rowIndex,colIndex)"-->
+<!--                                ></textarea>-->
                                 <textarea
                                     disabled
                                     class="cell-content"
