@@ -1,22 +1,44 @@
+import * as select from '@/utils/select';
+import * as location from '@/utils/location';
+// function paste(e) {
+//     e.stopPropagation();
+//     e.preventDefault();
+//     let clipboardData = e.clipboardData || window.clipboardData;
+//     let pastedData = clipboardData.getData('Text');
+//     alert(pastedData);
+// }
 export default {
     data() {
         return {
+            copyContent: '',
+            isCut: false,
+            cutIndex: {
+                rowStartIndex: null,
+                colStartIndex: null,
+                rowEndIndex: null,
+                colEndIndex: null,
+            },
             contextMenu: [
                 {
                     label: '复制',
                     def: 'copy',
+                    hotkey: 'ctrl+c',
                 },
                 {
                     label: '粘贴',
                     def: `paste`,
+                    hotkey: 'ctrl+v',
                 },
                 {
                     label: '剪切',
                     def: `cut`,
+                    hotkey: 'ctrl+x',
                 },
                 {
                     label: '清空选中区域',
                     def: `clear`,
+                    divided: true,
+                    hotkey: 'delete',
                 },
                 {
                     label: '上方插入一行',
@@ -41,42 +63,96 @@ export default {
             ],
         };
     },
-    computed: {},
+    computed: {
+        selectedList() {
+            return select.getSelectedList(this.table, this.selectedIndex);
+        },
+        keymap() {
+            let keymap = {};
+            for (let item of this.contextMenu) {
+                if (item.hotkey) {
+                    keymap[item.hotkey] = this[item.def];
+                }
+            }
+            return keymap;
+        },
+    },
     methods: {
         fnCall(method) {
             this[method]();
         },
+        updateCellList(index, text) {
+            for (let row = index.rowStartIndex; row <= index.rowEndIndex; row++) {
+                for (let col = index.colStartIndex; col <= index.colEndIndex; col++) {
+                    this.$store.commit('workbook/updateCell', {
+                        rowIndex: row,
+                        colIndex: col,
+                        value: text,
+                    });
+                }
+            }
+        },
         copy() {
-            //https://github.com/justjavac/the-front-end-knowledge-you-may-not-know/blob/master/archives/023-clipboardapi.md
-            //https://juejin.im/entry/5ad0684cf265da237b227fc0
-            navigator.clipboard.writeText(this.selectedList.join(' ')).catch((err) => {
-                // 如果用户没有授权，则抛出异常
-                console.error('无法复制此文本：', err);
-            });
+            this.copyContent = this.selectedList;
+            this.$refs.copyRect.style.display = '';
+            Object.assign(
+                this.$refs.copyRect.style,
+                location.getRectBetweenTwoCells(this.selectedIndex, this.rowsList, this.colsList),
+            );
+            //https://stackoverflow.com/questions/51805395/navigator-clipboard-is-undefined
+            //https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+            if (typeof navigator.clipboard === 'undefined') {
+                let input = document.createElement('textarea');
+                input.innerHTML = this.copyContent;
+                document.body.appendChild(input);
+                input.select();
+                let result = document.execCommand('copy');
+                document.body.removeChild(input);
+                return result;
+            } else {
+                navigator.clipboard.writeText(this.copyContent).catch((err) => {
+                    // 如果用户没有授权，则抛出异常
+                    console.error('无法复制此文本：', err);
+                });
+            }
         },
         paste() {
-            let vue = this;
-            navigator.clipboard.readText().then((text) => {
-                for (
-                    let row = this.selectedIndex.rowStartIndex;
-                    row <= this.selectedIndex.rowEndIndex;
-                    row++
-                ) {
-                    for (
-                        let col = this.selectedIndex.colStartIndex;
-                        col <= this.selectedIndex.colEndIndex;
-                        col++
-                    ) {
-                        this.table[row].splice([col], 1, text);
-                    }
+            const paste = (text) => {
+                if (this.isCut) {
+                    this.isCut = false;
+                    this.updateCellList(this.cutIndex, '');
                 }
-            });
+                this.updateCellList(this.selectedIndex, text);
+                this.$refs.copyRect.style.display = 'none';
+            };
+            if (typeof navigator.clipboard === 'undefined') {
+                paste(this.copyContent);
+            } else {
+                navigator.clipboard
+                    .readText()
+                    .then((text) => {
+                        paste(text);
+                    })
+                    .catch((error) => console.error(error));
+            }
         },
-        cut() {},
-        clear() {},
+        cut() {
+            this.copy();
+            this.isCut = true;
+            this.cutIndex = this.selectedIndex;
+        },
+        clear() {
+            this.updateCellList(this.selectedIndex, '');
+        },
         insertRowUp() {},
         insertRowDown() {},
         removeRow() {},
         insertColLeft() {},
     },
+    // mounted() {
+    //     this.$refs.table.addEventListener('paste', paste(e));
+    // },
+    // destroy() {
+    //     this.$refs.table.removeEventListener('paste', paste(e));
+    // },
 };

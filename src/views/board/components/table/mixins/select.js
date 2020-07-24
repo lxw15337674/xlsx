@@ -1,6 +1,7 @@
 import { once } from 'src/utils/dom';
 import * as location from '@/utils/location.ts';
 import * as select from 'src/utils/select.ts';
+import * as math from '@/utils/math';
 
 export default {
     data() {
@@ -15,32 +16,49 @@ export default {
             multipleList: [], //TODO 多选情况
         };
     },
-    watch: {},
-    computed: {
-        selectedContent() {
-            return location.getRectBetweenTwoCells(
-                this.selectedIndex,
-                this.rowsList,
-                this.colslist,
-            );
-        },
-        selectedList() {
-            return select.getSelectedList(this.data, this.selectedIndex);
+    watch: {
+        selectedIndex: {
+            deep: true,
+            handler() {
+                Object.assign(
+                    this.$refs.selectedRect.style,
+                    location.getRectBetweenTwoCells(
+                        this.selectedIndex,
+                        this.rowsList,
+                        this.colsList,
+                    ),
+                );
+            },
         },
     },
     methods: {
         startSelect(evt, rowIndex, colIndex) {
             if (evt.button === 0) {
                 evt.preventDefault();
-                //  this.selectedIndex.startCell = evt.currentTarget;
-                //  this.selectedIndex.endCell = evt.currentTarget;
-                this.selectedIndex.rowStartIndex = rowIndex;
-                this.selectedIndex.rowEndIndex = rowIndex;
-                this.selectedIndex.colStartIndex = colIndex;
-                this.selectedIndex.colEndIndex = colIndex;
+                this.selectedIndex = {
+                    rowStartIndex: rowIndex,
+                    rowEndIndex: rowIndex,
+                    colStartIndex: colIndex,
+                    colEndIndex: colIndex,
+                };
+                this.cellInputShow = false;
                 this.selectedStart = true;
                 let HandleOnMouseUp = (evt) => {
                     this.selectedStart = false;
+                    let [rowStartIndex, rowEndIndex] = math.sort([
+                        this.selectedIndex.rowStartIndex,
+                        this.selectedIndex.rowEndIndex,
+                    ]);
+                    let [colStartIndex, colEndIndex] = math.sort([
+                        this.selectedIndex.colStartIndex,
+                        this.selectedIndex.colEndIndex,
+                    ]);
+                    this.selectedIndex = {
+                        rowStartIndex: rowStartIndex,
+                        rowEndIndex: rowEndIndex,
+                        colStartIndex: colStartIndex,
+                        colEndIndex: colEndIndex,
+                    };
                 };
                 once(window, 'mouseup', HandleOnMouseUp);
             }
@@ -64,7 +82,6 @@ export default {
             if (!this.selectedStart) {
                 return;
             }
-            this.selectedIndex.endCell = evt.currentTarget;
             this.selectedIndex.rowEndIndex = rowIndex;
             this.selectedIndex.colEndIndex = colIndex;
         },
@@ -72,10 +89,12 @@ export default {
          */
         handleContextMenu(evt, rowIndex, colIndex) {
             if (!select.isSelected(rowIndex, colIndex, this.selectedIndex)) {
-                this.selectedIndex.rowStartIndex = rowIndex;
-                this.selectedIndex.rowEndIndex = rowIndex;
-                this.selectedIndex.colStartIndex = colIndex;
-                this.selectedIndex.colEndIndex = colIndex;
+                this.selectedIndex = {
+                    rowStartIndex: rowIndex,
+                    rowEndIndex: rowIndex,
+                    colStartIndex: colIndex,
+                    colEndIndex: colIndex,
+                };
             }
         },
         rowsSelect(rowIndex) {

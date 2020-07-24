@@ -1,59 +1,59 @@
 <template>
-    <table class="table-header">
-        <thead>
-            <tr>
-                <th>
-                    <div style="width:100px" class="col-container">全选</div>
-                </th>
-                <th v-for="col in colsHeader" :key="col.id">
-                    <div
-                        :style="{ width: `${col.width}px` }"
-                        class="col-container"
-                        :class="[{ 'is-active': isActive(col.index) }]"
-                        @click="handleClick(col.index)"
-                        @mouseenter="(evt) => handleMouseEnter(evt, col.index)"
-                        @mousedown="(evt) => handleMousedown(evt, col.index)"
-                        @mouseup="(evt) => handleMouseUp(evt, col.index)"
-                    >
-                        <div>
-                            {{ col.index | indexToChar }}
-                        </div>
-                        <div
-                            class="hori-resizable-content"
-                            @mousedown="(evt) => colResizeStart(evt, col.index, col.width)"
-                        ></div>
+    <div>
+        <div style="width:100px" class="col-container"></div>
+        <dynamic-scroller
+            :items="colsList"
+            :offset="offset"
+            direction="horizontal"
+            class="cols-header"
+        >
+            <template v-slot="{ index, size }">
+                <div
+                    :style="{ width: `${size}px` }"
+                    class="col-container"
+                    :class="[{ 'is-active': isActive(index) }]"
+                    @click="handleClick(index)"
+                    @mouseenter="(evt) => handleMouseEnter(evt, index)"
+                    @mousedown="(evt) => handleMousedown(evt, index)"
+                    @mouseup="(evt) => handleMouseUp(evt, index)"
+                >
+                    <div>
+                        {{ index | indexToChar }}
                     </div>
-                    <!--              <el-button @click="clearCol(index)">删除</el-button>-->
-                </th>
-            </tr>
-        </thead>
-    </table>
+                    <div
+                        class="hori-resizable-content"
+                        @mousedown="(evt) => colResizeStart(evt, index, size)"
+                    ></div>
+                </div>
+            </template>
+        </dynamic-scroller>
+    </div>
 </template>
 
 <script>
 import { indexToChar } from 'src/utils/transform.ts';
+import dynamicScroller from 'src/components/dynamicScroller';
 import select from './mixins/select.js';
 export default {
     name: 'cols-header',
     mixins: [select],
+    components: { dynamicScroller },
     props: {
-        colsHeader: {
+        colsList: {
             type: Array,
-            require: true,
-        },
-        tableRect: {
-            type: Object,
             require: true,
         },
         selectedIndex: {
             type: Object,
             require: true,
         },
-        tableWidth: {},
+        offset: {
+            type: Number,
+            default: 0,
+        },
     },
     data() {
         return {
-            width: '100',
         };
     },
     filters: {
@@ -70,8 +70,10 @@ export default {
         },
         isActive(colIndex) {
             return (
-                Math.min(this.selectedIndex.colStartIndex, this.selectedIndex.colEndIndex) <= colIndex &&
-                colIndex <= Math.max(this.selectedIndex.colStartIndex, this.selectedIndex.colEndIndex)
+                Math.min(this.selectedIndex.colStartIndex, this.selectedIndex.colEndIndex) <=
+                    colIndex &&
+                colIndex <=
+                    Math.max(this.selectedIndex.colStartIndex, this.selectedIndex.colEndIndex)
             );
         },
     },
@@ -79,6 +81,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.cols-header
+    height 60px
+    margin-left 100px
 .is-active
     background-color borderColor
 .col-container

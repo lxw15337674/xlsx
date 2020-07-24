@@ -1,11 +1,11 @@
 <template>
     <div class="c-table">
-        <div class="formula-container">
-            <div class="formula-key">
-                {{ currentPosition(cellInput.rowIndex, cellInput.colIndex) }}
-            </div>
-            <textarea class="formula-value" v-model="activeCellInput" />
-        </div>
+        <!--        <div class="formula-container">-->
+        <!--            <div class="formula-key">-->
+        <!--                {{ currentPosition(cellInput.rowIndex, cellInput.colIndex) }}-->
+        <!--            </div>-->
+        <!--            <textarea class="formula-value" v-model="activeCellInput" />-->
+        <!--        </div>-->
         <div class="table-container" ref="table">
             <!--        <canvas-->
             <!--          class="canvas"-->
@@ -14,93 +14,59 @@
             <!--        ></canvas>-->
             <div ref="horiAxis" class="horiAxis" id="horiAxis" style="display: none"></div>
             <div ref="vertAxis" class="vertAxis" id="vertAxis" style="display: none"></div>
-            <!--            <c-input class="cell-input" v-model="activeCellInput" :style="cellInputStyle"></c-input>-->
             <cols-header
-                class="table-header"
-                :colsHeader="visibleCols"
+                :colsList="colsList"
                 :selectedIndex="selectedIndex"
+                :offset="offset.left"
                 @selectStart="colSelect"
                 @select="colsSelect"
                 @colResizeStart="colResizeStart"
                 @colHeaderClick="colSelect"
             ></cols-header>
             <rows-header
-                class="left-table"
-                :rowsHeader="visibleRows"
+                :rowsList="rowsList"
+                :offset="offset.top"
                 :selectedIndex="selectedIndex"
                 @selectStart="rowSelect"
                 @select="rowsSelect"
                 @rowResizeStart="rowResizeStart"
                 @rowHeaderClick="rowSelect"
             ></rows-header>
-            <contextMenu>
+            <contextMenu v-hotkey="keymap">
                 <div class="table-main">
-                    <dynamic-scroller
-                        ref="scroller"
-                        :height="tableHeight"
-                        :width="tableWidth"
-                        :rows="rowsList"
-                        :cols="colslist"
-                    >
+                    <virtual-scroller-table :rows="rowsList" :cols="colsList" @scroll="scrollHandle">
                         <template slot="before">
-                            <div class="select-content" :style="selectedContent"></div>
+                            <div class="select-content" ref="selectedRect" ></div>
+                            <div class="copy-content" ref="copyRect"></div>
+                            <c-input class="cell-edit-input" ref="editInput" v-show="cellInputShow" v-model="activeCellInput" ></c-input>
                         </template>
-                        <slot>
-                            <table :style="visibleTableStyle">
-                                <colgroup>
-                                    <col
-                                        v-for="col in visibleCols"
-                                        :key="col.id"
-                                        :style="{ width: `${col.width}px` }"
-                                    />
-                                </colgroup>
-                                <tbody>
-                                    <tr ref="rows" v-for="(row, index) in visibleRows" :key="index">
-                                        <td
-                                            ref="cell"
-                                            v-for="(col, index) in visibleCols"
-                                            :key="index"
-                                        >
-                                            <div
-                                                class="cell"
-                                                @click="
-                                                    (evt) =>
-                                                        handleCellClick(evt, row.index, col.index)
-                                                "
-                                                @mousedown="
-                                                    (evt) => startSelect(evt, row.index, col.index)
-                                                "
-                                                @mouseenter="
-                                                    (evt) =>
-                                                        handleMouseEnter(evt, row.index, col.index)
-                                                "
-                                                @contextmenu="
-                                                    (evt) =>
-                                                        handleContextMenu(evt, row.index, col.index)
-                                                "
-                                                :style="{
-                                                    height: `${row.height}px`,
-                                                }"
-                                            >
-                                                <textarea
-                                                    disabled
-                                                    class="cell-content"
-                                                    v-model="table[row.index][col.index]"
-                                                ></textarea>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </slot>
-                    </dynamic-scroller>
+                        <template v-slot="{ rowIndex, colIndex, height, width }">
+                            <div
+                                class="cell"
+                                @click="(evt) => handleCellClick(evt, rowIndex, colIndex)"
+                                @mousedown="(evt) => startSelect(evt, rowIndex, colIndex)"
+                                @mouseenter="(evt) => handleMouseEnter(evt, rowIndex, colIndex)"
+                                @contextmenu="(evt) => handleContextMenu(evt, rowIndex, colIndex)"
+                                :style="{ height: `${height}px`, width: `${width}px` }"
+                            >
+                                <textarea
+                                    disabled
+                                    class="cell-content"
+                                    v-model="table[rowIndex] && table[rowIndex][colIndex]"
+                                ></textarea>
+                            </div>
+                        </template>
+                    </virtual-scroller-table>
                 </div>
                 <template slot="contentMenu">
                     <context-item
                         v-for="menuItem in contextMenu"
                         :key="menuItem.label"
+                        :divided="menuItem.divided"
                         @click.native="fnCall(menuItem.def)"
-                        >{{ menuItem.label }}
+                        >
+                        <span class="">{{ menuItem.label }}</span>
+                        <span class="fr">{{menuItem.hotkey}}</span>
                     </context-item>
                 </template>
             </contextMenu>

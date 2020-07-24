@@ -1,4 +1,3 @@
-import SWorker from 'simple-web-worker';
 //判断滚动方向
 let sLeft = 0,
     sTop = 0;
@@ -15,7 +14,8 @@ export function scrollToPosition(el): string {
 // 二分查找法
 function binarySearch(offset: number, list: number[]): number {
     if (list.length === 0) {
-        throw '数组不能为空';
+        // console.error('数组为空');
+        return -1;
     }
     let startIndex = 0,
         endIndex = list.length - 1,
@@ -71,54 +71,9 @@ export function findVisibleIndex(
     list: number[],
 ): VisiblePosition {
     let start = binarySearch(offset, list);
-    let end = binarySearch(visibleOffset + offset, list) + 1;
+    let end = binarySearch(visibleOffset + offset, list);
     return {
         start: start,
         end: end,
     };
-}
-
-//webWorker
-let sWorker;
-export class Worker {
-    private cacheCols = [];
-    private cacheRows = [];
-    public actions = [
-        { message: 'getItemStartPosition', func: getItemStartPosition },
-        { message: 'findStartIndex', func: findStartIndex },
-        //将所有显示内容进行缓存。
-        {
-            message: 'visibleCache',
-            func: (visibleOffset: number, list: number[]) => {
-                // 查找结束位置
-                function findEndIndex(
-                    visibleOffset: number,
-                    startIndex: number,
-                    list: number[],
-                ): number {
-                    let size = 0;
-                    let endIndex = startIndex;
-                    let maxVisibleLength = visibleOffset + list[startIndex];
-                    while (endIndex <= list.length - 1 && size <= maxVisibleLength) {
-                        size += list[endIndex];
-                        endIndex++;
-                    }
-                    return endIndex;
-                }
-
-                let visibleList = [];
-                for (let index in list) {
-                    visibleList.push(findEndIndex(visibleOffset, Number(index), list));
-                }
-                return visibleList;
-            },
-        },
-    ];
-
-    constructor() {
-        if (!sWorker) {
-            return SWorker.create(this.actions);
-        }
-        return sWorker;
-    }
 }

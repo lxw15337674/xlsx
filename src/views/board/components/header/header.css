@@ -1,0 +1,80 @@
+.header {
+  padding: 0 20px;
+  line-height: 60px;
+  background-color: #f8f8f8;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.header .left-tools button {
+  margin-right: 10px;
+}
+.header .left-tools .filename-input {
+  margin-right: 10px;
+  visibility: visible;
+  color: #333;
+  box-sizing: border-box;
+  max-width: 400px;
+  border: 1px solid transparent;
+}
+.header .left-tools .filename-input:focus {
+  border: 1px solid #4d90fe;
+  -webkit-appearance: none;
+  color: #333 !important;
+}
+.header .hi {
+  position: absolute;
+  animation: hi 50s linear infinite;
+  transition: all 1s;
+  z-index: 0;
+}
+.header .hi:hover {
+  opacity: 0.2;
+  filter: grayscale(50%);
+}
+.header .right-tools {
+  position: absolute;
+  right: 20px;
+}
+.header .right-tools * {
+  vertical-align: middle;
+}
+@-moz-keyframes hi {
+  0% {
+    left: -60px;
+    filter: hue-rotate(0);
+  }
+  100% {
+    left: 100%;
+    filter: hue-rotate(360deg);
+  }
+}
+@-webkit-keyframes hi {
+  0% {
+    left: -60px;
+    filter: hue-rotate(0);
+  }
+  100% {
+    left: 100%;
+    filter: hue-rotate(360deg);
+  }
+}
+@-o-keyframes hi {
+  0% {
+    left: -60px;
+    filter: hue-rotate(0);
+  }
+  100% {
+    left: 100%;
+    filter: hue-rotate(360deg);
+  }
+}
+@keyframes hi {
+  0% {
+    left: -60px;
+    filter: hue-rotate(0);
+  }
+  100% {
+    left: 100%;
+    filter: hue-rotate(360deg);
+  }
+}

@@ -1,3 +1,5 @@
+import * as math from '@/utils/math';
+
 interface selectedIndex {
     rowStartIndex: number;
     colStartIndex: number;
@@ -13,11 +15,15 @@ export function isSelected(rowIndex: number, colIndex: number, select: selectedI
     );
 }
 export function getSelectedList(data: string[][], select: selectedIndex) {
-    let array = [];
+    let content = '';
     for (let row = select.rowStartIndex; row <= select.rowEndIndex; row++) {
         for (let col = select.colStartIndex; col <= select.colEndIndex; col++) {
-            array.push(data[row][col]);
+            content += `${data[row][col]}`;
+            if (col !== select.colEndIndex) {
+                content += `\t`;
+            }
         }
+        content += `\n`;
     }
-    return array;
+    return content;
 }

@@ -22,10 +22,6 @@
   max-width: 100%;
   flex: 1;
 }
-.c-table .table-container .table-header {
-  position: sticky;
-  top: 0;
-}
 .c-table .table-container .table-main {
   overflow: auto;
   height: calc(100% - 40px);
@@ -34,14 +30,6 @@
   margin-left: 100px;
   position: relative;
 }
-.c-table .table-container .left-table {
-  position: absolute;
-  background: #fff;
-  display: inline-block;
-  left: 0;
-  right: 0;
-  z-index: 3;
-}
 .c-table table {
   table-layout: fixed;
   border-collapse: separate;
@@ -49,11 +37,31 @@
 .c-table .is-active {
   background-color: borderColor !important;
 }
-.c-table >>>.select-content {
-  border: 1px solid activeColor;
+.c-table .select-content {
+  border: 2px solid activeColor;
   background: #e5f3ff;
   position: absolute;
   pointer-events: none;
+  will-change: transform;
+}
+.c-table .copy-content {
+  border: 2px dashed activeColor;
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+}
+.c-table .cell-edit-input {
+  position: absolute;
+  border: 1px solid activeColor;
+  font-size: 15px;
+  resize: none;
+  will-change: transform;
+  overflow: hidden;
+  z-index: 1;
+  box-sizing: border-box;
+}
+.c-table .cell-edit-input:focus {
+  outline-color: activeColor;
 }
 .c-table .horiAxis {
   position: fixed;

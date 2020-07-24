@@ -5,10 +5,11 @@ import store from './store';
 import directive from 'src/directive'; // 引入自定义指令
 import './plugins/element.js';
 import './assets/css/reset.css';
+import VueHotKey from 'v-hotkey';
 
 Vue.config.productionTip = false;
 Vue.use(directive);
-
+Vue.use(VueHotKey);
 new Vue({
     router,
     store,

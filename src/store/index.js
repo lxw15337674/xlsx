@@ -17,4 +17,5 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 export default new Vuex.Store({
     modules,
     plugins: [createPersistedState()], // vuex缓存
+    strict: true,
 });

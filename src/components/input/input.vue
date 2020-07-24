@@ -59,15 +59,17 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.cell-input {
+.cell-edit-input {
   position: absolute;
   border: 1px solid activeColor;
   font-size: 15px;
   resize: none;
+  will-change: transform;
   overflow: hidden;
   z-index: 1;
   width: 100px;
   height: 40px;
+  box-sizing:border-box;
 
   &:focus {
     outline-color: activeColor;
