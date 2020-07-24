@@ -37,13 +37,30 @@
         border-collapse: separate;
     .is-active
         background-color borderColor !important
-
-    >>>.select-content
-        border 1px solid activeColor
-        background #e5f3ff
+    content()
         position :absolute
         pointer-events none
         will-change: transform;
+    .select-content
+        border 2px solid activeColor
+        background #e5f3ff
+        content()
+    .copy-content
+        border 2px dashed  activeColor
+        content()
+    .cell-edit-input
+        position: absolute;
+        border: 1px solid activeColor;
+        font-size: 15px;
+        resize: none;
+        will-change: transform;
+        overflow: hidden;
+        z-index: 1;
+        box-sizing:border-box;
+
+        &:focus {
+            outline-color: activeColor;
+        }
     axis()
         position fixed
         left 0;

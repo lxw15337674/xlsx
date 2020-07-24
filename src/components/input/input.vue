@@ -68,7 +68,6 @@ export default {
   overflow: hidden;
   z-index: 1;
   width: 100px;
-
   height: 40px;
   box-sizing:border-box;
 

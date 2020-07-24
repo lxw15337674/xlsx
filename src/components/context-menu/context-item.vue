@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="divided" v-if="divided"></div>
         <div class="context-item">
             <slot></slot>
         </div>
+        <div class="divided" v-if="divided"></div>
     </div>
 </template>
 
@@ -24,6 +24,7 @@ export default {
   padding: 10px 16px;
   cursor: pointer;
   font-size 15px
+  min-width 280px
   &:hover
     background-color: #f5f5f5;
 .divided

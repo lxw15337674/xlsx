@@ -1,6 +1,7 @@
 import { once } from 'src/utils/dom';
 import * as location from '@/utils/location.ts';
 import * as select from 'src/utils/select.ts';
+import * as math from '@/utils/math';
 
 export default {
     data() {
@@ -44,6 +45,20 @@ export default {
                 this.selectedStart = true;
                 let HandleOnMouseUp = (evt) => {
                     this.selectedStart = false;
+                    let [rowStartIndex, rowEndIndex] = math.sort([
+                        this.selectedIndex.rowStartIndex,
+                        this.selectedIndex.rowEndIndex,
+                    ]);
+                    let [colStartIndex, colEndIndex] = math.sort([
+                        this.selectedIndex.colStartIndex,
+                        this.selectedIndex.colEndIndex,
+                    ]);
+                    this.selectedIndex = {
+                        rowStartIndex: rowStartIndex,
+                        rowEndIndex: rowEndIndex,
+                        colStartIndex: colStartIndex,
+                        colEndIndex: colEndIndex,
+                    };
                 };
                 once(window, 'mouseup', HandleOnMouseUp);
             }

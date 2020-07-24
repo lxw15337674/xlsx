@@ -32,11 +32,12 @@
                 @rowResizeStart="rowResizeStart"
                 @rowHeaderClick="rowSelect"
             ></rows-header>
-            <contextMenu>
+            <contextMenu v-hotkey="keymap">
                 <div class="table-main">
                     <virtual-scroller-table :rows="rowsList" :cols="colsList" @scroll="scrollHandle">
                         <template slot="before">
                             <div class="select-content" ref="selectedRect" ></div>
+                            <div class="copy-content" ref="copyRect"></div>
                             <c-input class="cell-edit-input" ref="editInput" v-show="cellInputShow" v-model="activeCellInput" ></c-input>
                         </template>
                         <template v-slot="{ rowIndex, colIndex, height, width }">
@@ -61,8 +62,11 @@
                     <context-item
                         v-for="menuItem in contextMenu"
                         :key="menuItem.label"
+                        :divided="menuItem.divided"
                         @click.native="fnCall(menuItem.def)"
-                        >{{ menuItem.label }}
+                        >
+                        <span class="">{{ menuItem.label }}</span>
+                        <span class="fr">{{menuItem.hotkey}}</span>
                     </context-item>
                 </template>
             </contextMenu>
