@@ -51,25 +51,18 @@ export default {
             get() {
                 return this.$store.getters['workbook/activeTable'];
             },
-            // set(value) {
-            //     this.$store.commit('initSheet', { array: value });
-            // },
+
         },
     },
-    // watch: {
-    //     table: {
-    //         deep: true,
-    //         immediate: true,
-    //         handler() {
-    //             this.headerInit();
-    //         },
-    //     },
-
+    watch: {
+        table: {
+            deep: true,
+            handler() {
+                this.headerInit();
+            },
+        },
+    },
     methods: {
-        // updateCell(value, rowIndex, colIndex) {
-        //     this.$store.commit('workbook/updateCell', { value, rowIndex, colIndex });
-        // },
-        updateCellInput() {},
         headerInit() {
             //行
             for (let rowIndex = 0; rowIndex < this.table.length; rowIndex++) {

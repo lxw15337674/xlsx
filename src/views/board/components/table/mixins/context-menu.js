@@ -26,40 +26,45 @@ export default {
                 },
                 {
                     label: '粘贴',
-                    def: `paste`,
+                    def: 'paste',
                     hotkey: 'ctrl+v',
                 },
                 {
                     label: '剪切',
-                    def: `cut`,
+                    def: 'cut',
                     hotkey: 'ctrl+x',
                 },
                 {
                     label: '清空选中区域',
-                    def: `clear`,
+                    def: 'clear',
                     divided: true,
                     hotkey: 'delete',
                 },
                 {
                     label: '上方插入一行',
-                    def: `insertRowUp`,
+                    def: 'insertRowUp',
                 },
                 {
                     label: '下方插入一行',
-                    def: `insertRowDown`,
+                    def: 'insertRowDown',
                 },
                 {
                     label: '删除所在行',
-                    def: `removeRow`,
+                    def: 'removeRows',
+                    divided: true,
                 },
                 {
                     label: '左边插入一列',
-                    def: `insertColLeft`,
+                    def: 'insertColLeft',
                 },
-                // {
-                //   label:'左边插入一列',
-                //   def:`insertColLeft`
-                // },
+                {
+                    label: '右边插入一列',
+                    def: 'insertColRight',
+                },
+                {
+                    label: '删除所在列',
+                    def: 'removeCols',
+                },
             ],
         };
     },
@@ -144,10 +149,34 @@ export default {
         clear() {
             this.updateCellList(this.selectedIndex, '');
         },
-        insertRowUp() {},
-        insertRowDown() {},
-        removeRow() {},
-        insertColLeft() {},
+        insertRowUp() {
+            this.$store.commit('workbook/addRow', {
+                index: this.selectedIndex.rowStartIndex,
+            });
+        },
+        insertRowDown() {
+            this.$store.commit('workbook/addRow', {
+                index: this.selectedIndex.rowEndIndex + 1,
+            });
+        },
+        removeRows() {
+            let { rowStartIndex, rowEndIndex } = this.selectedIndex;
+            for (let i = rowStartIndex; i <= rowEndIndex; i++) {
+                this.$store.commit('workbook/removeRow', i);
+            }
+        },
+        insertColLeft() {
+            this.$store.commit('workbook/addCol', { index: this.selectedIndex.colStartIndex });
+        },
+        insertColRight() {
+            this.$store.commit('workbook/addCol', { index: this.selectedIndex.colEndIndex + 1 });
+        },
+        removeCols() {
+            let { colStartIndex, colEndIndex } = this.selectedIndex;
+            for (let i = colStartIndex; i <= colEndIndex; i++) {
+                this.$store.commit('workbook/removeCol', i);
+            }
+        },
     },
     // mounted() {
     //     this.$refs.table.addEventListener('paste', paste(e));

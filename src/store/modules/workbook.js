@@ -1,5 +1,4 @@
 import webWorker from 'src/utils/webWorker';
-import row from 'element-ui/packages/row/src/row';
 const DefaultSheetName = 'sheet1';
 
 export default {
@@ -21,8 +20,28 @@ export default {
         initSheet(state, { array, sheetName = state.activeSheetName }) {
             state.sheets[sheetName] = array;
         },
-        updateCell(state, { rowIndex, colIndex, value }) {
-            state.sheets[state.activeSheetName][rowIndex].splice([colIndex], 1, value);
+        updateCell({ state }, { rowIndex, colIndex, value }) {
+            state.sheets[state.activeSheetName][rowIndex].splice(colIndex, 1, value);
+        },
+        addRow(state, { index, value = '' }) {
+            let sheet = state.sheets[state.activeSheetName];
+            let row = Array(sheet[0].length).fill(value);
+            sheet.splice(index, 0, row);
+        },
+        addCol(state, { index = 0, value = '' }) {
+            let sheet = state.sheets[state.activeSheetName];
+            for (let row of sheet) {
+                row.splice(index, 0, value);
+            }
+        },
+        removeRow(state, index) {
+            state.sheets[state.activeSheetName].splice(index, 1);
+        },
+        removeCol(state, index) {
+            let sheet = state.sheets[state.activeSheetName];
+            for (let row of sheet) {
+                row.splice(index, 1);
+            }
         },
     },
     getters: {

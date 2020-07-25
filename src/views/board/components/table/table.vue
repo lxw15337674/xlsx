@@ -52,7 +52,7 @@
                                 <textarea
                                     disabled
                                     class="cell-content"
-                                    v-model="table[rowIndex] && table[rowIndex][colIndex]"
+                                    :value="table[rowIndex] && table[rowIndex][colIndex]"
                                 ></textarea>
                             </div>
                         </template>
