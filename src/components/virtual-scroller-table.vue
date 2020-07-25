@@ -118,24 +118,25 @@ export default {
             }
         },
         handleScroll() {
+            let scroller = this.$refs.scroller;
             // if (!direction) {
             //     direction = scroll.scrollToPosition(this.$refs.scroller.scrollLeft,this.$refs.scroller.scrollTop);
             // }
             // if (direction === 'vertical') {
             this.visibleRowsIndex = scroll.findVisibleIndex(
-                this.$refs.scroller.scrollTop,
-                this.$refs.scroller.clientHeight,
+                scroller.scrollTop,
+                scroller.clientHeight,
                 this.rowsPosition,
             );
             // } else {
             //TODO 结束位置缓存
             this.visibleColsIndex = scroll.findVisibleIndex(
-                this.$refs.scroller.scrollLeft,
-                this.$refs.scroller.clientWidth,
+                scroller.scrollLeft,
+                scroller.clientWidth,
                 this.colsPosition,
             );
             // }
-            this.$emit('scroll',{left:this.$refs.scroller.scrollLeft,top:this.$refs.scroller.scrollTop,})
+            this.$emit('scroll', { left: scroller.scrollLeft, top: scroller.scrollTop });
         },
     },
 
@@ -189,6 +190,12 @@ export default {
             });
         },
     },
+    mounted() {
+        window.addEventListener('resize', this.handleScroll);
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize',this.handleScroll)
+    }
 };
 </script>
 
