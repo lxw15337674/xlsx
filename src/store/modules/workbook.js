@@ -20,7 +20,7 @@ export default {
         initSheet(state, { array, sheetName = state.activeSheetName }) {
             state.sheets[sheetName] = array;
         },
-        updateCell({ state }, { rowIndex, colIndex, value }) {
+        updateCell(state, { rowIndex, colIndex, value }) {
             state.sheets[state.activeSheetName][rowIndex].splice(colIndex, 1, value);
         },
         addRow(state, { index, value = '' }) {

@@ -1,9 +1,9 @@
 <template>
     <!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
     <!--        @scroll.passive="handleScroll"-->
-    <div class="dynamicScroller" ref="scroller" >
+    <div class="dynamicScroller" ref="scroller">
         <slot name="before"></slot>
-        <div  ref="phantom" class="phantom" :style="tableSize"></div>
+        <div ref="phantom" class="phantom" :style="tableSize"></div>
         <div class="wrapper" ref="wrapper">
             <div
                 class="item-view"
@@ -17,7 +17,7 @@
                     }px)`,
                 }"
             >
-                <slot :size="view.item" :index="view.index"></slot>
+                <slot :size="view.item" :index="view.index" :active="view.used"></slot>
             </div>
         </div>
         <slot name="before"></slot>
@@ -32,17 +32,17 @@ export default {
     props: {
         items: {
             type: Array,
-            require:true
+            require: true,
         },
         direction: {
             type: String,
             default: 'vertical',
             validator: (value) => ['vertical', 'horizontal'].includes(value),
         },
-        offset:{
-            type:Number,
-            default:0
-        }
+        offset: {
+            type: Number,
+            default: 0,
+        },
     },
     components: {},
     data() {
@@ -56,24 +56,25 @@ export default {
     },
     methods: {
         usedView(viewIndex, itemsIndex) {
-            let view = {}, { items, itemsPosition } = this;
-            if(this.pool[viewIndex]){
-                view = this.pool[viewIndex]
+            let view = {},
+                { items, itemsPosition } = this;
+            if (this.pool[viewIndex]) {
+                view = this.pool[viewIndex];
                 view.item = items[itemsIndex];
                 view.index = itemsIndex;
                 view.used = true;
-                view.position = itemsPosition[itemsIndex-1]||0;
-            }else{
-                 view = {
-                    item:this.items[itemsIndex],
-                    position:itemsPosition[itemsIndex-1]||0,
+                view.position = itemsPosition[itemsIndex - 1] || 0;
+            } else {
+                view = {
+                    item: this.items[itemsIndex],
+                    position: itemsPosition[itemsIndex - 1] || 0,
                     index: itemsIndex,
                     id: uid++,
                     used: true,
                 };
                 this.pool.push(view);
             }
-            return view
+            return view;
         },
         unusedView(view) {
             view.item = undefined;
@@ -87,28 +88,23 @@ export default {
             let viewIndex = 0;
             //更新使用的view
             for (let i = start; i <= end; i++) {
-                this.usedView(viewIndex,i)
-                viewIndex++
+                this.usedView(viewIndex, i);
+                viewIndex++;
             }
             // 处理不使用的view
             for (let i = viewIndex; i < this.pool.length; i++) {
                 this.unusedView(this.pool[i]);
             }
-
         },
         handleScroll() {
             if (this.direction === 'vertical') {
-                this.handleVisibilityChange( this.offset, this.$refs.scroller.clientHeight);
-            }else{
-                this.handleVisibilityChange( this.offset, this.$refs.scroller.clientWidth);
+                this.handleVisibilityChange(this.offset, this.$refs.scroller.clientHeight);
+            } else {
+                this.handleVisibilityChange(this.offset, this.$refs.scroller.clientWidth);
             }
         },
-        handleVisibilityChange(offset,clientSize) {
-            let { start, end } = scroll.findVisibleIndex(
-                offset,
-                clientSize,
-                this.itemsPosition,
-            );
+        handleVisibilityChange(offset, clientSize) {
+            let { start, end } = scroll.findVisibleIndex(offset, clientSize, this.itemsPosition);
             this.visibleIndex.start = start;
             this.visibleIndex.end = end;
             this.updateVisibleItems();
@@ -121,16 +117,16 @@ export default {
                 this.handleScroll();
             },
         },
-        offset:{
-            handler(){
+        offset: {
+            handler() {
                 this.handleScroll();
                 if (this.direction === 'vertical') {
-                    this.$refs.scroller.scrollTop=this.offset
-                }else{
-                    this.$refs.scroller.scrollLeft = this.offset
+                    this.$refs.scroller.scrollTop = this.offset;
+                } else {
+                    this.$refs.scroller.scrollLeft = this.offset;
                 }
-            }
-        }
+            },
+        },
     },
     computed: {
         tableSize() {
@@ -139,13 +135,12 @@ export default {
                     height: `${math.total(this.items, 0, -1)}px`,
                     width: '100%',
                 };
-            }else{
+            } else {
                 return {
-                    height:'100%',
-                    width:`${math.total(this.items, 0, -1)}px`,
+                    height: '100%',
+                    width: `${math.total(this.items, 0, -1)}px`,
                 };
             }
-
         },
         //尺寸缓存
         itemsPosition() {
@@ -178,5 +173,4 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
-
 </style>

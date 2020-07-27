@@ -40,9 +40,10 @@
                             <div class="copy-content" ref="copyRect"></div>
                             <c-input class="cell-edit-input" ref="editInput" v-show="cellInputShow" v-model="activeCellInput" ></c-input>
                         </template>
-                        <template v-slot="{ rowIndex, colIndex, height, width }">
+                        <template v-slot="{ rowIndex, colIndex, height, width,active }">
                             <div
                                 class="cell"
+
                                 @click="(evt) => handleCellClick(evt, rowIndex, colIndex)"
                                 @mousedown="(evt) => startSelect(evt, rowIndex, colIndex)"
                                 @mouseenter="(evt) => handleMouseEnter(evt, rowIndex, colIndex)"
@@ -50,10 +51,11 @@
                                 :style="{ height: `${height}px`, width: `${width}px` }"
                             >
                                 <textarea
-                                    disabled
+                                    v-if="active"
                                     class="cell-content"
                                     :value="table[rowIndex] && table[rowIndex][colIndex]"
                                 ></textarea>
+<!--                               {{table[rowIndex][colIndex]}}-->
                             </div>
                         </template>
                     </virtual-scroller-table>

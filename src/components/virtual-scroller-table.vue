@@ -26,6 +26,7 @@
                         :colIndex="col.index"
                         :height="row.item"
                         :width="col.item"
+                        :active="col.used"
                     ></slot>
                 </div>
             </div>
@@ -194,8 +195,8 @@ export default {
         window.addEventListener('resize', this.handleScroll);
     },
     beforeDestroy() {
-        window.removeEventListener('resize',this.handleScroll)
-    }
+        window.removeEventListener('resize', this.handleScroll);
+    },
 };
 </script>
 
