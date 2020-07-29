@@ -12,12 +12,12 @@
 
 ## 衍生库
 
-1. `v-tip`: 提示框指令
+1. [v-tip](https://github.com/lxw15337674/v-tip): 提示框指令
 2. `v-debounce`：防抖指令
 
 ## 衍生组件
 
-1. `dynamicScroller`：虚拟滚动组件
+1. [dynamicScroller](https://github.com/lxw15337674/v-virtualScroller)：虚拟滚动组件
 2. `virtual-scroller-table`：虚拟滚动表格
 3. `context-menu`：右键菜单
 4. `input`：宽高自适应输入框

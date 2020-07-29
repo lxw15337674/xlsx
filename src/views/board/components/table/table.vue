@@ -53,6 +53,7 @@
                                 <textarea
                                     v-if="active"
                                     class="cell-content"
+                                    disabled
                                     :value="table[rowIndex] && table[rowIndex][colIndex]"
                                 ></textarea>
 <!--                               {{table[rowIndex][colIndex]}}-->

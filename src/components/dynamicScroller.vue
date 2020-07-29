@@ -84,7 +84,6 @@ export default {
         },
         updateVisibleItems() {
             let { start, end } = this.visibleIndex;
-            let items = this.items;
             let viewIndex = 0;
             //更新使用的view
             for (let i = start; i <= end; i++) {
