@@ -18,6 +18,7 @@ export default {
                 rowEndIndex: null,
                 colEndIndex: null,
             },
+            copyRectShow: false,
             contextMenu: [
                 {
                     label: '复制',
@@ -99,7 +100,7 @@ export default {
         },
         copy() {
             this.copyContent = this.selectedList;
-            this.$refs.copyRect.style.display = '';
+            this.copyRectShow = true;
             Object.assign(
                 this.$refs.copyRect.style,
                 location.getRectBetweenTwoCells(this.selectedIndex, this.rowsList, this.colsList),
@@ -128,7 +129,7 @@ export default {
                     this.updateCellList(this.cutIndex, '');
                 }
                 this.updateCellList(this.selectedIndex, text);
-                this.$refs.copyRect.style.display = 'none';
+                this.copyRectShow = false;
             };
             if (typeof navigator.clipboard === 'undefined') {
                 paste(this.copyContent);

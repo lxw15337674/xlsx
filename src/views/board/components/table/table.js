@@ -10,8 +10,7 @@ import * as location from '@/utils/location';
 const modulesFiles = importMixins(require.context('./mixins', false, /\.js$/));
 const components = importComponents(require.context('./components', false, /\.vue$/));
 let id = 1;
-const DefaultRowsLength = 100,
-    DefaultColsLength = 100;
+
 export default {
     components: { ...components, CInput, contextMenu, contextItem },
     mixins: modulesFiles,
@@ -66,7 +65,7 @@ export default {
             for (let rowIndex = 0; rowIndex < this.table.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
                     this.rowsHeader.splice(rowIndex, 1, {
-                        height: math.random(10, 100),
+                        height: 40,
                         id: id++,
                     });
                 }
@@ -74,7 +73,7 @@ export default {
             //列
             for (let colIndex = 0; colIndex < this.table[0].length; colIndex++) {
                 if (!this.colsHeader[colIndex]) {
-                    this.colsHeader.splice(colIndex, 1, { width: math.random(10, 200), id: id++ });
+                    this.colsHeader.splice(colIndex, 1, { width: 100, id: id++ });
                 }
             }
         },
@@ -89,20 +88,16 @@ export default {
                 location.getCellPosition(this.cellInput, this.rowsList, this.colsList),
             );
             this.cellInputShow = true;
-            // let rect = evt.target.getBoundingClientRect();
-            // this.$refs.editInput.$el.style.left = `${rect.left}px`;
-            // this.$refs.editInput.$el.style.top = `${rect.top}px`;
-            // this.$refs.editInput.$el.style.height = `${rect.height}px`;
-            // this.$refs.editInput.$el.style.width = `${rect.width}px`;
         },
     },
+    created() {
+        if (!this.table) {
+            this.$store.commit('workbook/initSheet');
+        }
+    },
     mounted() {
-        this.$store
-            .dispatch('workbook/sheetInit', {
-                rowsLength: DefaultRowsLength,
-                colsLength: DefaultColsLength,
-            })
-            .catch((res) => console.error('表格初始化失败', res));
-        this.headerInit();
+        if (this.table) {
+            this.headerInit();
+        }
     },
 };

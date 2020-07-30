@@ -1,11 +1,11 @@
 <template>
     <div class="c-table">
-        <!--        <div class="formula-container">-->
-        <!--            <div class="formula-key">-->
-        <!--                {{ currentPosition(cellInput.rowIndex, cellInput.colIndex) }}-->
-        <!--            </div>-->
-        <!--            <textarea class="formula-value" v-model="activeCellInput" />-->
-        <!--        </div>-->
+        <div class="formula-container">
+            <div class="formula-key">
+                {{ currentPosition(cellInput.rowIndex, cellInput.colIndex) }}
+            </div>
+            <textarea class="formula-value" v-model="activeCellInput" />
+        </div>
         <div class="table-container" ref="table">
             <!--        <canvas-->
             <!--          class="canvas"-->
@@ -40,8 +40,12 @@
                         @scroll="scrollHandle"
                     >
                         <template slot="before">
-                            <div class="select-content" ref="selectedRect"></div>
-                            <div class="copy-content" ref="copyRect"></div>
+                            <div
+                                class="select-content"
+                                ref="selectedRect"
+                                v-show="selectedShow"
+                            ></div>
+                            <div class="copy-content" ref="copyRect" v-show="copyRectShow"></div>
                             <c-input
                                 class="cell-edit-input"
                                 ref="editInput"
