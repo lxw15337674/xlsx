@@ -7,7 +7,6 @@ import contextItem from 'src/components/context-menu/context-item';
 import { importMixins, importComponents } from 'src/utils/import.ts';
 import * as math from '@/utils/math';
 import * as location from '@/utils/location';
-import { tsTsxRegex } from 'ts-loader/dist/constants';
 const modulesFiles = importMixins(require.context('./mixins', false, /\.js$/));
 const components = importComponents(require.context('./components', false, /\.vue$/));
 let id = 1;
@@ -51,7 +50,6 @@ export default {
             get() {
                 return this.$store.getters['workbook/activeTable'];
             },
-
         },
     },
     watch: {

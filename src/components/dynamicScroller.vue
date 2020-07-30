@@ -1,16 +1,16 @@
 <template>
-    <!--          v-debounce="{ event: 'scroll', handler: handleScroll, wait: 50 }"-->
-    <!--        @scroll.passive="handleScroll"-->
-    <div class="dynamicScroller" ref="scroller">
-        <slot name="before"></slot>
-        <div ref="phantom" class="phantom" :style="tableSize"></div>
-        <div class="wrapper" ref="wrapper">
+    <div
+        class="dynamicScroller"
+        :class="{ [`direction-${direction}`]: true }"
+        ref="scroller"
+        @scroll.passive="handleScroll"
+    >
+        <div class="wrapper" ref="wrapper" :style="tableSize">
             <div
                 class="item-view"
                 :class="direction"
                 v-for="view of pool"
                 :key="view.id"
-                v-show="view.used"
                 :style="{
                     transform: `translate${direction === 'vertical' ? 'Y' : 'X'}(${
                         view.position
@@ -20,12 +20,11 @@
                 <slot :size="view.item" :index="view.index" :active="view.used"></slot>
             </div>
         </div>
-        <slot name="before"></slot>
     </div>
 </template>
 <script>
-import * as scroll from 'src/utils/scroll.ts';
-import * as math from 'src/utils/math.ts';
+import * as scroll from '../utils/scroll.ts';
+import * as math from '../utils/math.ts';
 let uid = 0;
 export default {
     name: 'dynamicScroller',
@@ -33,6 +32,7 @@ export default {
         items: {
             type: Array,
             require: true,
+            default: [],
         },
         direction: {
             type: String,
@@ -44,7 +44,6 @@ export default {
             default: 0,
         },
     },
-    components: {},
     data() {
         return {
             pool: [],
@@ -77,10 +76,8 @@ export default {
             return view;
         },
         unusedView(view) {
-            view.item = undefined;
             view.used = false;
             view.position = -9999;
-            view.index = -1;
         },
         updateVisibleItems() {
             let { start, end } = this.visibleIndex;
@@ -113,16 +110,19 @@ export default {
         items: {
             deep: true,
             handler() {
-                this.handleScroll();
+                this.$nextTick(()=>{
+                    this.handleScroll();
+                })
             },
         },
         offset: {
             handler() {
+                let scroller =  this.$refs.scroller
                 this.handleScroll();
                 if (this.direction === 'vertical') {
-                    this.$refs.scroller.scrollTop = this.offset;
+                    scroller.scrollTop = this.offset;
                 } else {
-                    this.$refs.scroller.scrollLeft = this.offset;
+                    scroller.scrollLeft = this.offset;
                 }
             },
         },
@@ -131,13 +131,13 @@ export default {
         tableSize() {
             if (this.direction === 'vertical') {
                 return {
-                    height: `${math.total(this.items, 0, -1)}px`,
+                    minHeight: `${math.total(this.items, 0, -1)}px`,
                     width: '100%',
                 };
             } else {
                 return {
                     height: '100%',
-                    width: `${math.total(this.items, 0, -1)}px`,
+                    minWidth: `${math.total(this.items, 0, -1)}px`,
                 };
             }
         },
@@ -151,25 +151,25 @@ export default {
         },
     },
     mounted() {
-        this.handleScroll();
+        window.addEventListener('resize', this.handleScroll);
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.handleScroll);
     },
 };
 </script>
 
 <style lang="stylus" scoped>
-
 .dynamicScroller
-    position absolute
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position relative;
+    height 100%
+    width 100%
     overflow hidden
-    .phantom
-        position absolute
     .item-view
-        will-change: transform;
-        position: absolute;
-        top: 0;
-        left: 0;
+        will-change transform;
+        position absolute;
+        top 0;
+        left 0;
+.direction-horizontal
+    display: flex;
 </style>

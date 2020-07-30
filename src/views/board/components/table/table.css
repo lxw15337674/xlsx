@@ -23,12 +23,13 @@
   flex: 1;
 }
 .c-table .table-container .table-main {
-  overflow: auto;
   height: calc(100% - 40px);
   width: calc(100% - 100px);
   display: inline-block;
   margin-left: 100px;
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 40px;
 }
 .c-table table {
   table-layout: fixed;
