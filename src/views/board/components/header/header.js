@@ -31,7 +31,9 @@ export default {
         },
 
         importFile() {
-            if (!this.$refs.fileInput.files.length) return;
+            if (!this.$refs.fileInput.files.length) {
+                return;
+            }
             let file = this.$refs.fileInput.files[0],
                 fileReader = new FileReader();
             fileReader.onload = (e) => {

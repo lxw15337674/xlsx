@@ -36,7 +36,7 @@ export default {
     mounted() {},
     methods: {
         handleClick(sheet) {
-            this.$emit('select', sheet);
+            this.$store.commit('workbook/switchSheet',sheet);
         },
         addSheet() {
             this.$store.commit('workbook/addSheet');
@@ -74,7 +74,7 @@ export default {
     .active
         background-color: white !important;
         border-top: 0;
-        border-bottom 2px solid red
+        border-bottom 2px solid themeColor
     .icon
         height 24px
         width 24px

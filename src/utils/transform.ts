@@ -46,11 +46,7 @@ export function IndexToSymbol(row: number, col: number): string {
 }
 
 // 将sheet对象转为Array二维数组
-export function objToArray(
-    obj: object,
-    minRow: number = 30,
-    minCol: number = 30,
-): string[][] {
+export function objToArray(obj: object, minRow: number = 30, minCol: number = 30): string[][] {
     if (!obj['!ref']) return [[]];
     let table = [];
     let [col, row] = symbolToIndex(obj['!ref'].split(':')[1]);
@@ -69,11 +65,7 @@ export function objToArray(
 }
 
 // 通过行、列位置获取单元格位置
-export function getCellIndex(
-    rowIndex: number,
-    colIndex: number,
-    colLength: number,
-): number {
+export function getCellIndex(rowIndex: number, colIndex: number, colLength: number): number {
     return colIndex + rowIndex * colLength;
 }
 

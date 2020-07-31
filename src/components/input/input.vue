@@ -1,8 +1,7 @@
 <template>
     <textarea
         ref="cellInput"
-        :value="val"
-        @input="$emit('valUpdate', $event.target.value)"
+        v-model="val"
         :style="[cellInputRect]"
     />
 </template>
@@ -11,30 +10,35 @@
 export default {
     data() {
         return {
+            val:null,
             cellInputRect: {
                 width: 0,
                 height: 0,
             },
         };
     },
-    model: {
-        prop: 'val',
-        event: 'valUpdate',
-    },
+    // model: {
+    //     prop: 'value',
+    //     event: 'input',
+    // },
     props: {
-        val: [String, Number],
+        value: [String, Number],
     },
     watch: {
+        value:{
+            immediate:true,
+            handler(){
+                this.val = this.value
+            }
+        },
         val: {
             immediate: true,
-            handler() {
+            handler(val) {
                 //todo 宽高不超过页面
                 // let cellRect=this.$refs.cellInput.getBoundingClientRect()
                 let width = null,
                     height = null;
-                let strList = this.val
-                    ? this.val.split('\n').map((item) => item.length)
-                    : '';
+                let strList = this.val ? this.val.split('\n').map((item) => item.length) : '';
                 if (strList) {
                     width = Math.max(...strList) * 8 + 20;
                     height = strList.length * 17 + 10;
@@ -43,6 +47,7 @@ export default {
                         height: `${height}px`,
                     };
                 }
+                this.$emit('input', val)
                 // let width = Math.min(
                 //   Math.max(...strList) * 8 + 20,
                 //   window.innerWidth- cellRect.left

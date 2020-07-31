@@ -4,7 +4,7 @@
             打开最近<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
         <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(workbook, index) in workbookList">
+            <el-dropdown-item v-for="(workbook, index) in workbookList" :key="workbook.name">
                 {{ workbook.name }}
             </el-dropdown-item>
         </el-dropdown-menu>

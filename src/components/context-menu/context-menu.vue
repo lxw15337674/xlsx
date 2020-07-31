@@ -26,9 +26,9 @@ export default {
     methods: {
         OpenContextMenu(evt) {
             evt.preventDefault();
-            if(this.visible){
-                this.closeContextMenu()
-            }else {
+            if (this.visible) {
+                this.closeContextMenu();
+            } else {
                 this.position.left = evt.pageX;
                 this.position.top = evt.pageY;
                 this.visible = true;

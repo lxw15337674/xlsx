@@ -124,9 +124,7 @@ export const getStyle = function(element, styleName) {
     }
     try {
         var computed = document.defaultView.getComputedStyle(element, '');
-        return element.style[styleName] || computed
-            ? computed[styleName]
-            : null;
+        return element.style[styleName] || computed ? computed[styleName] : null;
     } catch (e) {
         return element.style[styleName];
     }
@@ -147,9 +145,7 @@ export function setStyle(element, styleName, value) {
     } else {
         styleName = camelCase(styleName);
         if (styleName === 'opacity' && ieVersion < 9) {
-            element.style.filter = isNaN(value)
-                ? ''
-                : 'alpha(opacity=' + value * 100 + ')';
+            element.style.filter = isNaN(value) ? '' : 'alpha(opacity=' + value * 100 + ')';
         } else {
             element.style[styleName] = value;
         }
@@ -190,11 +186,7 @@ export const isInContainer = (el, container) => {
     const elRect = el.getBoundingClientRect();
     let containerRect;
 
-    if (
-        [window, document, document.documentElement, null, undefined].includes(
-            container,
-        )
-    ) {
+    if ([window, document, document.documentElement, null, undefined].includes(container)) {
         containerRect = {
             top: 0,
             right: window.innerWidth,
