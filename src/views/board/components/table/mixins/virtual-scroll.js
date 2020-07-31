@@ -1,4 +1,4 @@
-import virtualScrollerTable from 'src/components/virtual-scroller-table';
+import { virtualScrollerTable } from 'v-virtual-scroller';
 export default {
     components: {
         virtualScrollerTable,

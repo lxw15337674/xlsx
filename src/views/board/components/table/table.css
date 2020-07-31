@@ -1,100 +1,101 @@
 .c-table {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
 }
 .c-table .formula-container {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    height: 50px;
 }
 .c-table .formula-container .formula-key {
-  margin-right: 20px;
+    margin-right: 20px;
 }
 .c-table .formula-container .formula-value {
-  width: 100%;
+    width: 100%;
 }
 .c-table .table-container {
-  position: relative;
-  overflow: hidden;
-  max-width: 100%;
-  flex: 1;
+    position: relative;
+    overflow: hidden;
+    max-width: 100%;
+    flex: 1;
 }
 .c-table .table-container .table-main {
-  overflow: auto;
-  height: calc(100% - 40px);
-  width: calc(100% - 100px);
-  display: inline-block;
-  margin-left: 100px;
-  position: relative;
+    height: calc(100% - 40px);
+    width: calc(100% - 100px);
+    display: inline-block;
+    margin-left: 100px;
+    position: absolute;
+    left: 0;
+    top: 40px;
 }
 .c-table table {
-  table-layout: fixed;
-  border-collapse: separate;
+    table-layout: fixed;
+    border-collapse: separate;
 }
 .c-table .is-active {
-  background-color: borderColor !important;
+    background-color: borderColor !important;
 }
 .c-table .select-content {
-  border: 2px solid activeColor;
-  background: #e5f3ff;
-  position: absolute;
-  pointer-events: none;
-  will-change: transform;
+    border: 2px solid activeColor;
+    background: #e5f3ff;
+    position: absolute;
+    pointer-events: none;
+    will-change: transform;
 }
 .c-table .copy-content {
-  border: 2px dashed activeColor;
-  position: absolute;
-  pointer-events: none;
-  will-change: transform;
+    border: 2px dashed activeColor;
+    position: absolute;
+    pointer-events: none;
+    will-change: transform;
 }
 .c-table .cell-edit-input {
-  position: absolute;
-  border: 1px solid activeColor;
-  font-size: 15px;
-  resize: none;
-  will-change: transform;
-  overflow: hidden;
-  z-index: 1;
-  box-sizing: border-box;
+    position: absolute;
+    border: 1px solid activeColor;
+    font-size: 15px;
+    resize: none;
+    will-change: transform;
+    overflow: hidden;
+    z-index: 1;
+    box-sizing: border-box;
 }
 .c-table .cell-edit-input:focus {
-  outline-color: activeColor;
+    outline-color: activeColor;
 }
 .c-table .horiAxis {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 10;
-  width: 100%;
-  border-top: 2px dashed activeColor;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    border-top: 2px dashed activeColor;
 }
 .c-table .vertAxis {
-  height: 100%;
-  border-left: 2px dashed activeColor;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 10;
+    height: 100%;
+    border-left: 2px dashed activeColor;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
 }
 .c-table .cell {
-  height: 100%;
-  box-sizing: border-box;
-  border-right: 1px solid borderColor;
-  border-bottom: 1px solid borderColor;
+    height: 100%;
+    box-sizing: border-box;
+    border-right: 1px solid borderColor;
+    border-bottom: 1px solid borderColor;
 }
 .c-table td {
-  vertical-align: middle;
-  text-align: center;
-  position: relative;
-  word-break: break-all;
-  box-sizing: border-box;
+    vertical-align: middle;
+    text-align: center;
+    position: relative;
+    word-break: break-all;
+    box-sizing: border-box;
 }
 .c-table tr {
-  position: relative;
+    position: relative;
 }
 .c-table tr:first-child td {
-  border-top: 0;
+    border-top: 0;
 }

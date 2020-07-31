@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <div style="width:100px" class="col-container"></div>
+    <div class="cols-header">
+        <div class="col-container" style="min-width: 100px"></div>
         <dynamic-scroller
             :items="colsList"
-            :offset="offset"
             direction="horizontal"
-            class="cols-header"
+            v-on="$listeners"
+            v-bind="$attrs"
         >
             <template v-slot="{ index, size }">
                 <div
@@ -47,14 +47,9 @@ export default {
             type: Object,
             require: true,
         },
-        offset: {
-            type: Number,
-            default: 0,
-        },
     },
     data() {
-        return {
-        };
+        return {};
     },
     filters: {
         indexToChar(index) {
@@ -82,8 +77,8 @@ export default {
 
 <style lang="stylus" scoped>
 .cols-header
-    height 60px
-    margin-left 100px
+    height 40px
+    display flex
 .is-active
     background-color borderColor
 .col-container

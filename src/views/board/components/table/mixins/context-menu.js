@@ -1,12 +1,6 @@
 import * as select from '@/utils/select';
 import * as location from '@/utils/location';
-// function paste(e) {
-//     e.stopPropagation();
-//     e.preventDefault();
-//     let clipboardData = e.clipboardData || window.clipboardData;
-//     let pastedData = clipboardData.getData('Text');
-//     alert(pastedData);
-// }
+import debounce from '@/utils/debounce';
 export default {
     data() {
         return {
@@ -18,6 +12,8 @@ export default {
                 rowEndIndex: null,
                 colEndIndex: null,
             },
+            tableHistory: [],
+            copyRectShow: false,
             contextMenu: [
                 {
                     label: '复制',
@@ -26,40 +22,55 @@ export default {
                 },
                 {
                     label: '粘贴',
-                    def: `paste`,
+                    def: 'paste',
                     hotkey: 'ctrl+v',
                 },
                 {
                     label: '剪切',
-                    def: `cut`,
+                    def: 'cut',
                     hotkey: 'ctrl+x',
                 },
                 {
+                    label: '撤销',
+                    def: 'reverse',
+                    hotkey: 'ctrl+z',
+                },
+                {
                     label: '清空选中区域',
-                    def: `clear`,
+                    def: 'clear',
                     divided: true,
                     hotkey: 'delete',
                 },
+
+                // {
+                //     label: '撤回',
+                //     def: 'removeCols',
+                // },
                 {
                     label: '上方插入一行',
-                    def: `insertRowUp`,
+                    def: 'insertRowUp',
                 },
                 {
                     label: '下方插入一行',
-                    def: `insertRowDown`,
+                    def: 'insertRowDown',
                 },
                 {
                     label: '删除所在行',
-                    def: `removeRow`,
+                    def: 'removeRows',
+                    divided: true,
                 },
                 {
                     label: '左边插入一列',
-                    def: `insertColLeft`,
+                    def: 'insertColLeft',
                 },
-                // {
-                //   label:'左边插入一列',
-                //   def:`insertColLeft`
-                // },
+                {
+                    label: '右边插入一列',
+                    def: 'insertColRight',
+                },
+                {
+                    label: '删除所在列',
+                    def: 'removeCols',
+                },
             ],
         };
     },
@@ -81,20 +92,43 @@ export default {
         fnCall(method) {
             this[method]();
         },
+        saveHistory() {
+            this.tableHistory.push(JSON.parse(JSON.stringify(this.table)));
+        },
         updateCellList(index, text) {
             for (let row = index.rowStartIndex; row <= index.rowEndIndex; row++) {
                 for (let col = index.colStartIndex; col <= index.colEndIndex; col++) {
-                    this.$store.commit('workbook/updateCell', {
-                        rowIndex: row,
-                        colIndex: col,
-                        value: text,
-                    });
+                    this.table[row].splice(col, 1, text);
                 }
+            }
+        },
+        reverse() {
+            if (this.tableHistory.length >= 1) {
+                this.table = this.tableHistory.pop();
+            } else {
+                console.log('无撤回操作');
+            }
+        },
+        addRow(index, value = '') {
+            let row = Array(this.table[0].length).fill(value);
+            this.table.splice(index, 0, row);
+        },
+        addCol(index, value = '') {
+            for (let row of this.table) {
+                row.splice(index, 0, value);
+            }
+        },
+        removeRow(index) {
+            this.table.splice(index, 1);
+        },
+        removeCol(state, index) {
+            for (let row of this.table) {
+                row.splice(index, 1);
             }
         },
         copy() {
             this.copyContent = this.selectedList;
-            this.$refs.copyRect.style.display = '';
+            this.copyRectShow = true;
             Object.assign(
                 this.$refs.copyRect.style,
                 location.getRectBetweenTwoCells(this.selectedIndex, this.rowsList, this.colsList),
@@ -117,13 +151,14 @@ export default {
             }
         },
         paste() {
+            this.saveHistory();
             const paste = (text) => {
                 if (this.isCut) {
                     this.isCut = false;
                     this.updateCellList(this.cutIndex, '');
                 }
                 this.updateCellList(this.selectedIndex, text);
-                this.$refs.copyRect.style.display = 'none';
+                this.copyRectShow = false;
             };
             if (typeof navigator.clipboard === 'undefined') {
                 paste(this.copyContent);
@@ -142,17 +177,38 @@ export default {
             this.cutIndex = this.selectedIndex;
         },
         clear() {
+            this.saveHistory();
             this.updateCellList(this.selectedIndex, '');
         },
-        insertRowUp() {},
-        insertRowDown() {},
-        removeRow() {},
-        insertColLeft() {},
+        insertRowUp() {
+            this.saveHistory();
+            this.addRow(this.selectedIndex.rowStartIndex);
+        },
+        insertRowDown() {
+            this.saveHistory();
+            this.addRow(this.selectedIndex.rowStartIndex + 1);
+        },
+        removeRows() {
+            this.saveHistory();
+            let { rowStartIndex, rowEndIndex } = this.selectedIndex;
+            for (let i = rowStartIndex; i <= rowEndIndex; i++) {
+                this.removeRow(i);
+            }
+        },
+        insertColLeft() {
+            this.saveHistory();
+            this.addCol(this.selectedIndex.colStartIndex);
+        },
+        insertColRight() {
+            this.saveHistory();
+            this.addCol(this.selectedIndex.colStartIndex + 1);
+        },
+        removeCols() {
+            this.saveHistory();
+            let { colStartIndex, colEndIndex } = this.selectedIndex;
+            for (let i = colStartIndex; i <= colEndIndex; i++) {
+                this.removeCol(i);
+            }
+        },
     },
-    // mounted() {
-    //     this.$refs.table.addEventListener('paste', paste(e));
-    // },
-    // destroy() {
-    //     this.$refs.table.removeEventListener('paste', paste(e));
-    // },
 };

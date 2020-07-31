@@ -26,10 +26,14 @@ export default {
     methods: {
         OpenContextMenu(evt) {
             evt.preventDefault();
-            this.position.left = evt.pageX;
-            this.position.top = evt.pageY;
-            this.visible = true;
-            this.$emit('contextmenu');
+            if(this.visible){
+                this.closeContextMenu()
+            }else {
+                this.position.left = evt.pageX;
+                this.position.top = evt.pageY;
+                this.visible = true;
+                this.$emit('contextmenu');
+            }
         },
         closeContextMenu() {
             this.visible = false;

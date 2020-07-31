@@ -7,12 +7,10 @@ import contextItem from 'src/components/context-menu/context-item';
 import { importMixins, importComponents } from 'src/utils/import.ts';
 import * as math from '@/utils/math';
 import * as location from '@/utils/location';
-import { tsTsxRegex } from 'ts-loader/dist/constants';
 const modulesFiles = importMixins(require.context('./mixins', false, /\.js$/));
 const components = importComponents(require.context('./components', false, /\.vue$/));
 let id = 1;
-const DefaultRowsLength = 100,
-    DefaultColsLength = 100;
+
 export default {
     components: { ...components, CInput, contextMenu, contextItem },
     mixins: modulesFiles,
@@ -27,6 +25,7 @@ export default {
             colsHeader: [],
             // 行头
             rowsHeader: [],
+            table: [],
         };
     },
     filters: {
@@ -37,45 +36,30 @@ export default {
     computed: {
         activeCellInput: {
             get() {
-                return this.table[this.cellInput.rowIndex][this.cellInput.colIndex];
+                let { rowIndex, colIndex } = this.cellInput;
+                return this.table[rowIndex][colIndex];
             },
             set(val) {
-                this.$store.commit('workbook/updateCell', {
-                    rowIndex: this.cellInput.rowIndex,
-                    colIndex: this.cellInput.colIndex,
-                    value: val,
-                });
+                let { rowIndex, colIndex } = this.cellInput;
+                this.table[rowIndex][colIndex] = val;
             },
-        },
-        table: {
-            get() {
-                return this.$store.getters['workbook/activeTable'];
-            },
-            // set(value) {
-            //     this.$store.commit('initSheet', { array: value });
-            // },
         },
     },
-    // watch: {
-    //     table: {
-    //         deep: true,
-    //         immediate: true,
-    //         handler() {
-    //             this.headerInit();
-    //         },
-    //     },
-
+    watch: {
+        table: {
+            deep: true,
+            handler() {
+                this.headerHandler();
+            },
+        },
+    },
     methods: {
-        // updateCell(value, rowIndex, colIndex) {
-        //     this.$store.commit('workbook/updateCell', { value, rowIndex, colIndex });
-        // },
-        updateCellInput() {},
-        headerInit() {
+        headerHandler() {
             //行
             for (let rowIndex = 0; rowIndex < this.table.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
                     this.rowsHeader.splice(rowIndex, 1, {
-                        height: math.random(10, 100),
+                        height: 40,
                         id: id++,
                     });
                 }
@@ -83,12 +67,12 @@ export default {
             //列
             for (let colIndex = 0; colIndex < this.table[0].length; colIndex++) {
                 if (!this.colsHeader[colIndex]) {
-                    this.colsHeader.splice(colIndex, 1, { width: math.random(10, 200), id: id++ });
+                    this.colsHeader.splice(colIndex, 1, { width: 100, id: id++ });
                 }
             }
         },
         currentPosition(rowIndex, colIndex) {
-            return `${String.fromCharCode(65 + colIndex)}${rowIndex + 1}`;
+            return `${indexToChar(colIndex)}${rowIndex + 1}`;
         },
         handleCellClick(evt, rowIndex, colIndex) {
             this.cellInput.rowIndex = rowIndex;
@@ -98,20 +82,12 @@ export default {
                 location.getCellPosition(this.cellInput, this.rowsList, this.colsList),
             );
             this.cellInputShow = true;
-            // let rect = evt.target.getBoundingClientRect();
-            // this.$refs.editInput.$el.style.left = `${rect.left}px`;
-            // this.$refs.editInput.$el.style.top = `${rect.top}px`;
-            // this.$refs.editInput.$el.style.height = `${rect.height}px`;
-            // this.$refs.editInput.$el.style.width = `${rect.width}px`;
         },
     },
-    mounted() {
-        this.$store
-            .dispatch('workbook/sheetInit', {
-                rowsLength: DefaultRowsLength,
-                colsLength: DefaultColsLength,
-            })
-            .catch((res) => console.error('表格初始化失败', res));
-        this.headerInit();
+    created() {
+        if (!this.$store.getters['workbook/activeTable']) {
+            this.$store.commit('workbook/initSheet');
+        }
+        this.table = JSON.parse(JSON.stringify(this.$store.getters['workbook/activeTable']));
     },
 };
