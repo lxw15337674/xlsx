@@ -72,7 +72,7 @@ export default {
             }
         },
         currentPosition(rowIndex, colIndex) {
-            return `${String.fromCharCode(65 + colIndex)}${rowIndex + 1}`;
+            return `${indexToChar(colIndex)}${rowIndex + 1}`;
         },
         handleCellClick(evt, rowIndex, colIndex) {
             this.cellInput.rowIndex = rowIndex;

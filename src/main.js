@@ -6,10 +6,12 @@ import directive from 'src/directive'; // 引入自定义指令
 import './plugins/element.js';
 import './assets/css/reset.css';
 import VueHotKey from 'v-hotkey';
-
+import tip from '@lxw15337674/v-tip';
 Vue.config.productionTip = false;
 Vue.use(directive);
 Vue.use(VueHotKey);
+Vue.use(tip, { directiveName: 'tip', theme: 'dark' });
+
 new Vue({
     router,
     store,

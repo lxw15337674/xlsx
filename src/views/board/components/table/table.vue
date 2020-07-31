@@ -61,6 +61,12 @@
                                 @mouseenter="(evt) => handleMouseEnter(evt, rowIndex, colIndex)"
                                 @contextmenu="(evt) => handleContextMenu(evt, rowIndex, colIndex)"
                                 :style="{ height: `${height}px`, width: `${width}px` }"
+                                v-tip="{
+                                    content: currentPosition(rowIndex,colIndex),
+                                    delay: 1000,
+                                    theme: 'dark',
+                                    positions: 'bottom',
+                                }"
                             >
                                 <textarea
                                     v-if="active"

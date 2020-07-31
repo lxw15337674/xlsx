@@ -10,6 +10,7 @@
     "start": "vue-cli-service serve "
   },
   "dependencies": {
+    "@lxw15337674/v-tip": "^1.1.0",
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
     "simple-web-worker": "^1.2.0",
