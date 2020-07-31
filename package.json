@@ -14,7 +14,7 @@
     "element-ui": "^2.13.2",
     "simple-web-worker": "^1.2.0",
     "v-hotkey": "^0.8.0",
-    "v-virtual-scroller": "^1.0.7",
+    "v-virtual-scroller": "^1.0.8",
     "vue": "^2.6.11",
     "vue-router": "^3.3.4",
     "vuex": "^3.5.1",

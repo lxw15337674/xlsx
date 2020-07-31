@@ -66,9 +66,8 @@
                                     v-if="active"
                                     class="cell-content"
                                     disabled
-                                    :value="table[rowIndex] && table[rowIndex][colIndex]"
+                                    :value="table[rowIndex][colIndex]"
                                 ></textarea>
-                                <!--                               {{table[rowIndex][colIndex]}}-->
                             </div>
                         </template>
                     </virtual-scroller-table>

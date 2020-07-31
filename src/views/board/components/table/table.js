@@ -25,6 +25,7 @@ export default {
             colsHeader: [],
             // 行头
             rowsHeader: [],
+            table: [],
         };
     },
     filters: {
@@ -35,19 +36,12 @@ export default {
     computed: {
         activeCellInput: {
             get() {
-                return this.table[this.cellInput.rowIndex][this.cellInput.colIndex];
+                let { rowIndex, colIndex } = this.cellInput;
+                return this.table[rowIndex][colIndex];
             },
             set(val) {
-                this.$store.commit('workbook/updateCell', {
-                    rowIndex: this.cellInput.rowIndex,
-                    colIndex: this.cellInput.colIndex,
-                    value: val,
-                });
-            },
-        },
-        table: {
-            get() {
-                return this.$store.getters['workbook/activeTable'];
+                let { rowIndex, colIndex } = this.cellInput;
+                this.table[rowIndex][colIndex] = val;
             },
         },
     },
@@ -55,12 +49,12 @@ export default {
         table: {
             deep: true,
             handler() {
-                this.headerInit();
+                this.headerHandler();
             },
         },
     },
     methods: {
-        headerInit() {
+        headerHandler() {
             //行
             for (let rowIndex = 0; rowIndex < this.table.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
@@ -91,13 +85,9 @@ export default {
         },
     },
     created() {
-        if (!this.table) {
+        if (!this.$store.getters['workbook/activeTable']) {
             this.$store.commit('workbook/initSheet');
         }
-    },
-    mounted() {
-        if (this.table) {
-            this.headerInit();
-        }
+        this.table = JSON.parse(JSON.stringify(this.$store.getters['workbook/activeTable']));
     },
 };

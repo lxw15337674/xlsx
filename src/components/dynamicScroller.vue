@@ -109,6 +109,7 @@ export default {
     watch: {
         items: {
             deep: true,
+            immediate:true,
             handler() {
                 this.$nextTick(()=>{
                     this.handleScroll();
