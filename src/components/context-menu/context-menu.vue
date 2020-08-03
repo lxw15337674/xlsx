@@ -1,40 +1,58 @@
 <script>
 import Vue from 'vue';
 
+function numToPx(number) {
+    if (number) {
+        return `${number}px`;
+    } else {
+        return 0;
+    }
+}
+function positionHandler(menuSize, cursorPosition, windowPosition) {
+    let position = cursorPosition;
+    if (position > windowPosition / 2) {
+        position = cursorPosition - menuSize;
+    }
+    return numToPx(position);
+}
 export default {
     name: 'context-menu',
     mounted() {
-        this.$el.addEventListener('contextmenu', this.OpenContextMenu, true);
+        this.$el.addEventListener('contextmenu', this.openContextMenu, true);
         this.$el.addEventListener('click', this.closeContextMenu);
-    },
-    computed: {
-        tipStyle() {
-            let x = this.position.left;
-            let y = this.position.top;
-            return { left: `${x}px`, top: `${y}px` };
-        },
     },
     data() {
         return {
-            position: {
-                left: 0,
-                top: 0,
-            },
             visible: false,
         };
     },
     methods: {
-        OpenContextMenu(evt) {
+        openContextMenu(evt) {
             evt.preventDefault();
             if (this.visible) {
                 this.closeContextMenu();
             } else {
-                this.position.left = evt.pageX;
-                this.position.top = evt.pageY;
                 this.visible = true;
-                this.$emit('contextmenu');
+                this.$nextTick(() => {
+                    let contextMenu = this.$refs.contextMenu,
+                        {
+                            width: menuHeight,
+                            height: menuWidth,
+                        } = contextMenu.getBoundingClientRect(),
+                        position = {},
+                        { x, y } = evt,
+                        { innerWidth: width, innerHeight: height } = window;
+                    debugger;
+                    position.maxWidth = numToPx(width);
+                    position.maxHeight = numToPx(height);
+                    position.left = positionHandler(menuHeight, x, width);
+                    position.top = positionHandler(menuWidth, y, height);
+                    Object.assign(contextMenu.style, position);
+                    this.$emit('contextmenu');
+                });
             }
         },
+
         closeContextMenu() {
             this.visible = false;
         },
@@ -75,7 +93,7 @@ export default {
                 <div
                     id='context-menu'
                     class={[this.theme, 'context-menu']}
-                    style={this.tipStyle}
+                    ref='contextMenu'
                     v-show={this.visible}
                     onClick={this.closeContextMenu}
                 >
@@ -96,7 +114,7 @@ export default {
         this.popperVM && this.popperVM.$destroy();
     },
     destroyed() {
-        this.$el.removeEventListener('oncontextmenu', this.handleOnContextMenu);
+        this.$el.removeEventListener('oncontextmenu', this.openContextMenu);
     },
 };
 </script>
