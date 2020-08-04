@@ -109,16 +109,16 @@ export default {
     watch: {
         items: {
             deep: true,
-            immediate:true,
+            immediate: true,
             handler() {
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.handleScroll();
-                })
+                });
             },
         },
         offset: {
             handler() {
-                let scroller =  this.$refs.scroller
+                let scroller = this.$refs.scroller;
                 this.handleScroll();
                 if (this.direction === 'vertical') {
                     scroller.scrollTop = this.offset;

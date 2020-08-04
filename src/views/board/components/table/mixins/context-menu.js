@@ -120,10 +120,12 @@ export default {
         },
         removeRow(index) {
             this.table.splice(index, 1);
+            this.rowsHeader.splice(index, 1);
         },
         removeCol(state, index) {
             for (let row of this.table) {
                 row.splice(index, 1);
+                this.colsHeader.splice(index, 1);
             }
         },
         copy() {

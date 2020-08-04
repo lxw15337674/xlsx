@@ -1,5 +1,3 @@
-import * as math from '@/utils/math';
-
 interface selectedIndex {
     rowStartIndex: number;
     colStartIndex: number;

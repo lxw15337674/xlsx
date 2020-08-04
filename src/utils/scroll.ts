@@ -2,11 +2,11 @@
 let sLeft = 0,
     sTop = 0;
 export function scrollToPosition(el): string {
-    if (sLeft != el.scrollLeft) {
+    if (sLeft !== el.scrollLeft) {
         sLeft = el.scrollLeft;
         return 'horizontal';
     }
-    if (sTop != el.scrollTop) {
+    if (sTop !== el.scrollTop) {
         sTop = el.scrollTop;
         return 'vertical';
     }

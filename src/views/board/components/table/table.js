@@ -41,20 +41,23 @@ export default {
             },
             set(val) {
                 let { rowIndex, colIndex } = this.cellInput;
-                this.table[rowIndex][colIndex] = val;
+                this.table[rowIndex].splice(colIndex, 1, val);
             },
         },
     },
     watch: {
-        table: {
+        '$store.state.workbook.activeSheetName': {
             deep: true,
-            handler() {
-                this.headerHandler();
+            handler(val, oldVal) {
+                this.table = JSON.parse(
+                    JSON.stringify(this.$store.getters['workbook/activeTable']),
+                );
+                this.tableHistory = [];
             },
         },
     },
     methods: {
-        headerHandler() {
+        initHeader() {
             //行
             for (let rowIndex = 0; rowIndex < this.table.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
@@ -89,5 +92,8 @@ export default {
             this.$store.commit('workbook/initSheet');
         }
         this.table = JSON.parse(JSON.stringify(this.$store.getters['workbook/activeTable']));
+    },
+    mounted() {
+        this.initHeader();
     },
 };

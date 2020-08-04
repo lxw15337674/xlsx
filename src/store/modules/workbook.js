@@ -20,7 +20,7 @@ export default {
     },
     mutations: {
         initSheet(state) {
-            let sheetName = `sheet${sheetNum++}`;
+            let sheetName = `sheet${sheetNum}`;
             state.sheets[sheetName] = createTable();
             state.sheetNames.push(sheetName);
             state.activeSheetName = sheetName;
@@ -38,7 +38,6 @@ export default {
                 }
             }
             checkSheetName();
-            console.log(sheetName);
             state.sheets[sheetName] = createTable();
             state.sheetNames.push(sheetName);
             state.activeSheetName = sheetName;
@@ -49,6 +48,7 @@ export default {
         updateActiveSheetName(state, sheetName) {
             state.activeSheetName = sheetName;
         },
+        // updateCell
         // updateCell(state, { rowIndex, colIndex, value }) {
         //     state.sheets[state.activeSheetName][rowIndex].splice(colIndex, 1, value);
         // },
