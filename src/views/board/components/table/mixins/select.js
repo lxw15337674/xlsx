@@ -14,6 +14,7 @@ export default {
             },
             selectStart: false,
             multipleList: [], //TODO 多选情况
+            selectedShow: false,
         };
     },
     watch: {
@@ -28,6 +29,7 @@ export default {
                         this.colsList,
                     ),
                 );
+                this.selectedShow = true;
             },
         },
     },

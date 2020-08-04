@@ -23,7 +23,7 @@ export default {
 .context-item
   padding: 10px 16px;
   cursor: pointer;
-  font-size 15px
+  font-size 14px
   min-width 280px
   &:hover
     background-color: #f5f5f5;

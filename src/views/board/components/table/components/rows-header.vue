@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <dynamic-scroller :items="rowsList" :offset="offset" class="rows-header">
+    <div class="rows-header">
+        <dynamic-scroller :items="rowsList" v-on="$listeners" v-bind="$attrs">
             <template v-slot="{ index, size }">
                 <div
                     class="row-header"
@@ -38,10 +38,6 @@ export default {
             type: Object,
             require: true,
         },
-        offset: {
-            type: Number,
-            default: 0,
-        },
     },
     mixins: [select],
     components: { dynamicScroller },
@@ -69,7 +65,8 @@ export default {
 
 <style lang="stylus" scoped>
 .rows-header
-    margin-top 40px
+    width 100px
+    height 100%
     .is-active
         background-color borderColor
     .row-header

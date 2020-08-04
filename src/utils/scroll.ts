@@ -15,7 +15,7 @@ export function scrollToPosition(el): string {
 function binarySearch(offset: number, list: number[]): number {
     if (list.length === 0) {
         // console.error('数组为空');
-        return -1;
+        return 0;
     }
     let startIndex = 0,
         endIndex = list.length - 1,
