@@ -17,59 +17,60 @@ export default {
             contextMenu: [
                 {
                     label: '复制',
-                    def: 'copy',
+                    callback: this.copy,
                     hotkey: 'ctrl+c',
                 },
                 {
                     label: '粘贴',
-                    def: 'paste',
+                    callback: this.paste,
                     hotkey: 'ctrl+v',
                 },
                 {
                     label: '剪切',
-                    def: 'cut',
+                    callback: this.cut,
                     hotkey: 'ctrl+x',
                 },
                 {
                     label: '撤销',
-                    def: 'reverse',
+                    callback: this.reverse,
                     hotkey: 'ctrl+z',
                 },
                 {
+                    label: '重做',
+                    callback: '',
+                    hotkey: 'ctrl+y',
+                    disabled: false,
+                },
+                {
                     label: '清空选中区域',
-                    def: 'clear',
+                    callback: this.clear,
                     divided: true,
                     hotkey: 'delete',
                 },
-
-                // {
-                //     label: '撤回',
-                //     def: 'removeCols',
-                // },
                 {
                     label: '上方插入一行',
-                    def: 'insertRowUp',
+                    callback: this.insertRowUp,
                 },
                 {
                     label: '下方插入一行',
-                    def: 'insertRowDown',
+                    callback: this.insertRowDown,
                 },
                 {
                     label: '删除所在行',
-                    def: 'removeRows',
+                    callback: this.removeRows,
                     divided: true,
                 },
                 {
                     label: '左边插入一列',
-                    def: 'insertColLeft',
+                    callback: this.insertColLeft,
                 },
                 {
                     label: '右边插入一列',
-                    def: 'insertColRight',
+                    callback: this.insertColRight,
                 },
                 {
                     label: '删除所在列',
-                    def: 'removeCols',
+                    callback: this.removeCols,
                 },
             ],
         };
@@ -78,20 +79,8 @@ export default {
         selectedList() {
             return select.getSelectedList(this.table, this.selectedIndex);
         },
-        keymap() {
-            let keymap = {};
-            for (let item of this.contextMenu) {
-                if (item.hotkey) {
-                    keymap[item.hotkey] = this[item.def];
-                }
-            }
-            return keymap;
-        },
     },
     methods: {
-        fnCall(method) {
-            this[method]();
-        },
         saveHistory() {
             this.tableHistory.push(JSON.parse(JSON.stringify(this.table)));
         },

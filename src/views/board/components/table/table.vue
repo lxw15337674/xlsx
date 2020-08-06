@@ -32,7 +32,7 @@
                 @rowResizeStart="rowResizeStart"
                 @rowHeaderClick="rowSelect"
             ></rows-header>
-            <contextMenu v-hotkey="keymap">
+            <context-menu>
                 <div class="table-main">
                     <virtual-scroller-table
                         :rows="rowsList"
@@ -78,18 +78,19 @@
                         </template>
                     </virtual-scroller-table>
                 </div>
-                <template slot="contentMenu">
+                <template slot="contextMenu">
                     <context-item
                         v-for="menuItem in contextMenu"
                         :key="menuItem.label"
                         :divided="menuItem.divided"
-                        @click.native="fnCall(menuItem.def)"
+                        :disabled="menuItem.disabled"
+                        :hotkey="menuItem.hotkey"
+                        :callback="menuItem.callback"
                     >
-                        <span class="">{{ menuItem.label }}</span>
-                        <span class="fr">{{ menuItem.hotkey }}</span>
                     </context-item>
                 </template>
-            </contextMenu>
+            </context-menu>
+
         </div>
     </div>
 </template>

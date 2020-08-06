@@ -12,7 +12,19 @@ export function indexToChar(number: number): string {
     }
     return res;
 }
-
+//热键提示转换。
+// 例如: ctrl+v=>Ctrl+V
+export function hotKeyFilter(str: string): string {
+    if (!str) {
+        return '';
+    }
+    return str
+        .split('+')
+        .map((item) => {
+            return item.slice(0, 1).toUpperCase() + item.slice(1);
+        })
+        .join('+');
+}
 // 列头符号转换位置。
 //  例如： Z->1 Z->26   AA->27 AB->28
 
