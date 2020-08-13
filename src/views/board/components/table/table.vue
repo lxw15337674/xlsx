@@ -81,7 +81,7 @@
                 <template slot="contextMenu">
                     <context-item
                         v-for="menuItem in contextMenu"
-                        :key="menuItem.label"
+                        :label="menuItem.label"
                         :divided="menuItem.divided"
                         :disabled="menuItem.disabled"
                         :hotkey="menuItem.hotkey"
