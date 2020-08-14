@@ -39,7 +39,7 @@ export default {
                     label: '重做',
                     callback: '',
                     hotkey: 'ctrl+y',
-                    disabled: false,
+                    disabled: true,
                 },
                 {
                     label: '清空选中区域',
