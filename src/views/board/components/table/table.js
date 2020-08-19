@@ -59,7 +59,7 @@ export default {
             for (let rowIndex = 0; rowIndex < this.table.length; rowIndex++) {
                 if (!this.rowsHeader[rowIndex]) {
                     this.rowsHeader.splice(rowIndex, 1, {
-                        height: math.random(20, 100),
+                        height: 100,
                         id: id++,
                     });
                 }
@@ -67,7 +67,7 @@ export default {
             //列
             for (let colIndex = 0; colIndex < this.table[0].length; colIndex++) {
                 if (!this.colsHeader[colIndex]) {
-                    this.colsHeader.splice(colIndex, 1, { width: math.random(50, 300), id: id++ });
+                    this.colsHeader.splice(colIndex, 1, { width: 100, id: id++ });
                 }
             }
         },
