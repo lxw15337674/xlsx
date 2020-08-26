@@ -7,11 +7,6 @@
             <textarea class="formula-value" v-model="activeCellInput" />
         </div>
         <div class="table-container" ref="table">
-            <!--        <canvas-->
-            <!--          class="canvas"-->
-            <!--          :width="canvasRect.width"-->
-            <!--          :height="canvasRect.height"-->
-            <!--        ></canvas>-->
             <div ref="horiAxis" class="horiAxis" id="horiAxis" style="display: none"></div>
             <div ref="vertAxis" class="vertAxis" id="vertAxis" style="display: none"></div>
             <cols-header
@@ -90,7 +85,6 @@
                     </context-item>
                 </template>
             </context-menu>
-
         </div>
     </div>
 </template>

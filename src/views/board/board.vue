@@ -2,7 +2,7 @@
     <div class="home">
         <c-header></c-header>
         <c-table class="c-table"></c-table>
-        <sheetBar> </sheetBar>
+<!--        <sheetBar> </sheetBar>-->
     </div>
 </template>
 
